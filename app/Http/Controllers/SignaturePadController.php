@@ -19,11 +19,11 @@ class SignaturePadController extends Controller
     }
     public function stamp()
     {
-        $user = User::select('users.*','signatures.signature_img')
-        ->leftJoin('signatures','users.id','=','signatures.user_id')
-        ->where('users.id','=', Auth::user()->id)
-        ->get();
-        
+        $user = User::select('users.*', 'signatures.signature_img')
+            ->leftJoin('signatures', 'users.id', '=', 'signatures.user_id')
+            ->where('users.id', '=', Auth::user()->id)
+            ->get();
+
         return view('signature.stamp', compact('user'));
     }
 
@@ -41,10 +41,10 @@ class SignaturePadController extends Controller
 
     public function stamping(Request $request)
     {
-        $user = User::select('users.*','signatures.signature_img')
-        ->leftJoin('signatures','users.id','=','signatures.user_id')
-        ->where('users.id','=', Auth::user()->id)
-        ->get();
+        $user = User::select('users.*', 'signatures.signature_img')
+            ->leftJoin('signatures', 'users.id', '=', 'signatures.user_id')
+            ->where('users.id', '=', Auth::user()->id)
+            ->get();
 
         $data = $request->all();
 
@@ -56,7 +56,7 @@ class SignaturePadController extends Controller
         $canvasHeight = ($data['canvasHeight'] / 1.5);
         $canvasWidth = ($data['canvasWidth'] / 1.5);
         $pageNumber = $data['pageNumber'];
-        $qrPath = asset('/signature/' . $user[0]->signature_img); 
+        $qrPath = asset('/signature/' . $user[0]->signature_img);
 
         // Get stream of uploaded file
         $file = $request->file('pdf-file');
@@ -64,7 +64,7 @@ class SignaturePadController extends Controller
         $pageCount = PDF::setSourceFile($file);
 
         // Loop through all pages
-        for ($i=1; $i<=$pageCount; $i++) {
+        for ($i = 1; $i <= $pageCount; $i++) {
             $template = PDF::importPage($i);
             $size = PDF::getTemplateSize($template);
 
@@ -95,12 +95,12 @@ class SignaturePadController extends Controller
         $image_type = explode("image/", $image[0]);
         $image_type_png = $image_type[1];
         $image_base64 = base64_decode($image[1]);
-        $filename = uniqid() . '.'.$image_type_png;
+        $filename = uniqid() . '.' . $image_type_png;
         $file = $folderPath . $filename;
-        
+
         Signature::updateOrCreate([
             'user_id' => $request->user_id,
-        ],[
+        ], [
             'user_id' => $request->user_id,
             'signature_img' => $filename,
         ]);
@@ -109,9 +109,8 @@ class SignaturePadController extends Controller
             File::delete(public_path('../../public/signature/' . $request->signature_img));
         }
         file_put_contents($file, $image_base64);
-        
+
         Alert::success('Create Successfully!', 'Signature successfully created!');
-        return redirect()
-            ->route('profile');
+        return redirect('user/profile');
     }
 }
