@@ -31,6 +31,7 @@
                                 </div>
                                 <div class="card-body">
                                         <input class="form-control" type="hidden" id="user_id" name="user_id" required value="{{ $user[0]->id }}">
+										<input class="form-control" type="hidden" id="old_signature" name="old_signature" readonly value="{{ $user[0]->signature_img }}">
                                         <div>
                                             <label>Name :</label>
                                             <input class="form-control" type="text" id="name" name="name" readonly value="{{ $user[0]->name }}">
@@ -119,7 +120,6 @@
 	// Set up the canvas
 	var canvas = document.getElementById("sig-canvas");
     canvas.style.width = "100%";
-    canvas.style.height = "100%";
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
 	var ctx = canvas.getContext("2d");

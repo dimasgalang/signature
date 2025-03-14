@@ -105,8 +105,8 @@ class SignaturePadController extends Controller
             'signature_img' => $filename,
         ]);
 
-        if ($request->signature_img) {
-            File::delete(public_path('../../public/signature/' . $request->signature_img));
+        if ($request->old_signature) {
+            Storage::disk('signature_uploads')->delete($request->old_signature);
         }
         Storage::put('public/signature/' . $filename, $image_base64);
 

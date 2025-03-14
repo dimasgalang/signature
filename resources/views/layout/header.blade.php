@@ -42,6 +42,7 @@
         #sig-canvas {
 			border: 1px solid #CCCCCC;
 			border-radius: 5px;
+            height: 300px;
 			cursor: crosshair;
 		}
 
