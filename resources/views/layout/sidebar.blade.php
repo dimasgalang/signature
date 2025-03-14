@@ -19,6 +19,7 @@
             <span>Dashboard</span></a>
     </li>
 
+    @if($roles[0]->rolename == 'Admin')
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
             aria-expanded="true" aria-controls="collapseUser">
@@ -32,6 +33,7 @@
             </div>
         </div>
     </li>
+    @endif
 
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseApproval"
@@ -46,6 +48,7 @@
         </div>
     </li>
 
+    @if($roles[0]->rolename == 'Admin')
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTools"
             aria-expanded="true" aria-controls="collapseTools">
@@ -58,6 +61,7 @@
             </div>
         </div>
     </li>
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
