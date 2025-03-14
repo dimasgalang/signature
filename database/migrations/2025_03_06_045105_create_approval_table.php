@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('document_approve')->nullable();
             $table->longText('approval_base64')->nullable();
             $table->string('status');
-            $table->string('comment')->nullable();
+            $table->text('comment')->nullable();
             $table->string('void');
             $table->timestamps();
         });
