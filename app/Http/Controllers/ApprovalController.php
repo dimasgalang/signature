@@ -124,7 +124,7 @@ class ApprovalController extends Controller
             'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '"'
         ];
 
-        // Mail::to($sendTo[0]->email)->send(new SendEmail($email));
+        Mail::to($sendTo[0]->email)->send(new SendEmail($email));
         Alert::success('Approval Successfully!', 'Document ' . $approval->document_name . ' successfully approved!');
 
         // return PDF::Output('Signature.pdf', 'I');
