@@ -39,12 +39,14 @@ return [
         'signature_uploads' => [
             'driver' => 'local',
             'visibility' => 'public',
-            'root'   => storage_path('app/public/signature'),
+            'throw' => false,
+            'root'   => storage_path('app/public/signature/'),
         ],
         'pdf_uploads' => [
             'driver' => 'local',
             'visibility' => 'public',
-            'root'   => storage_path('app/public/document'),
+            'throw' => false,
+            'root'   => storage_path('app/public/document/'),
         ],
 
         'public' => [
