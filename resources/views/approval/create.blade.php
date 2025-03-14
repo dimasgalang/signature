@@ -34,7 +34,7 @@
                                     <input class="form-control" type="hidden" id="preparer_id" name="preparer_id" value="{{ Auth::user()->id }}">
                                     <div>
                                         <label>Document Name :</label>
-                                        <input class="form-control" type="text" id="document_name" name="document_name">
+                                        <input class="form-control" type="text" id="document_name" name="document_name" required>
                                         <input class="form-control" type="hidden" id="base64" name="base64">
                                     </div>
                                     <br>
