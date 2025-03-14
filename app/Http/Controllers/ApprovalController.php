@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Elibyy\TCPDF\Facades\TCPDF as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use setasign\Fpdi\PdfParser\StreamReader;
 
@@ -54,14 +55,12 @@ class ApprovalController extends Controller
         $canvasHeight = ($data['canvasHeight'] / 1.7);
         $canvasWidth = ($data['canvasWidth'] / 1.7);
         $pageNumber = $data['pageNumber'];
-        $qrPath = asset('/signature/' . $request->signature_img);
+        $qrPath = asset('/storage/signature/' . $request->signature_img);
 
         // Get stream of uploaded file
-        $fileContent = file_get_contents(asset('/document/' . $request->original_name));
+        $fileContent = file_get_contents(asset('/storage/document/' . $request->original_name));
+        // $fileContent = Storage::get('/storage/app/public/document' . $request->original_name);
         $pageCount = PDF::setSourceFile(StreamReader::createByString($fileContent));
-
-        // $file = asset('/document/' . $request->original_name); 
-        // $pageCount = PDF::setSourceFile($file);
 
         // Loop through all pages
         for ($i = 1; $i <= $pageCount; $i++) {
@@ -86,8 +85,8 @@ class ApprovalController extends Controller
 
         // I: Show to Browser, D: Download, F: Save to File, S: Return as String
         $new_filename = substr($request->original_name, 0, -4) . "_approved_" . $approval->approval_level . '.pdf';
-        PDF::Output(public_path('document') . '/' . $new_filename, 'F');
-        $new_base64 = "data:application/pdf;base64," . base64_encode(file_get_contents(asset('/document/' . $new_filename)));
+        PDF::Output(storage_path('app/public/document/') . $new_filename, 'F');
+        $new_base64 = "data:application/pdf;base64," . base64_encode(file_get_contents(asset('/storage/document/' . $new_filename)));
         // dd($new_base64);
 
         $approval->fill([
@@ -118,13 +117,13 @@ class ApprovalController extends Controller
 
         $sendTo = Approval::select('users.email')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.created_at', '=', $request->created_at)->where('approval.approval_level', '=', $request->approval_progress + 1)->get();
 
-        PDF::Output(public_path('document') . '/' . $new_filename, 'F');
+        // PDF::Output(public_path('document') . '/' . $new_filename, 'F');
         $email = [
             'name' => 'Chutex E-Signature Notification',
             'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '"'
         ];
 
-        Mail::to($sendTo[0]->email)->send(new SendEmail($email));
+        // Mail::to($sendTo[0]->email)->send(new SendEmail($email));
         Alert::success('Approval Successfully!', 'Document ' . $approval->document_name . ' successfully approved!');
 
         // return PDF::Output('Signature.pdf', 'I');
@@ -157,8 +156,10 @@ class ApprovalController extends Controller
             $level++;
         }
 
-        $file->storeAs('', $fileName, 'pdf_uploads');
+        Storage::put('public/document/', $file);
+        // $file->storeAs('', $fileName, 'pdf_uploads');
 
+        Alert::success('Upload Successfully!', 'Document ' . $request->document_name . ' successfully uploaded!');
         return redirect()->intended('approval/index');
     }
 

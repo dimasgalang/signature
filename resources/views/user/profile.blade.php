@@ -45,7 +45,7 @@
                                             <label>Signature Image :</label>
                                             <br>
                                             <input class="form-control" type="hidden" id="signature_img" name="signature_img" readonly value="{{ $user[0]->signature_img }}">
-                                            <img src="{{ asset('/signature/' . $user[0]->signature_img) }}" width="100%">
+                                            <img src="{{ asset('/storage/signature/' . $user[0]->signature_img) }}" width="100%">
                                         </div>
                                         <br>
                                 </div>

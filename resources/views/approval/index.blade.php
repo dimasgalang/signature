@@ -80,15 +80,15 @@
                                         @endif
                                         <td class="text-center">
                                             @if (($approval->value_first == null) && ($approval->value_last == null))
-                                            <a href="{{ asset('/document/' . $approval->original_name) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
+                                            <a href="{{ asset('/storage/document/' . $approval->original_name) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @elseif ((!is_null($approval->value_first)) && ($approval->value_last == null))
-                                            <a href="{{ asset('/document/' . $approval->value_first) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
+                                            <a href="{{ asset('/storage/document/' . $approval->value_first) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @elseif ((!is_null($approval->value_first)) && (!is_null($approval->value_last)))
-                                            <a href="{{ asset('/document/' . $approval->value_last) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
+                                            <a href="{{ asset('/storage/document/' . $approval->value_last) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @endif

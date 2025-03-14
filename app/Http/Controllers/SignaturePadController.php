@@ -108,7 +108,7 @@ class SignaturePadController extends Controller
         if ($request->signature_img) {
             File::delete(public_path('../../public/signature/' . $request->signature_img));
         }
-        file_put_contents($file, $image_base64);
+        Storage::put('public/signature/' . $filename, $image_base64);
 
         Alert::success('Create Successfully!', 'Signature successfully created!');
         return redirect('user/profile');

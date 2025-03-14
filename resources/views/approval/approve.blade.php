@@ -65,7 +65,7 @@
                             <div class="card-body">
                                 <center>
                                     <div id=parent>
-                                        <div class="draggable"><img src="{{ asset('/signature/' . $user[0]->signature_img) }}" width="100%" height="100%"></div>
+                                        <div class="draggable"><img src="{{ asset('/storage/signature/' . $user[0]->signature_img) }}" width="100%" height="100%"></div>
                                         <canvas class="border-solid border-2 dark:border-zinc-50" id="pdf-canvas"></canvas>
                                     </div>
                                     <input type="hidden" id="stampX" name="stampX">
