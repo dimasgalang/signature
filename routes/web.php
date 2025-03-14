@@ -40,16 +40,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
     //Register
-    Route::get('/register/create', [RegisterController::class, 'create'])->name('register.create');
-    Route::post('/register', [RegisterController::class, 'storeAuth'])->name('register');
+    Route::get('/register/create', [RegisterController::class, 'create'])->name('register.create')->middleware(['auth', 'role:Admin']);
+    Route::post('/register', [RegisterController::class, 'storeAuth'])->name('register')->middleware(['auth', 'role:Admin']);
 
     //Role
-    Route::get('/role/index', [RoleController::class, 'index'])->name('role.index');
-    Route::get('/role/delete/{id}', [RoleController::class, 'delete'])->name('role.delete');
-    Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');
-    Route::post('/role/store', [RoleController::class, 'store'])->name('role.store');
-    Route::get('/role/find/{id}', [RoleController::class, 'find'])->name('role.find');
-    Route::post('/role/update', [RoleController::class, 'update'])->name('role.update');
+    Route::get('/role/index', [RoleController::class, 'index'])->name('role.index')->middleware(['auth', 'role:Admin']);
+    Route::get('/role/delete/{id}', [RoleController::class, 'delete'])->name('role.delete')->middleware(['auth', 'role:Admin']);
+    Route::get('/role/create', [RoleController::class, 'create'])->name('role.create')->middleware(['auth', 'role:Admin']);
+    Route::post('/role/store', [RoleController::class, 'store'])->name('role.store')->middleware(['auth', 'role:Admin']);
+    Route::get('/role/find/{id}', [RoleController::class, 'find'])->name('role.find')->middleware(['auth', 'role:Admin']);
+    Route::post('/role/update', [RoleController::class, 'update'])->name('role.update')->middleware(['auth', 'role:Admin']);
 
     //Signature
     Route::get('/signature', [SignaturePadController::class, 'index'])->name('signature');
@@ -61,11 +61,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/signature-pdf/upload', [SignaturePadController::class, 'upload'])->name('signaturepdf.upload');
 
     //User
-    Route::get('/user/index', [UserController::class, 'index'])->name('user.index');
-    Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
-    Route::get('/user/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
-    Route::get('/user/assign/{id}', [UserController::class, 'assign'])->name('user.assign');
-    Route::post('/user/assignrole', [UserController::class, 'assignrole'])->name('user.assignrole');
+    Route::get('/user/index', [UserController::class, 'index'])->name('user.index')->middleware(['auth', 'role:Admin']);
+    Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile')->middleware(['auth', 'role:Admin']);
+    Route::get('/user/delete/{id}', [UserController::class, 'delete'])->name('user.delete')->middleware(['auth', 'role:Admin']);
+    Route::get('/user/assign/{id}', [UserController::class, 'assign'])->name('user.assign')->middleware(['auth', 'role:Admin']);
+    Route::post('/user/assignrole', [UserController::class, 'assignrole'])->name('user.assignrole')->middleware(['auth', 'role:Admin']);
 
     //Approval
     Route::get('/approval/index', [ApprovalController::class, 'index'])->name('approval.index');
