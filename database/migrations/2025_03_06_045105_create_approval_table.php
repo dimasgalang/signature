@@ -19,11 +19,12 @@ return new class extends Migration
             $table->longText('base64');
             $table->string('approval_id');
             $table->integer('approval_level');
-            $table->date('approval_date');
+            $table->date('approval_date')->nullable();
             $table->string('approval_progress');
-            $table->string('document_approve');
-            $table->longText('approval_base64');
+            $table->string('document_approve')->nullable();
+            $table->longText('approval_base64')->nullable();
             $table->string('status');
+            $table->string('comment')->nullable();
             $table->string('void');
             $table->timestamps();
         });
