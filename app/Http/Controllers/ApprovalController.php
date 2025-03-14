@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendEmail;
 use App\Models\Approval;
 use App\Models\User;
 use Carbon\Carbon;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Elibyy\TCPDF\Facades\TCPDF as PDF;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 use setasign\Fpdi\PdfParser\StreamReader;
 
@@ -30,20 +32,20 @@ class ApprovalController extends Controller
 
     public function approve($id)
     {
-        $user = User::select('users.*','signatures.signature_img')
-        ->leftJoin('signatures','users.id','=','signatures.user_id')
-        ->where('users.id','=', Auth::user()->id)
-        ->get();
-        $approval = Approval::select('*')->where('id','=',$id)->get();
-        return view('approval.approve', compact('user','approval'));
+        $user = User::select('users.*', 'signatures.signature_img')
+            ->leftJoin('signatures', 'users.id', '=', 'signatures.user_id')
+            ->where('users.id', '=', Auth::user()->id)
+            ->get();
+        $approval = Approval::select('*')->where('id', '=', $id)->get();
+        return view('approval.approve', compact('user', 'approval'));
     }
 
     public function approved(Request $request)
     {
         $data = $request->all();
         $approval = Approval::findOrFail($request->id);
-        $totalData = Approval::select('*')->where('preparer_id','=',$request->preparer_id)->where('document_name','=',$request->document_name)->where('created_at','=',$request->created_at)->get();
-        // dd($totalData);
+        $totalData = Approval::select('approval.*', 'users.name')->leftJoin('users', 'approval.preparer_id', '=', 'users.id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.created_at', '=', $request->created_at)->get();
+        // dd($totalData[0]->name);
         // Stamp scale is 1.7, change to 1.
         $stampX = ($data['stampX'] / 1.7);
         $stampY = ($data['stampY'] / 1.7);
@@ -62,7 +64,7 @@ class ApprovalController extends Controller
         // $pageCount = PDF::setSourceFile($file);
 
         // Loop through all pages
-        for ($i=1; $i<=$pageCount; $i++) {
+        for ($i = 1; $i <= $pageCount; $i++) {
             $template = PDF::importPage($i);
             $size = PDF::getTemplateSize($template);
 
@@ -83,8 +85,8 @@ class ApprovalController extends Controller
         }
 
         // I: Show to Browser, D: Download, F: Save to File, S: Return as String
-        $new_filename = substr($request->original_name,0,-4) . "_approved_" . $approval->approval_level . '.pdf';
-        PDF::Output(public_path('document').'/'.$new_filename, 'F');
+        $new_filename = substr($request->original_name, 0, -4) . "_approved_" . $approval->approval_level . '.pdf';
+        PDF::Output(public_path('document') . '/' . $new_filename, 'F');
         $new_base64 = "data:application/pdf;base64," . base64_encode(file_get_contents(asset('/document/' . $new_filename)));
         // dd($new_base64);
 
@@ -95,39 +97,47 @@ class ApprovalController extends Controller
         ]);
         $approval->save();
 
-        Approval::where('preparer_id','=',$request->preparer_id)->where('approval_level','>',$approval->approval_level)->where('document_name','=',$request->document_name)->where('created_at','=',$request->created_at)->update([
+        Approval::where('preparer_id', '=', $request->preparer_id)->where('approval_level', '>', $approval->approval_level)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
             'original_name' => $new_filename,
             'base64' => $new_base64,
         ]);
-        
+
         if ($approval->approval_level < count($totalData)) {
-            Approval::where('preparer_id','=',$request->preparer_id)->where('document_name','=',$request->document_name)->where('created_at','=',$request->created_at)->update([
+            Approval::where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
                 'approval_progress' => $request->approval_progress + 1,
             ]);
         } else {
             $approvalProgress = $request->approval_progress;
-            Approval::where('preparer_id','=',$request->preparer_id)->where('document_name','=',$request->document_name)->where('created_at','=',$request->created_at)->update([
+            Approval::where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
                 'approval_progress' => $request->approval_progress,
                 'status' => 'approved',
             ]);
         }
-        
 
-        PDF::Output(public_path('document').'/'.$new_filename, 'F');
+
+        PDF::Output(public_path('document') . '/' . $new_filename, 'F');
+        $email = [
+            'name' => 'Chutex E-Signature Notification',
+            'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '"'
+        ];
+
+        Mail::to('dimasgalang@chutex.id')->send(new SendEmail($email));
         Alert::success('Approval Successfully!', 'Document ' . $approval->document_name . ' successfully approved!');
+
         // return PDF::Output('Signature.pdf', 'I');
         return redirect('approval/index');
     }
 
-    public function store(Request $request) {
-        
+    public function store(Request $request)
+    {
+
         $request->validate([
             'file' => 'required|mimes:docx,pdf|max:10240'
         ]);
 
         $file = $request->file('file');
         $fileName = $file->hashName();
-        
+
         $level = 1;
         foreach ($request->approval_id as $key => $value) {
             $item = new Approval();
@@ -149,8 +159,9 @@ class ApprovalController extends Controller
         return redirect()->intended('approval/index');
     }
 
-    public function fetchapproval($id) {
-        $fetchapproval = Approval::select('approval.*','users.name')->leftJoin('users','users.id','=','approval.approval_id')->where('approval.id','=',$id)->get();
+    public function fetchapproval($id)
+    {
+        $fetchapproval = Approval::select('approval.*', 'users.name')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.id', '=', $id)->get();
         // dd($fetchapproval);
         return response()->json($fetchapproval);
     }
@@ -158,7 +169,7 @@ class ApprovalController extends Controller
     public function revision(Request $request)
     {
         // dd($request->comment);
-        Approval::select('*')->where('preparer_id','=',$request->preparer_id)->where('document_name','=',$request->document_name)->where('created_at','=',$request->created_at)->update([
+        Approval::select('*')->where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
             'status' => 'revision',
             'comment' => $request->comment,
         ]);
@@ -169,7 +180,7 @@ class ApprovalController extends Controller
 
     public function void(Request $request)
     {
-        $approval = Approval::select('*')->where('preparer_id','=',$request->preparer_id)->where('document_name','=',$request->document_name)->where('created_at','=',$request->created_at)->update([
+        $approval = Approval::select('*')->where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
             'void' => 'true',
         ]);
 
@@ -179,7 +190,7 @@ class ApprovalController extends Controller
 
     public function restore(Request $request)
     {
-        $approval = Approval::select('*')->where('preparer_id','=',$request->preparer_id)->where('document_name','=',$request->document_name)->where('created_at','=',$request->created_at)->update([
+        $approval = Approval::select('*')->where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
             'void' => 'false',
         ]);
 

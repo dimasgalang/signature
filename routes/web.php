@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\SignaturePadController;
 use App\Http\Controllers\SpeechController;
 use App\Http\Controllers\UserController;
@@ -79,4 +80,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
+
+    //Send Email
+    Route::get('/email/send', [SendEmailController::class, 'send'])->name('email.send');
 });
