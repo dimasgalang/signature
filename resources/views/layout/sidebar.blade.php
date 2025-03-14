@@ -20,6 +20,20 @@
     </li>
 
     <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
+            aria-expanded="true" aria-controls="collapseUser">
+            <i class="fas fa-fw fa-users"></i>
+            <span>User</span>
+        </a>
+        <div id="collapseUser" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('user.index') }}">Daftar User</a>
+                <a class="collapse-item" href="{{ route('role.index') }}">Daftar Role</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseApproval"
             aria-expanded="true" aria-controls="collapseApproval">
             <i class="fas fa-fw fa-check-square"></i>
@@ -33,14 +47,14 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKaryawan"
-            aria-expanded="true" aria-controls="collapseKaryawan">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTools"
+            aria-expanded="true" aria-controls="collapseTools">
             <i class="fas fa-fw fa-users"></i>
-            <span>Signature</span>
+            <span>Tools</span>
         </a>
-        <div id="collapseKaryawan" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseTools" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('signaturepdf.stamp') }}">Stamp</a>
+                <a class="collapse-item" href="{{ route('speech.index') }}">Text To Speech</a>
             </div>
         </div>
     </li>

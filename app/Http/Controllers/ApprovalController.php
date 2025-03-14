@@ -148,4 +148,42 @@ class ApprovalController extends Controller
 
         return redirect()->intended('approval/index');
     }
+
+    public function fetchapproval($id) {
+        $fetchapproval = Approval::select('approval.*','users.name')->leftJoin('users','users.id','=','approval.approval_id')->where('approval.id','=',$id)->get();
+        // dd($fetchapproval);
+        return response()->json($fetchapproval);
+    }
+
+    public function revision(Request $request)
+    {
+        // dd($request->comment);
+        Approval::select('*')->where('preparer_id','=',$request->preparer_id)->where('document_name','=',$request->document_name)->where('created_at','=',$request->created_at)->update([
+            'status' => 'revision',
+            'comment' => $request->comment,
+        ]);
+
+        Alert::success('Comment to Revision Successfully!', 'Approval ' . $request->document_name . ' successfully commented!');
+        return redirect('approval/index');
+    }
+
+    public function void(Request $request)
+    {
+        $approval = Approval::select('*')->where('preparer_id','=',$request->preparer_id)->where('document_name','=',$request->document_name)->where('created_at','=',$request->created_at)->update([
+            'void' => 'true',
+        ]);
+
+        Alert::success('Void Successfully!', 'Approval ' . $request->document_name . ' successfully voided!');
+        return redirect('approval/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $approval = Approval::select('*')->where('preparer_id','=',$request->preparer_id)->where('document_name','=',$request->document_name)->where('created_at','=',$request->created_at)->update([
+            'void' => 'false',
+        ]);
+
+        Alert::success('Restore Successfully!', 'Approval ' . $request->document_name . ' successfully restored!');
+        return redirect('approval/index');
+    }
 }

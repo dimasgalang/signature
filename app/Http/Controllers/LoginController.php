@@ -25,7 +25,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
             $username = Auth::user()->name;
 
-            Alert::success('Login Successfully!', 'Welcome To Chutex Sistem');
+            Alert::success('Login Successfully!', 'Welcome To Chutex E-Signature Sistem');
             return redirect()->intended('/home');
         }
         return back()->withErrors([
@@ -38,6 +38,6 @@ class LoginController extends Controller
         $username = Auth::user()->name;
         Auth::logout();
         Alert::success('Logout Successfully!', 'See You Next Time');
-        return view('auth.login');
+        return redirect('/login');
     }
 }

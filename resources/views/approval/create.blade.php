@@ -22,7 +22,7 @@
                 
 
                 <!-- Approach -->
-                                <form method="post" action="{{ route('approval.store') }}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('approval.store') }}" enctype="multipart/form-data">
                  <div class="row">
                     <div class="col-lg-6">
                         <div class="card shadow mb-4">

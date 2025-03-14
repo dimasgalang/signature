@@ -38,20 +38,11 @@ class HomeController extends Controller
 
     public function index()
     {
-        return view('home');
-    }
-
-    public function profile()
-    {
-        $user = User::select('users.*','signatures.signature_img')
-        ->leftJoin('signatures','users.id','=','signatures.user_id')
-        ->where('users.id','=', Auth::user()->id)
-        ->get();
-        return view('auth.profile', compact('user'));
-    }
-
-    public function listuser() {
-        $users   = User::all();
-        return view('auth.list-user', compact('users'));
+        $totalapproved = DB::select('select ifnull(sum(total),0) as total from (select preparer_id,document_name,created_at,status,count(distinct status) as total from approval where preparer_id = "' . Auth::user()->id . '" and status = "approved" group by preparer_id,document_name,created_at,status) as subquery');
+        $totalpending = DB::select('select ifnull(sum(total),0) as total from (select preparer_id,document_name,created_at,status,count(distinct status) as total from approval where preparer_id = "' . Auth::user()->id . '" and status = "pending" group by preparer_id,document_name,created_at,status) as subquery');
+        $totaldocument = DB::select('select ifnull(sum(total),0) as total from (select preparer_id,document_name,created_at,status,count(distinct status) as total from approval where preparer_id = "' . Auth::user()->id . '" group by preparer_id,document_name,created_at,status) as subquery');
+        $totaluser = count(User::all());
+        // dd($totaluser);
+        return view('home', compact('totalapproved','totalpending','totaldocument','totaluser'));
     }
 }

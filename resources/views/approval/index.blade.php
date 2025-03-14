@@ -33,8 +33,8 @@
                         <form method="GET" id="form-void">
                                 <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
                                     <option disabled selected hidden>Select Status</option>
-                                    <option value="false">Active</option>
-                                    <option value="true">Void</option>
+                                    <option value="false" {{ app('request')->input('void') == 'false'  ? 'selected' : ''}}>Active</option>
+                                    <option value="true" {{ app('request')->input('void') == 'true'  ? 'selected' : ''}}>Void</option>
                                 </select>
                         </form>
                     </div>
@@ -72,6 +72,11 @@
                                             <span class="text">Approved</span>
                                             </a></center>
                                         </td>
+                                        @elseif ($approval->status == 'revision')
+                                        <td><center><a id="show-comment" class="btn btn-warning btn-icon-split btn-sm show-comment" data-toggle="modal" data-target="#commentModal" data-comment-url="{{ route('approval.fetchapproval', $approval->id) }}">
+                                            <span class="text">Revision</span>
+                                            </a></center>
+                                        </td>
                                         @endif
                                         <td class="text-center">
                                             @if (($approval->value_first == null) && ($approval->value_last == null))
@@ -92,15 +97,18 @@
                                                 <a href="{{ route('approval.approve', ['id' => $approval->id]) }}" class="btn btn-success btn-circle btn-sm">
                                                     <i class="fas fa-check"></i>
                                                 </a>
+                                                <a id="show-revision" class="btn btn-warning btn-circle btn-sm show-revision" data-revision-url="{{ route('approval.fetchapproval', $approval->id) }}" data-revision-link="{{ route('approval.revision') }}" data-revision-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#revisionModal">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
                                                 @endif
                                             @endif
                                             @if ($approval->preparer_id == $approval->approval_id)
                                                 @if (request()->get('void') == 'false')
-                                                <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="void/{{ $approval->id }}" data-void-name="{{ $approval->document_name }}" data-toggle="modal" data-target="#voidModal">
+                                                <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('approval.fetchapproval', $approval->id) }}" data-void-link="{{ route('approval.void') }}" data-void-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#voidModal">
                                                     <i class="fas fa-ban"></i>
                                                 </a>
                                                 @elseif (request()->get('void') == 'true')
-                                                <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="restore/{{ $approval->id }}" data-restore-name="{{ $approval->document_name }}" data-toggle="modal" data-target="#restoreModal">
+                                                <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore" data-restore-url="{{ route('approval.fetchapproval', $approval->id) }}" data-restore-link="{{ route('approval.restore') }}" data-restore-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#restoreModal">
                                                     <i class="fas fa-history"></i>
                                                 </a>
                                                 @endif
@@ -140,6 +148,36 @@
             </div>
         </div>
 
+        <div class="modal fade" id="revisionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="revision-title" class="modal-title" id="exampleModalLabel">Revision Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('approval.revision') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                    <div class="modal-body">
+                            <input class="form-control" type="hidden" id="modal_preparer_id" name="preparer_id" readonly>
+                            <input class="form-control" type="hidden" id="modal_name" name="name" readonly>
+                            <label>Document Name :</label>
+                            <input class="form-control" type="text" id="modal_document_name" name="document_name" readonly>
+                            <br>
+                            <input class="form-control" type="hidden" id="modal_created_at" name="created_at">
+                            <label>Revision Comment : </label>
+                            <textarea class="form-control" type="text" id="modal_comment" name="comment"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                        <a id="btn-confirm-revision" href=""><button class="btn btn-primary" type="submit">Confirm</button></a>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="voidModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
@@ -149,11 +187,20 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <div class="modal-body"><p id="modal-text-record-void"></p></div>
+                    <form action="{{ route('approval.void') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                    <div class="modal-body">
+                        <p id="modal-text-record-void"></p>
+                        <input class="form-control" type="hidden" id="modal_preparer_id_void" name="preparer_id" readonly>
+                        <input class="form-control" type="hidden" id="modal_name_void" name="name" readonly>
+                        <input class="form-control" type="hidden" id="modal_document_name_void" name="document_name" readonly>
+                        <input class="form-control" type="hidden" id="modal_created_at_void" name="created_at">
+                    </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
-                        <a id="btn-confirm-void" href=""><button class="btn btn-danger" type="button">Confirm</button></a>
+                        <a id="btn-confirm-void"><button class="btn btn-danger" type="submit">Confirm</button></a>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -167,10 +214,39 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <div class="modal-body"><p id="modal-text-record-restore"></p></div>
+                    <form action="{{ route('approval.restore') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                    <div class="modal-body">
+                        <p id="modal-text-record-restore"></p>
+                        <input class="form-control" type="hidden" id="modal_preparer_id_restore" name="preparer_id" readonly>
+                        <input class="form-control" type="hidden" id="modal_name_restore" name="name" readonly>
+                        <input class="form-control" type="hidden" id="modal_document_name_restore" name="document_name" readonly>
+                        <input class="form-control" type="hidden" id="modal_created_at_restore" name="created_at">
+                    </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
-                        <a id="btn-confirm-restore" href=""><button class="btn btn-success" type="button">Confirm</button></a>
+                        <a id="btn-confirm-restore"><button class="btn btn-success" type="submit">Confirm</button></a>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="comment-title" class="modal-title" id="exampleModalLabel">Comment Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label>Revision Comment : </label>
+                        <textarea class="form-control" type="text" id="modal_comment_detail" name="comment" readonly></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
                     </div>
                 </div>
             </div>
@@ -211,18 +287,76 @@
 
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
-<script>
+<script type="text/javascript">
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
             $("#modal-text-record").text('Apakah anda yakin ingin menghapus Approval ' + $(this).data('delete-name') + '?');
     });
     $('.btn-void-record').on('click', function () {
-            $('#btn-confirm-void').attr('href', $(this).data('void-link'));
             $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Approval ' + $(this).data('void-name') + '?');
     });
     $('.btn-restore-record').on('click', function () {
-            $('#btn-confirm-restore').attr('href', $(this).data('restore-link'));
             $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Approval ' + $(this).data('restore-name') + '?');
+    });
+    $('.btn-revision-record').on('click', function () {
+            $("#modal-text-record-revision").text('Apakah anda yakin ingin mengubah status Approval menjadi Revision ' + $(this).data('revision-name') + '?');
+    });
+    $(function () {
+        $('body').on('click', '#show-revision', function() {
+        var jsonRevision = $(this).data('revision-url'); 
+        $.get(jsonRevision, function (data) {
+            if (data.length > 0) {
+                $('#modal_preparer_id').val(data[0].preparer_id);
+                $('#modal_name').val(data[0].name);
+                $('#modal_document_name').val(data[0].document_name);
+                $('#modal_created_at').val(data[0].created_at);
+                } else {
+
+                }
+            });
+        });
+    });
+    $(function () {
+        $('body').on('click', '#show-void', function() {
+        var jsonVoid = $(this).data('void-url'); 
+        $.get(jsonVoid, function (data) {
+            if (data.length > 0) {
+                $('#modal_preparer_id_void').val(data[0].preparer_id);
+                $('#modal_name_void').val(data[0].name);
+                $('#modal_document_name_void').val(data[0].document_name);
+                $('#modal_created_at_void').val(data[0].created_at);
+                } else {
+
+                }
+            });
+        });
+    });
+    $(function () {
+        $('body').on('click', '#show-restore', function() {
+        var jsonRestore = $(this).data('restore-url'); 
+        $.get(jsonRestore, function (data) {
+            if (data.length > 0) {
+                $('#modal_preparer_id_restore').val(data[0].preparer_id);
+                $('#modal_name_restore').val(data[0].name);
+                $('#modal_document_name_restore').val(data[0].document_name);
+                $('#modal_created_at_restore').val(data[0].created_at);
+                } else {
+
+                }
+            });
+        });
+    });
+    $(function () {
+        $('body').on('click', '#show-comment', function() {
+        var jsonComment = $(this).data('comment-url'); 
+        $.get(jsonComment, function (data) {
+            if (data.length > 0) {
+                $('#modal_comment_detail').val(data[0].comment);
+                } else {
+
+                }
+            });
+        });
     });
 </script>
 </html>

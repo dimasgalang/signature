@@ -55,6 +55,6 @@ class RegisterController extends Controller
         ]);
 
         Alert::success('Create Successfully!', 'User ' . $request->name . ' successfully created!');
-        return redirect()->intended('listuser');
+        return redirect()->intended('user/index');
     }
 }

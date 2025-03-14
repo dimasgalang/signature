@@ -3,7 +3,6 @@
 @include('layout.header')
 <body id="page-top">
 <!-- Page Wrapper -->
-@include('sweetalert::alert')
 <div id="wrapper">
 @include('layout.sidebar')
     <!-- Content Wrapper -->
@@ -17,16 +16,17 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Daftar User</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Assign Role User</h1>
                 </div>
-            
+                
+
                 <!-- Approach -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Form Daftar User</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Assign Role User</h6>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{{ route('register') }}">
+                        <form method="post" action="{{ route('user.assignrole') }}">
                             @csrf
                             @if ($message = Session::get('success'))
                             <div class="alert alert-success alert-block">
@@ -56,23 +56,32 @@
                             </div>
                             @endif
                             <div>
+                                <label>ID :</label>
+                                <input class="form-control" type="text" id="id" name="id" value="{{ $modelhasroles[0]->id }}" readonly>
+                            </div>
+                            <br>
+                            <div>
                                 <label>Nama Lengkap :</label>
-                                <input class="form-control" type="text" id="name" name="name">
+                                <input class="form-control" type="text" id="name" name="name" value="{{ $modelhasroles[0]->name }}" readonly>
                             </div>
                             <br>
                             <div>
                                 <label>Email :</label>
-                                <input class="form-control" type="email" id="email" name="email">
+                                <input class="form-control" type="email" id="email" name="email" value="{{ $modelhasroles[0]->email }}" readonly>
                             </div>
                             <br>
                             <div>
-                                <label>Password :</label>
-                                <input class="form-control" type="password" id="password" name="password">
+                                <label>Role :</label>
+                                <select class="form-control" id="role_id" name="role_id">
+                                    @foreach($roles as $role)
+                                        <option value="{{ $role->id }}" {{ $modelhasroles[0]->role_id == $role->id  ? 'selected' : ''}}>{{ $role->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Create</button>
+                                    <button type="submit" class="btn btn-primary btn-block">Update</button>
                                 </div>
                             </div>
                         </form>
@@ -93,7 +102,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 <script type="text/javascript">
-    $("#chatid").select2({
+    $("#role_id").select2({
           allowClear: true
     });
 </script>
