@@ -34,7 +34,7 @@
                                     <input class="form-control" type="hidden" id="preparer_id" name="preparer_id" value="{{ Auth::user()->id }}">
                                     <div>
                                         <label>Document Name :</label>
-                                        <input class="form-control" type="text" id="document_name" name="document_name" required>
+                                        <input class="form-control" type="text" id="document_name" name="document_name" required readonly>
                                         <input class="form-control" type="hidden" id="base64" name="base64">
                                     </div>
                                     <br>
@@ -93,6 +93,13 @@
 <script type="module" src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.min.mjs'></script>
 <script type="module" src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.worker.min.mjs'></script>
 <script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.20/dist/interact.min.js"></script>
+
+<script>
+    document.getElementById('file').onchange = function () {
+        var name = document.getElementById('file')
+        document.getElementById('document_name').value = name.files.item(0).name.split('.')[0];
+    };
+</script>
 
 <script>
     document.querySelector("#file").addEventListener("change", async function(e){

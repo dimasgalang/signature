@@ -30,7 +30,7 @@
         #parent{position:relative; overflow:scroll; width:auto; border:1px solid blue; }
         .draggable {
             display: none;
-            width: 70px;
+            width: 120px;
             height: 70px;
             background-color: rgba(255, 0, 0, 0.4);
             touch-action: none;
