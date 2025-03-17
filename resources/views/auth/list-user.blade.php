@@ -78,13 +78,13 @@
                                         <td>{{ $user->created_at }}</td>
                                         <td>{{ $user->updated_at }}</td>
                                         <td class="text-center">
-                                            <a href="/user/assign/{{ $user->id }}" class="btn btn-primary btn-circle btn-sm">
+                                            <a href="{{ route('user.assign', $user->id) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-key"></i>
                                             </a>
-                                            <a href="/user/detail/{{ $user->id }}" class="btn btn-primary btn-circle btn-sm">
+                                            <a href="{{ route('user.detail', $user->id) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-user" data-delete-link="/user/delete/{{ $user->id }}" data-user-name="{{ $user->name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-user" data-delete-link="{{ route('user.delete', $user->id) }}" data-user-name="{{ $user->name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
