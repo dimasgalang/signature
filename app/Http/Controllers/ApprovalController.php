@@ -55,8 +55,8 @@ class ApprovalController extends Controller
         // Stamp scale is 1.7, change to 1.
         $stampX = ($data['stampX'] / 1.7);
         $stampY = ($data['stampY'] / 1.7);
-        $stampHeight = ($data['stampHeight'] / 4.7);
-        $stampWidth = ($data['stampWidth'] / 4.7);
+        $stampHeight = ($data['stampHeight'] / 4.2);
+        $stampWidth = ($data['stampWidth'] / 3.2);
         $canvasHeight = ($data['canvasHeight'] / 1.7);
         $canvasWidth = ($data['canvasWidth'] / 1.7);
         $pageNumber = $data['pageNumber'];
