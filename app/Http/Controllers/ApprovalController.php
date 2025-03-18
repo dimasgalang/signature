@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use setasign\Fpdi\PdfParser\StreamReader;
+use Illuminate\Support\Facades\URL;
 
 class ApprovalController extends Controller
 {
@@ -64,7 +65,7 @@ class ApprovalController extends Controller
         // dd($qrPath);
 
         // Get stream of uploaded file
-        $fileContent = Storage::disk('pdf_uploads')->get($request->original_name);;
+        $fileContent = Storage::disk('pdf_uploads')->get($request->original_name);
         // dd($fileContent);
         $pageCount = PDF::setSourceFile(StreamReader::createByString($fileContent));
 
@@ -124,12 +125,14 @@ class ApprovalController extends Controller
 
         $email = [
             'name' => 'Chutex E-Signature Notification',
-            'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '"'
+            'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '"',
+            'url' => $request->url
         ];
 
         if (count($sendTo) > 0) {
             Mail::to($sendTo[0]->email)->send(new SendEmail($email));
         }
+
         Alert::success('Approval Successfully!', 'Document ' . $approval->document_name . ' successfully approved!');
 
         // return PDF::Output('Signature.pdf', 'I');

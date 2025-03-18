@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ApprovalController;
+use App\Http\Controllers\ConverterController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
@@ -8,6 +10,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\SignaturePadController;
 use App\Http\Controllers\SpeechController;
+use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -83,4 +86,15 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Send Email
     Route::get('/email/send', [SendEmailController::class, 'send'])->name('email.send');
+
+    //Template
+    Route::get('/template/lpp', [TemplateController::class, 'lpp'])->name('template.lpp');
+
+    //Export
+    Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');
+    Route::get('/export/lpp_pdf', [ExportController::class, 'lpp_pdf'])->name('export.lpp_pdf');
+
+    //Converter
+    Route::get('/converter', [ConverterController::class, 'index'])->name('converter.index');
+    Route::post('/converter/converter', [ConverterController::class, 'converter'])->name('converter.converter');
 });

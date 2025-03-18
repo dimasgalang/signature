@@ -52,12 +52,38 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTools"
             aria-expanded="true" aria-controls="collapseTools">
-            <i class="fas fa-fw fa-users"></i>
+            <i class="fas fa-fw fa-cog"></i>
             <span>Tools</span>
         </a>
         <div id="collapseTools" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('speech.index') }}">Text To Speech</a>
+                <a class="collapse-item" href="{{ route('converter.index') }}">Excel To PDF</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTemplate"
+            aria-expanded="true" aria-controls="collapseTemplate">
+            <i class="fas fa-fw fa-file"></i>
+            <span>Template</span>
+        </a>
+        <div id="collapseTemplate" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('template.lpp') }}">LPP</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseExport"
+            aria-expanded="true" aria-controls="collapseExport">
+            <i class="fas fa-fw fa-file-pdf"></i>
+            <span>Export</span>
+        </a>
+        <div id="collapseExport" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('export.lpp') }}">LPP</a>
+                <a class="collapse-item" href="{{ route('export.lpp_pdf') }}">LPP PDF</a>
             </div>
         </div>
     </li>
