@@ -50,7 +50,7 @@
                     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
                 </div>
                 <div class="row">
-                    @if($roles[0]->rolename == 'Admin')
+                    @if($roleusers[0]->rolename == 'Admin')
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="card border-left-primary shadow h-100 py-2">
                             <div class="card-body">

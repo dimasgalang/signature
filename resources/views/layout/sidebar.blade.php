@@ -19,7 +19,7 @@
             <span>Dashboard</span></a>
     </li>
 
-    @if($roles[0]->rolename == 'Admin')
+    @if($roleusers[0]->rolename == 'Admin')
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
             aria-expanded="true" aria-controls="collapseUser">
@@ -48,7 +48,7 @@
         </div>
     </li>
 
-    @if($roles[0]->rolename == 'Admin')
+    @if($roleusers[0]->rolename == 'Admin')
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTools"
             aria-expanded="true" aria-controls="collapseTools">

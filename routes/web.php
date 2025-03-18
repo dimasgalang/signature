@@ -60,7 +60,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //User
     Route::get('/user/index', [UserController::class, 'index'])->name('user.index')->middleware(['auth', 'role:Admin']);
-    Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile')->middleware(['auth', 'role:Admin']);
+    Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('/user/update', [UserController::class, 'update'])->name('user.update')->middleware(['auth', 'role:Admin']);
     Route::get('/user/detail/{id}', [UserController::class, 'detail'])->name('user.detail')->middleware(['auth', 'role:Admin']);
     Route::get('/user/delete/{id}', [UserController::class, 'delete'])->name('user.delete')->middleware(['auth', 'role:Admin']);
