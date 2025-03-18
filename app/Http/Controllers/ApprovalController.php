@@ -125,7 +125,7 @@ class ApprovalController extends Controller
 
         $email = [
             'name' => 'Chutex E-Signature Notification',
-            'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '"',
+            'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '". You can give document approval by opening the link below.',
             'url' => $request->url
         ];
 
