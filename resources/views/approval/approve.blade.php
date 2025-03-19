@@ -30,7 +30,7 @@
                             <div class="card-body">
                                 <input class="form-control" type="hidden" id="id" name="id" value="{{ $approval[0]->id }}" readonly>
                                 <input class="form-control" type="hidden" id="url" name="url" value="{{ url()->current() }}" readonly>
-                                <input class="form-control" type="hidden" id="created_at" name="created_at" value="{{ $approval[0]->created_at }}" readonly>
+                                <input class="form-control" type="hidden" id="token" name="token" value="{{ $approval[0]->token }}" readonly>
                                 <input class="form-control" type="hidden" id="preparer_id" name="preparer_id" value="{{ $approval[0]->preparer_id }}" readonly>
                                 <input class="form-control" type="hidden" id="base64" name="base64" value="{{ $approval[0]->base64 }}" readonly>
                                 <input class="form-control" type="hidden" id="approval_progress" name="approval_progress" value="{{ $approval[0]->approval_progress }}" readonly>
