@@ -165,9 +165,9 @@
                             <label>Document Name :</label>
                             <input class="form-control" type="text" id="modal_document_name" name="document_name" readonly>
                             <br>
-                            <input class="form-control" type="hidden" id="modal_created_at" name="created_at">
+                            <input class="form-control" type="hidden" id="modal_token" name="token" readonly>
                             <label>Revision Comment : </label>
-                            <textarea class="form-control" type="text" id="modal_comment" name="comment"></textarea>
+                            <textarea class="form-control" type="hidden" id="modal_comment" name="comment"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -309,7 +309,7 @@
                 $('#modal_preparer_id').val(data[0].preparer_id);
                 $('#modal_name').val(data[0].name);
                 $('#modal_document_name').val(data[0].document_name);
-                $('#modal_created_at').val(data[0].created_at);
+                $('#modal_token').val(data[0].token);
                 } else {
 
                 }
@@ -324,7 +324,7 @@
                 $('#modal_preparer_id_void').val(data[0].preparer_id);
                 $('#modal_name_void').val(data[0].name);
                 $('#modal_document_name_void').val(data[0].document_name);
-                $('#modal_created_at_void').val(data[0].created_at);
+                $('#modal_token_void').val(data[0].token);
                 } else {
 
                 }
@@ -339,7 +339,7 @@
                 $('#modal_preparer_id_restore').val(data[0].preparer_id);
                 $('#modal_name_restore').val(data[0].name);
                 $('#modal_document_name_restore').val(data[0].document_name);
-                $('#modal_created_at_restore').val(data[0].created_at);
+                $('#modal_token_restore').val(data[0].token);
                 } else {
 
                 }

@@ -21,6 +21,7 @@ class Approval extends Model
         'document_approve',
         'approval_base64',
         'status',
+        'token',
         'void'
     ];
 }

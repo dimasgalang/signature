@@ -51,7 +51,7 @@ class ApprovalController extends Controller
     {
         $data = $request->all();
         $approval = Approval::findOrFail($request->id);
-        $totalData = Approval::select('approval.*', 'users.name', 'users.email')->leftJoin('users', 'approval.preparer_id', '=', 'users.id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.created_at', '=', $request->created_at)->get();
+        $totalData = Approval::select('approval.*', 'users.name', 'users.email')->leftJoin('users', 'approval.preparer_id', '=', 'users.id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->get();
         // dd($totalData[0]->email);
         // Stamp scale is 1.7, change to 1.
         $stampX = ($data['stampX'] / 1.7);
@@ -102,18 +102,18 @@ class ApprovalController extends Controller
         ]);
         $approval->save();
 
-        Approval::where('preparer_id', '=', $request->preparer_id)->where('approval_level', '>', $approval->approval_level)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
+        Approval::where('preparer_id', '=', $request->preparer_id)->where('approval_level', '>', $approval->approval_level)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
             'original_name' => $new_filename,
             'base64' => $new_base64,
         ]);
 
         if ($approval->approval_level < count($totalData)) {
-            Approval::where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
+            Approval::where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
                 'approval_progress' => $request->approval_progress + 1,
             ]);
         } else {
             $approvalProgress = $request->approval_progress;
-            Approval::where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
+            Approval::where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
                 'approval_progress' => $request->approval_progress,
                 'document_approve' => $new_filename,
                 'approval_base64' => $new_base64,
@@ -121,7 +121,7 @@ class ApprovalController extends Controller
             ]);
         }
 
-        $sendTo = Approval::select('users.email')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.created_at', '=', $request->created_at)->where('approval.approval_level', '=', $request->approval_progress + 1)->get();
+        $sendTo = Approval::select('users.email')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->where('approval.approval_level', '=', $request->approval_progress + 1)->get();
 
         $email = [
             'name' => 'Chutex E-Signature Notification',
@@ -161,6 +161,7 @@ class ApprovalController extends Controller
             $item->approval_progress = '1';
             $item->status = 'pending';
             $item->void = 'false';
+            $item->token = csrf_token();
             $item->save();
             $level++;
         }
@@ -182,7 +183,7 @@ class ApprovalController extends Controller
     public function revision(Request $request)
     {
         // dd($request->comment);
-        Approval::select('*')->where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
+        Approval::select('*')->where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
             'status' => 'revision',
             'comment' => $request->comment,
         ]);
@@ -193,7 +194,7 @@ class ApprovalController extends Controller
 
     public function void(Request $request)
     {
-        $approval = Approval::select('*')->where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
+        $approval = Approval::select('*')->where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
             'void' => 'true',
         ]);
 
@@ -203,7 +204,7 @@ class ApprovalController extends Controller
 
     public function restore(Request $request)
     {
-        $approval = Approval::select('*')->where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('created_at', '=', $request->created_at)->update([
+        $approval = Approval::select('*')->where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
             'void' => 'false',
         ]);
 
