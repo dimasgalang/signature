@@ -29,7 +29,7 @@
                             </div>
                             <div class="card-body">
                                 <input class="form-control" type="hidden" id="id" name="id" value="{{ $approval[0]->id }}" readonly>
-                                <input class="form-control" type="text" id="url" name="url" value="{{ url()->current() }}" readonly>
+                                <input class="form-control" type="hidden" id="url" name="url" value="{{ url()->current() }}" readonly>
                                 <input class="form-control" type="hidden" id="token" name="token" value="{{ $approval[0]->token }}" readonly>
                                 <input class="form-control" type="hidden" id="preparer_id" name="preparer_id" value="{{ $approval[0]->preparer_id }}" readonly>
                                 <input class="form-control" type="hidden" id="base64" name="base64" value="{{ $approval[0]->base64 }}" readonly>

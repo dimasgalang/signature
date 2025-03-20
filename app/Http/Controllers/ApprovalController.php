@@ -124,14 +124,22 @@ class ApprovalController extends Controller
 
         $sendTo = Approval::select('users.email', 'approval.id')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->where('approval.approval_level', '=', $request->approval_progress + 1)->get();
         // dd($sendTo);
-        $email = [
-            'name' => 'Chutex E-Signature',
-            'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '". You can give document approval by opening the link below.',
-            'url' => URL::to("/approval/approve/" . $sendTo[0]->id)
-        ];
+        $finishTo = Approval::select('users.email', 'approval.id')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->where('approval.approval_level', '=', 1)->get();
 
         if (count($sendTo) > 0) {
+            $email = [
+                'name' => 'Chutex E-Signature',
+                'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '". You can give document approval by opening the link below.',
+                'url' => URL::to("/approval/approve/" . $sendTo[0]->id)
+            ];
             Mail::to($sendTo[0]->email)->send(new SendEmail($email));
+        } else {
+            $email = [
+                'name' => 'Chutex E-Signature',
+                'body' => 'Your document "' . $approval->document_name . '" has been approved!',
+                'url' => URL::to("/approval/index")
+            ];
+            Mail::to($finishTo[0]->email)->send(new SendEmail($email));
         }
 
         Alert::success('Approval Successfully!', 'Document ' . $approval->document_name . ' successfully approved!');
