@@ -13,9 +13,15 @@ class SendEmailController extends Controller
     {
         $data = [
             'name' => 'Chutex E-Signature Notification',
-            'body' => 'Testing Kirim Email di Chutex System'
+            'body' => 'Testing Kirim Email di Chutex System',
+            'url' => 'http://signature.test:8080/home'
         ];
 
-        Mail::to('sigitpriyoga@chutex.id')->send(new SendEmail($data));
+        Mail::send(array('html' => 'email.sendemailhtml'), array('data' => $data), function ($message) {
+            $message->to('kiritoooookun@gmail.com')->subject('Chutex E-Signature');
+        });
+
+        // Mail::to('kiritoooookun@gmail.com')->send(new SendEmail($data));
+        // return view('email.sendemailhtml', compact('data'));
     }
 }
