@@ -59,7 +59,7 @@
                                     <br>
                                     <div class="row">
                                         <div class="col-12">
-                                            <button type="submit" class="btn btn-primary btn-block">Create</button>
+                                            <button id="submit" type="submit" class="btn btn-primary btn-block">Create</button>
                                         </div>
                                     </div>
                             </div>
@@ -90,11 +90,14 @@
 </body>
 <script src="{{asset('vendor/jquery/jquery-ui.min.js')}}"></script>
 
-<script type="module" src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.min.mjs'></script>
-<script type="module" src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.worker.min.mjs'></script>
-<script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.20/dist/interact.min.js"></script>
+<script type="module" src="{{asset('vendor/module/pdf.min.mjs')}}"></script>
+<script type="module" src="{{asset('vendor/module/pdf.worker.min.mjs')}}"></script>
+<script src="{{asset('vendor/jquery/interact.min.js')}}"></script>
 
 <script>
+    $("#submit").click(function() {
+        $(this).hide();
+    });
     document.getElementById('file').onchange = function () {
         var name = document.getElementById('file')
         document.getElementById('document_name').value = name.files.item(0).name.split('.')[0];

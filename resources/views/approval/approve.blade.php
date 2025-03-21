@@ -52,7 +52,7 @@
                                 </div>
                                 <br>
                                 {{-- btn --}}
-                                <button type="submit" class="btn btn-primary btn-block">
+                                <button id="submit" type="submit" class="btn btn-primary btn-block">
                                     <span class="mt-2 text-base dark:text-white leading-normal">Submit</span>
                                 </button>
                             </div>
@@ -104,6 +104,9 @@
 <script type="module" src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.worker.min.mjs'></script>
 
 <script>
+    $("#submit").click(function() {
+        $(this).hide();
+    });
     // Predefine the variables
     var pdfDoc = null,
     pageNum = 1,
