@@ -45,7 +45,18 @@ class ApprovalController extends Controller
             ->where('users.id', '=', Auth::user()->id)
             ->get();
         $approval = Approval::select('*')->where('id', '=', $id)->get();
-        return view('approval.approve', compact('user', 'approval'));
+        $user_id = Auth::user()->id;
+        $approvals = DB::select('with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by id) and document_name = lag(document_name) over (order by id) and token = lag(token) over (order by id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = "false"),data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = ' . $user_id . ') select * from data3 where approval_id = ' . $user_id . ' order by id desc');
+
+        if ($approval[0]->status == 'approved') {
+            Alert::error('Alert!', 'Document "' . $approval[0]->document_name . '" has been approved!');
+            return redirect('/approval/index');
+        } else if ($approval[0]->approval_level < $approval[0]->approval_progress) {
+            Alert::error('Alert!', 'You have been approve document "' . $approval[0]->document_name . '".');
+            return redirect('/approval/index');
+        } else {
+            return view('approval.approve', compact('user', 'approval'));
+        }
     }
 
     public function approved(Request $request)
@@ -142,7 +153,7 @@ class ApprovalController extends Controller
             Mail::to($finishTo[0]->email)->send(new SendEmail($email));
         }
 
-        Alert::success('Approval Successfully!', 'Document ' . $approval->document_name . ' successfully approved!');
+        Alert::success('Approval Successfully!', 'Document "' . $approval->document_name . '" successfully approved!');
 
         // return PDF::Output('Signature.pdf', 'I');
         return redirect('approval/index');
@@ -179,7 +190,7 @@ class ApprovalController extends Controller
         Storage::put('public/document/', $file);
         // $file->storeAs('', $fileName, 'pdf_uploads');
 
-        Alert::success('Upload Successfully!', 'Document ' . $request->document_name . ' successfully uploaded!');
+        Alert::success('Upload Successfully!', 'Document "' . $request->document_name . '" successfully uploaded!');
         return redirect()->intended('approval/index');
     }
 
@@ -198,7 +209,7 @@ class ApprovalController extends Controller
             'comment' => $request->comment,
         ]);
 
-        Alert::success('Comment to Revision Successfully!', 'Approval ' . $request->document_name . ' successfully commented!');
+        Alert::success('Comment to Revision Successfully!', 'Approval "' . $request->document_name . '" successfully commented!');
         return redirect('approval/index');
     }
 
@@ -208,7 +219,7 @@ class ApprovalController extends Controller
             'void' => 'true',
         ]);
 
-        Alert::success('Void Successfully!', 'Approval ' . $request->document_name . ' successfully voided!');
+        Alert::success('Void Successfully!', 'Approval "' . $request->document_name . '" successfully voided!');
         return redirect('approval/index');
     }
 
@@ -218,7 +229,7 @@ class ApprovalController extends Controller
             'void' => 'false',
         ]);
 
-        Alert::success('Restore Successfully!', 'Approval ' . $request->document_name . ' successfully restored!');
+        Alert::success('Restore Successfully!', 'Approval "' . $request->document_name . '" successfully restored!');
         return redirect('approval/index');
     }
 }
