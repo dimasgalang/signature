@@ -92,18 +92,20 @@
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @endif
-                                            @if ($approval->approval_level == $approval->approval_progress)
-                                                @if ($approval->status == 'pending')
-                                                <a href="{{ route('approval.approve', ['id' => $approval->id]) }}" class="btn btn-success btn-circle btn-sm">
-                                                    <i class="fas fa-check"></i>
-                                                </a>
-                                                <a id="show-revision" class="btn btn-warning btn-circle btn-sm show-revision" data-revision-url="{{ route('approval.fetchapproval', $approval->id) }}" data-revision-link="{{ route('approval.revision') }}" data-revision-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#revisionModal">
-                                                    <i class="fas fa-times"></i>
-                                                </a>
+                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
+                                                @if ($approval->approval_level == $approval->approval_progress)
+                                                    @if ($approval->status == 'pending')
+                                                    <a href="{{ route('approval.approve', ['id' => $approval->id]) }}" class="btn btn-success btn-circle btn-sm">
+                                                        <i class="fas fa-check"></i>
+                                                    </a>
+                                                    <a id="show-revision" class="btn btn-warning btn-circle btn-sm show-revision" data-revision-url="{{ route('approval.fetchapproval', $approval->id) }}" data-revision-link="{{ route('approval.revision') }}" data-revision-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#revisionModal">
+                                                        <i class="fas fa-times"></i>
+                                                    </a>
+                                                    @endif
                                                 @endif
                                             @endif
                                             @if ($approval->preparer_id == $approval->approval_id)
-                                                @if (request()->get('void') == 'false')
+                                                @if (request()->get('void') == 'false' || request()->get('void') == '')
                                                 <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('approval.fetchapproval', $approval->id) }}" data-void-link="{{ route('approval.void') }}" data-void-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#voidModal">
                                                     <i class="fas fa-ban"></i>
                                                 </a>
@@ -194,7 +196,7 @@
                         <input class="form-control" type="hidden" id="modal_preparer_id_void" name="preparer_id" readonly>
                         <input class="form-control" type="hidden" id="modal_name_void" name="name" readonly>
                         <input class="form-control" type="hidden" id="modal_document_name_void" name="document_name" readonly>
-                        <input class="form-control" type="hidden" id="modal_created_at_void" name="created_at">
+                        <input class="form-control" type="hidden" id="modal_token_void" name="token">
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -221,7 +223,7 @@
                         <input class="form-control" type="hidden" id="modal_preparer_id_restore" name="preparer_id" readonly>
                         <input class="form-control" type="hidden" id="modal_name_restore" name="name" readonly>
                         <input class="form-control" type="hidden" id="modal_document_name_restore" name="document_name" readonly>
-                        <input class="form-control" type="hidden" id="modal_created_at_restore" name="created_at">
+                        <input class="form-control" type="hidden" id="modal_token_restore" name="token">
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>

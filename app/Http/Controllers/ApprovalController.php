@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Elibyy\TCPDF\Facades\TCPDF as PDF;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
@@ -75,11 +76,13 @@ class ApprovalController extends Controller
         $pageNumber = $data['pageNumber'];
         $qrPath = Storage::disk('signature_uploads')->path($request->signature_img);
         // dd($qrPath);
-
-        // Get stream of uploaded file
-        $fileContent = Storage::disk('pdf_uploads')->get($request->original_name);
-        // dd($fileContent);
-        $pageCount = PDF::setSourceFile(StreamReader::createByString($fileContent));
+        try {
+            $fileContent = Storage::disk('pdf_uploads')->get($request->original_name);
+            $pageCount = PDF::setSourceFile(StreamReader::createByString($fileContent));
+        } catch (Exception $e) {
+            Alert::error("PDF may be in compression process, please replace PDF with uncompressed one.");
+            return redirect('approval/index');
+        }
 
         // Loop through all pages
         for ($i = 1; $i <= $pageCount; $i++) {
