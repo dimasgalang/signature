@@ -80,6 +80,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/approval/restore', [ApprovalController::class, 'restore'])->name('approval.restore');
     Route::post('/approval/store', [ApprovalController::class, 'store'])->name('approval.store');
     Route::post('/approval/approved', [ApprovalController::class, 'approved'])->name('approval.approved');
+    Route::get('/approval/stamp/{id}', [ApprovalController::class, 'stamp'])->name('approval.stamp');
+    Route::post('/approval/stamping', [ApprovalController::class, 'stamping'])->name('approval.stamping');
 
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');

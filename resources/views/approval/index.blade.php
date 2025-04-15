@@ -80,17 +80,23 @@
                                         @endif
                                         <td class="text-center">
                                             @if (($approval->value_first == null) && ($approval->value_last == null))
-                                            <a href="{{ asset('/storage/document/' . $approval->original_name) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
+                                            <a id="show-view" href="{{ asset('/storage/document/' . $approval->original_name) }}" class="btn btn-primary btn-circle btn-sm show-view" target="_blank">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @elseif ((!is_null($approval->value_first)) && ($approval->value_last == null))
-                                            <a href="{{ asset('/storage/document/' . $approval->value_first) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
+                                            <a id="show-view" href="{{ asset('/storage/document/' . $approval->value_first) }}" class="btn btn-primary btn-circle btn-sm show-view" target="_blank">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @elseif ((!is_null($approval->value_first)) && (!is_null($approval->value_last)))
-                                            <a href="{{ asset('/storage/document/' . $approval->value_last) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
+                                            <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-show-approved="{{ asset('/storage/document/' . $approval->value_last) }}" data-show-stamped="{{ asset('/storage/document/' . $approval->document_stamp) }}">
+                                                <!-- <a id="show-view" href="{{ asset('/storage/document/' . $approval->value_last) }}" class="btn btn-primary btn-circle btn-sm show-view" target="_blank"> -->
                                                 <i class="fas fa-eye"></i>
                                             </a>
+                                                @if ($approval->stamp != 'true')
+                                                <a href="{{ route('approval.stamp', ['id' => $approval->id]) }}" class="btn btn-success btn-circle btn-sm">
+                                                    <i class="fas fa-stop-circle"></i>
+                                                </a>
+                                                @endif
                                             @endif
                                             @if (request()->get('void') == 'false' || request()->get('void') == '')
                                                 @if ($approval->approval_level == $approval->approval_progress)
@@ -289,6 +295,7 @@
 
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript">
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
@@ -314,6 +321,29 @@
                 $('#modal_token').val(data[0].token);
                 } else {
 
+                }
+            });
+        });
+    });
+    $(function () {
+        $('body').on('click', '#show-view', function() {
+            console.log($(this).data('show-stamped'));
+            Swal.fire({
+                title: "View document?",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "View Document",
+                denyButtonText: `View Document + Stamp`
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    window.open($(this).data('show-approved'));
+                } else if (result.isDenied) {
+                    if($(this).data('show-stamped').substr($(this).data('show-stamped').length - 4) == ".pdf") {
+                        window.open($(this).data('show-stamped'));
+                    } else {
+                        Swal.fire("This document not stamped", "", "danger");
+                    }
                 }
             });
         });

@@ -59,6 +59,7 @@
                                 </div>
                                 <div class="card-body">
                                     <canvas id="sig-canvas"></canvas>
+                                    <canvas id="sig-canvas-2"></canvas>
                                     <textarea id="sig-dataUrl" name="signed" class="form-control" style="display: none;"></textarea>
                                     <br>
                                     <br>
@@ -118,7 +119,7 @@
 					};
 	})();
 	// Set up the canvas
-	var canvas = document.getElementById("sig-canvas");
+	var canvas = document.getElementById("sig-canvas-2");
     canvas.style.width = "100%";
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;

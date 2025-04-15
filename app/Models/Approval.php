@@ -20,6 +20,9 @@ class Approval extends Model
         'approval_progress',
         'document_approve',
         'approval_base64',
+        'stamp',
+        'document_stamp',
+        'stamp_base64',
         'status',
         'token',
         'void'
