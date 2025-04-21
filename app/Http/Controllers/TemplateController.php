@@ -10,4 +10,9 @@ class TemplateController extends Controller
     {
         return view('template.lpp');
     }
+
+    public function serah_terima()
+    {
+        return view('template.serah-terima');
+    }
 }

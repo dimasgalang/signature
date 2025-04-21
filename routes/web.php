@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\ConverterController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\HandoverController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
@@ -81,6 +82,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/approval/store', [ApprovalController::class, 'store'])->name('approval.store');
     Route::post('/approval/approved', [ApprovalController::class, 'approved'])->name('approval.approved');
 
+    // Serah Terima
+    Route::get('/handover/index', [HandoverController::class, 'index'])->name('handover.index');
+    Route::get('/handover/create', [HandoverController::class, 'create'])->name('handover.create');
+    Route::post('/handover/store', [HandoverController::class, 'store'])->name('handover.store');
+
+
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
 
@@ -89,6 +96,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Template
     Route::get('/template/lpp', [TemplateController::class, 'lpp'])->name('template.lpp');
+    Route::get('/template/serah-terima', [TemplateController::class, 'serah_terima'])->name('template.serah-terima');
 
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');

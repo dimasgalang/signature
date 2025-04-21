@@ -44,4 +44,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function handoversGiven()
+    {
+        return $this->hasMany(Handover::class, 'handover_name_id');
+    }
+
+    // Relasi dengan handovers sebagai 'receiver_name'
+    public function handoversReceived()
+    {
+        return $this->hasMany(Handover::class, 'receiver_name_id');
+    }
 }
