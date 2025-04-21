@@ -162,6 +162,108 @@ class ApprovalController extends Controller
         return redirect('approval/index');
     }
 
+    public function stamp($id)
+    {
+        $user = User::select('users.*', 'signatures.signature_img')
+            ->leftJoin('signatures', 'users.id', '=', 'signatures.user_id')
+            ->where('users.id', '=', Auth::user()->id)
+            ->get();
+        $approval = Approval::select('*')->where('id', '=', $id)->get();
+        $user_id = Auth::user()->id;
+        $approvals = DB::select('with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by id) and document_name = lag(document_name) over (order by id) and token = lag(token) over (order by id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = "false"),data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = ' . $user_id . ') select * from data3 where approval_id = ' . $user_id . ' order by id desc');
+
+        if ($approval[0]->status == 'approved') {
+            return view('approval.stamp', compact('user', 'approval'));
+            return redirect('/approval/index');
+        } else {
+            Alert::error('Alert!', 'Document "' . $approval[0]->document_name . '" need approval!');
+            return redirect('/approval/index');
+        }
+    }
+
+    public function stamping(Request $request)
+    {
+        $data = $request->all();
+        $approval = Approval::findOrFail($request->id);
+        $totalData = Approval::select('approval.*', 'users.name', 'users.email')->leftJoin('users', 'approval.preparer_id', '=', 'users.id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->get();
+        // dd($totalData[0]->email);
+        // Stamp scale is 1.7, change to 1.
+        $stampX = ($data['stampX'] / 1.83);
+        $stampY = ($data['stampY'] / 1.70);
+        $stampHeight = ($data['stampHeight'] / 8.2);
+        $stampWidth = ($data['stampWidth'] / 3.2);
+        $canvasHeight = ($data['canvasHeight'] / 1.7);
+        $canvasWidth = ($data['canvasWidth'] / 1.7);
+        $pageNumber = $data['pageNumber'];
+        $qrPath = Storage::disk('signature_uploads')->path($request->stamp_img);
+        // dd($qrPath);
+        try {
+            $fileContent = Storage::disk('pdf_uploads')->get($request->original_name);
+            $pageCount = PDF::setSourceFile(StreamReader::createByString($fileContent));
+        } catch (Exception $e) {
+            Alert::error("PDF may be in compression process, please replace PDF with uncompressed one.");
+            return redirect('approval/index');
+        }
+
+        // Loop through all pages
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $template = PDF::importPage($i);
+            $size = PDF::getTemplateSize($template);
+
+            PDF::AddPage($size['orientation'], array($size['width'], $size['height']));
+            PDF::useTemplate($template);
+
+            $widthDiffPercent = ($canvasWidth - $size['width']) / $canvasWidth * 100;
+            $heightDiffPercent = ($canvasHeight - $size['height']) / $canvasHeight * 100;
+
+            $realXPosition = $stampX - ($widthDiffPercent * $stampX / 100);
+            $realYPosition = $stampY - ($heightDiffPercent * $stampY / 100);
+
+            // Now we will add QR code to the page number that we want
+            if ($i == $pageNumber) {
+                PDF::SetAutoPageBreak(false);
+                PDF::Image($qrPath, $realXPosition, $realYPosition, $stampWidth, $stampHeight, 'PNG');
+            }
+        }
+
+        // I: Show to Browser, D: Download, F: Save to File, S: Return as String
+        $new_filename = substr($request->document_approve, 0, -4) . '_stamping.pdf';
+        // return PDF::Output('Signature.pdf', 'I');
+        PDF::Output(storage_path('app/public/document/') . $new_filename, 'F');
+        $new_base64 = "data:application/pdf;base64," . base64_encode(Storage::disk('pdf_uploads')->get($new_filename));
+
+        Approval::where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
+            'document_stamp' => $new_filename,
+            'stamp_base64' => $new_base64,
+            'stamp' => 'true',
+        ]);
+
+        $sendTo = Approval::select('users.email', 'approval.id')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->where('approval.approval_level', '=', $request->approval_progress + 1)->get();
+        // dd($sendTo);
+        $finishTo = Approval::select('users.email', 'approval.id')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->where('approval.approval_level', '=', 1)->get();
+
+        // if (count($sendTo) > 0) {
+        //     $email = [
+        //         'name' => 'Chutex E-Signature',
+        //         'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '". You can give document approval by opening the link below.',
+        //         'url' => URL::to("/approval/approve/" . $sendTo[0]->id)
+        //     ];
+        //     Mail::to($sendTo[0]->email)->send(new SendEmail($email));
+        // } else {
+        //     $email = [
+        //         'name' => 'Chutex E-Signature',
+        //         'body' => 'Your document "' . $approval->document_name . '" has been approved!',
+        //         'url' => URL::to("/approval/index")
+        //     ];
+        //     Mail::to($finishTo[0]->email)->send(new SendEmail($email));
+        // }
+
+        Alert::success('Stamping Successfully!', 'Document "' . $approval->document_name . '" successfully stamped!');
+
+        // return PDF::Output('Signature.pdf', 'I');
+        return redirect('approval/index');
+    }
+
     public function store(Request $request)
     {
 

@@ -40,11 +40,29 @@
             color: white;
             position: absolute;
         }
+        .draggable-2 {
+            display: none;
+            width: 240px;
+            height: 150px;
+            background-color: rgba(255, 0, 0, 0.4);
+            touch-action: none;
+            user-select: none;
+            text-align: center;
+            color: white;
+            position: absolute;
+        }
         #sig-canvas {
 			border: 1px solid #CCCCCC;
 			border-radius: 5px;
             height: 300px;
 			cursor: crosshair;
+		}
+        #sig-canvas-2 {
+			border: 1px solid #CCCCCC;
+			border-radius: 5px;
+            height: 300px;
+			cursor: crosshair;
+            background-image: url("{{ asset('/storage/signature/chutex_stamp.png') }}") 
 		}
 
 		#sig-dataUrl {
