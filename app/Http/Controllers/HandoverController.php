@@ -53,4 +53,56 @@ class HandoverController extends Controller
         Alert::success('Upload Successfully!', 'Document successfully uploaded!');
         return redirect()->intended('handover/index');
     }
+
+    public function revision(Request $request)
+    {
+        // cari dan relasi handover_id di item handover dengan id handover (buat dengan sql raw)
+        $users = User::all();
+        $items = Item::all();
+        $handover = Handover::find($request->id);
+        $itemHandover = DB::select("SELECT ih.* FROM item_handovers ih INNER JOIN handovers h ON ih.handover_id = h.id WHERE h.id = ? ", [$request->id]);
+
+        // dd($itemHandover[0]);
+        return view('handover.revision', compact('users', 'items', 'handover', 'itemHandover'));
+    }
+
+    public function update(Request $request)
+    {
+        $itemsToDelete = json_decode($request->input('items_to_delete'), true);
+        if (!empty($itemsToDelete)) {
+            // Delete items from the database
+            ItemHandover::whereIn('id', $itemsToDelete)->delete();
+        }
+
+        $handover = Handover::find($request->handover_id);
+        $handover->handover_name_id = $request->handover_name_id;
+        $handover->receiver_name_id = $request->receiver_name_id;
+        $handover->department = $request->department;
+        $handover->save();
+
+        // update data item handover secara manual tanpa menghapus data yang ada
+        foreach ($request->product_id as $key => $value) {
+            // If items exist, update each one
+            if (isset($value['id'])) {
+                $items = ItemHandover::where('handover_id', $request->handover_id)
+                    ->where('id', $value['id'])->get();
+                foreach ($items as $item) {
+                    $item->handover_id = $request->handover_id;
+                    $item->item_id = $value['item_id'];
+                    $item->quantity = $value['quantity'];
+                    $item->save();
+                }
+            // If id is null, create a new item
+            } else {
+                $item = new ItemHandover();
+                $item->handover_id = $request->handover_id;
+                $item->item_id = $value['item_id'];
+                $item->quantity = $value['quantity'];
+                $item->save();
+            }
+        }
+
+        Alert::success('Upload Successfully!', 'Document successfully uploaded!');
+        return redirect()->intended('handover/index');
+    }
 }

@@ -88,6 +88,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/handover/index', [HandoverController::class, 'index'])->name('handover.index');
     Route::get('/handover/create', [HandoverController::class, 'create'])->name('handover.create');
     Route::post('/handover/store', [HandoverController::class, 'store'])->name('handover.store');
+    Route::get('/handover/revision/{id}', [HandoverController::class, 'revision'])->name('handover.revisionHandover');
+    Route::post('/handover/update', [HandoverController::class, 'update'])->name('handover.updateHandover');
 
 
     //Text To Speech

@@ -60,8 +60,11 @@
                                         <td>{{ $handover->receiverName->name }}</td>
                                         <td>{{ $handover->department }}</td>
                                         <td>{{ $handover->date }}</td>
-                                        <td>{{ $handover->handover_name_id }}</td>
-                                        <td></td>
+                                        <td>{{ $handover->item_handovers->count() }}</td>
+                                         <td><center><a href="{{ route('handover.revisionHandover', $handover->id) }}" class="btn btn-warning btn-icon-split btn-sm">
+                                            <span class="text">Revision</span>
+                                            </a></center>
+                                        </td>
                                         {{-- @if ($approval->status == 'pending')
                                         <td><center><a class="btn btn-danger btn-icon-split btn-sm">
                                             <span class="text">Pending</span>
