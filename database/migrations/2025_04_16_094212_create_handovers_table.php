@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('receiver_name_id')->constrained('users');
             $table->string('department');
             $table->dateTime('date');
+            $table->string('void')->default('false');
             $table->timestamps();
         });
     }

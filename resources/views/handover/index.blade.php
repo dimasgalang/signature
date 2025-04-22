@@ -61,9 +61,21 @@
                                         <td>{{ $handover->department }}</td>
                                         <td>{{ $handover->date }}</td>
                                         <td>{{ $handover->item_handovers->count() }}</td>
-                                         <td><center><a href="{{ route('handover.revisionHandover', $handover->id) }}" class="btn btn-warning btn-icon-split btn-sm">
-                                            <span class="text">Revision</span>
-                                            </a></center>
+                                         <td>
+                                            <center>
+                                                <a href="{{ route('handover.revisionHandover', $handover->id) }}" class="btn btn-warning btn-circle btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                @if (request()->get('void') == 'false' || request()->get('void') == '')
+                                                <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('handover.fetchHandover', $handover->id) }}" data-void-link="{{ route('handover.void') }}" data-void-name="data-handover" data-toggle="modal" data-target="#voidModal">
+                                                    <i class="fas fa-ban"></i>
+                                                </a>
+                                                @elseif (request()->get('void') == 'true')
+                                                <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore" data-restore-url="{{ route('handover.fetchHandover', $handover->id) }}" data-restore-link="{{ route('handover.restore') }}" data-restore-name="data-handover" data-toggle="modal" data-target="#restoreModal">
+                                                    <i class="fas fa-history"></i>
+                                                </a>
+                                            </center>
+                                            @endif
                                         </td>
                                         {{-- @if ($approval->status == 'pending')
                                         <td><center><a class="btn btn-danger btn-icon-split btn-sm">
@@ -153,7 +165,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="revisionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade" id="revisionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
@@ -181,7 +193,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="modal fade" id="voidModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
@@ -192,14 +204,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('approval.void') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('handover.void') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-void"></p>
-                        <input class="form-control" type="hidden" id="modal_preparer_id_void" name="preparer_id" readonly>
-                        <input class="form-control" type="hidden" id="modal_name_void" name="name" readonly>
-                        <input class="form-control" type="hidden" id="modal_document_name_void" name="document_name" readonly>
-                        <input class="form-control" type="hidden" id="modal_token_void" name="token">
+                        <input class="form-control" type="hidden" id="modal_handover_id_void" name="handover_id" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -219,14 +228,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('approval.restore') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('handover.restore') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-restore"></p>
-                        <input class="form-control" type="hidden" id="modal_preparer_id_restore" name="preparer_id" readonly>
-                        <input class="form-control" type="hidden" id="modal_name_restore" name="name" readonly>
-                        <input class="form-control" type="hidden" id="modal_document_name_restore" name="document_name" readonly>
-                        <input class="form-control" type="hidden" id="modal_token_restore" name="token">
+                        <input class="form-control" type="hidden" id="modal_handover_id_restore" name="handover_id" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -237,7 +243,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
@@ -255,9 +261,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
-        <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
@@ -281,7 +287,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
 
 @include('layout.footer')
@@ -298,38 +304,36 @@
             $("#modal-text-record").text('Apakah anda yakin ingin menghapus Approval ' + $(this).data('delete-name') + '?');
     });
     $('.btn-void-record').on('click', function () {
-            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Approval ' + $(this).data('void-name') + '?');
+            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Handover ' + $(this).data('void-name') + '?');
     });
     $('.btn-restore-record').on('click', function () {
-            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Approval ' + $(this).data('restore-name') + '?');
+            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Handover ' + $(this).data('restore-name') + '?');
     });
-    $('.btn-revision-record').on('click', function () {
-            $("#modal-text-record-revision").text('Apakah anda yakin ingin mengubah status Approval menjadi Revision ' + $(this).data('revision-name') + '?');
-    });
-    $(function () {
-        $('body').on('click', '#show-revision', function() {
-        var jsonRevision = $(this).data('revision-url'); 
-        $.get(jsonRevision, function (data) {
-            if (data.length > 0) {
-                $('#modal_preparer_id').val(data[0].preparer_id);
-                $('#modal_name').val(data[0].name);
-                $('#modal_document_name').val(data[0].document_name);
-                $('#modal_token').val(data[0].token);
-                } else {
+    // $('.btn-revision-record').on('click', function () {
+    //         $("#modal-text-record-revision").text('Apakah anda yakin ingin mengubah status Approval menjadi Revision ' + $(this).data('revision-name') + '?');
+    // });
+    
+    // $(function () {
+    //     $('body').on('click', '#show-revision', function() {
+    //     var jsonRevision = $(this).data('revision-url'); 
+    //     $.get(jsonRevision, function (data) {
+    //         if (data.length > 0) {
+    //             $('#modal_preparer_id').val(data[0].preparer_id);
+    //             $('#modal_name').val(data[0].name);
+    //             $('#modal_document_name').val(data[0].document_name);
+    //             $('#modal_token').val(data[0].token);
+    //             } else {
 
-                }
-            });
-        });
-    });
+    //             }
+    //         });
+    //     });
+    // });
     $(function () {
         $('body').on('click', '#show-void', function() {
         var jsonVoid = $(this).data('void-url'); 
         $.get(jsonVoid, function (data) {
             if (data.length > 0) {
-                $('#modal_preparer_id_void').val(data[0].preparer_id);
-                $('#modal_name_void').val(data[0].name);
-                $('#modal_document_name_void').val(data[0].document_name);
-                $('#modal_token_void').val(data[0].token);
+                $('#modal_handover_id_void').val(data[0].id);
                 } else {
 
                 }
@@ -341,27 +345,24 @@
         var jsonRestore = $(this).data('restore-url'); 
         $.get(jsonRestore, function (data) {
             if (data.length > 0) {
-                $('#modal_preparer_id_restore').val(data[0].preparer_id);
-                $('#modal_name_restore').val(data[0].name);
-                $('#modal_document_name_restore').val(data[0].document_name);
-                $('#modal_token_restore').val(data[0].token);
+                $('#modal_handover_id_restore').val(data[0].id);
                 } else {
 
                 }
             });
         });
     });
-    $(function () {
-        $('body').on('click', '#show-comment', function() {
-        var jsonComment = $(this).data('comment-url'); 
-        $.get(jsonComment, function (data) {
-            if (data.length > 0) {
-                $('#modal_comment_detail').val(data[0].comment);
-                } else {
+    // $(function () {
+    //     $('body').on('click', '#show-comment', function() {
+    //     var jsonComment = $(this).data('comment-url'); 
+    //     $.get(jsonComment, function (data) {
+    //         if (data.length > 0) {
+    //             $('#modal_comment_detail').val(data[0].comment);
+    //             } else {
 
-                }
-            });
-        });
-    });
+    //             }
+    //         });
+    //     });
+    // });
 </script>
 </html>

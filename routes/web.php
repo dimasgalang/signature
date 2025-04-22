@@ -89,7 +89,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/handover/create', [HandoverController::class, 'create'])->name('handover.create');
     Route::post('/handover/store', [HandoverController::class, 'store'])->name('handover.store');
     Route::get('/handover/revision/{id}', [HandoverController::class, 'revision'])->name('handover.revisionHandover');
+    Route::get('/handover/fetchHandover/{id}', [HandoverController::class, 'fetchHandover'])->name('handover.fetchHandover');
     Route::post('/handover/update', [HandoverController::class, 'update'])->name('handover.updateHandover');
+    Route::post('/handover/void', [HandoverController::class, 'void'])->name('handover.void');
+    Route::post('/handover/restore', [HandoverController::class, 'restore'])->name('handover.restore');
 
 
     //Text To Speech

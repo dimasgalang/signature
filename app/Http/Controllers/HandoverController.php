@@ -8,6 +8,7 @@ use App\Models\ItemHandover;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -15,13 +16,16 @@ class HandoverController extends Controller
 {
     public function index(Request $request)
     {
-        // $user_id = Auth::user()->id;
-        // if ($request->void) {
-        //     $approvals = DB::select('with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by id) and document_name = lag(document_name) over (order by id) and token = lag(token) over (order by id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = "' . $request->void . '"),data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = ' . $user_id . ') select * from data3 where approval_id = ' . $user_id . ' order by id desc');
-        // } else {
-        //     $approvals = DB::select('with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by id) and document_name = lag(document_name) over (order by id) and token = lag(token) over (order by id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = "false"),data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = ' . $user_id . ') select * from data3 where approval_id = ' . $user_id . ' order by id desc');
-        // }
-        $handovers = Handover::with(['item_handovers', 'handoverName', 'receiverName'])->get();
+        $user_id = Auth::user()->id;
+        if($request->void) {
+            $handovers = Handover::with(['item_handovers', 'handoverName', 'receiverName'])
+                ->where('void', $request->void)
+                ->get();
+        } else {
+            $handovers = Handover::with(['item_handovers', 'handoverName', 'receiverName'])
+                ->where('void', false)
+                ->get();
+        }
         return view('handover.index', compact('handovers'));
     }
 
@@ -52,6 +56,13 @@ class HandoverController extends Controller
 
         Alert::success('Upload Successfully!', 'Document successfully uploaded!');
         return redirect()->intended('handover/index');
+    }
+
+    public function fetchHandover($id)
+    {
+        $fetchHandover = Handover::select('handovers.*', 'users.name')->leftJoin('users', 'users.id', '=', 'handovers.handover_name_id')->where('handovers.id', '=', $id)->get();
+        // dd($fetchapproval);
+        return response()->json($fetchHandover);
     }
 
     public function revision(Request $request)
@@ -92,7 +103,7 @@ class HandoverController extends Controller
                     $item->quantity = $value['quantity'];
                     $item->save();
                 }
-            // If id is null, create a new item
+                // If id is null, create a new item
             } else {
                 $item = new ItemHandover();
                 $item->handover_id = $request->handover_id;
@@ -103,6 +114,23 @@ class HandoverController extends Controller
         }
 
         Alert::success('Upload Successfully!', 'Document successfully uploaded!');
+        return redirect()->intended('handover/index');
+    }
+
+    public function void(Request $request)
+    {
+        $handover = Handover::find($request->handover_id);
+        $handover->void = 'true';
+        $handover->save();
+        Alert::success('Void Successfully!', 'Document successfully void!');
+        return redirect()->intended('handover/index');
+    }
+    public function restore(Request $request)
+    {
+        $handover = Handover::find($request->handover_id);
+        $handover->void = 'false';
+        $handover->save();
+        Alert::success('Restore Successfully!', 'Document successfully restore!');
         return redirect()->intended('handover/index');
     }
 }

@@ -13,6 +13,7 @@ class Handover extends Model
         'receiver_name_id',
         'department',
         'date',
+        'void',
     ];
 
     public function item_handovers()
