@@ -108,7 +108,7 @@
                                                         <i class="fas fa-times"></i>
                                                     </a>
                                                     @endif
-                                                @endif
+                                                @endif+
                                             @endif
                                             @if ($approval->preparer_id == $approval->approval_id)
                                                 @if (request()->get('void') == 'false' || request()->get('void') == '')

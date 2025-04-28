@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+@include('layout.header')
+<body id="page-top">
+<!-- Page Wrapper -->
+@include('sweetalert::alert')
+<div id="wrapper">
+@include('layout.sidebar')
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+            @include('layout.navbar')
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Create Attachment</h1>
+                </div>
+                
+
+                <!-- Approach -->
+                <form method="post" action="{{ route('attachment.store') }}" enctype="multipart/form-data">
+                 <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Form Create Attachment</h6>
+                            </div>
+                            <div class="card-body">
+                                    @csrf
+                                    <div>
+                                        <label>Approval Document :</label>
+                                        <select class="form-control token" id="token" name="token" >
+                                            <option></option>
+                                            @foreach($approvals as $approval)
+                                            <option value="{{ $approval->token }}">{{ $approval->document_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Document Name :</label>
+                                        <input class="form-control" type="text" id="document_name" name="document_name" required readonly>
+                                        <input class="form-control" type="hidden" id="base64" name="base64">
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label for="file">File PDF :</label>
+                                        <input type="file" id="file" name="file" accept=".pdf" >
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button id="submit" type="submit" class="btn btn-primary btn-block">Create</button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
+                                <h6 class="m-0 font-weight-bold text-primary">Display PDF</h6>
+                            </div>
+                            <div class="card-body">
+                                <iframe id="pdfPreview" width="100%" height="500px"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+                <!-- Content Row -->
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+@include('layout.footer')
+</body>
+<script src="{{asset('vendor/jquery/jquery-ui.min.js')}}"></script>
+
+<script type="module" src="{{asset('vendor/module/pdf.min.mjs')}}"></script>
+<script type="module" src="{{asset('vendor/module/pdf.worker.min.mjs')}}"></script>
+<script src="{{asset('vendor/jquery/interact.min.js')}}"></script>
+
+<script>
+    $("#submit").click(function() {
+        $(this).hide();
+    });
+    document.getElementById('file').onchange = function () {
+        var name = document.getElementById('file')
+        document.getElementById('document_name').value = name.files.item(0).name.split('.')[0];
+    };
+</script>
+
+<script>
+    document.querySelector("#file").addEventListener("change", async function(e){
+        var file = e.target.files[0]
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+        });
+        console.log(await toBase64(file));
+
+        document.getElementById('base64').value = await toBase64(file);
+        if (file.type === "application/pdf") {
+            const fileURL = URL.createObjectURL(file);
+            document.getElementById('pdfPreview').src = fileURL;
+        } else {
+            alert("Please upload a valid PDF file.");
+        }
+    })
+</script>
+<script type="text/javascript">
+    $('.token').select2({
+          allowClear: true,
+          placeholder: 'Choose Approval Document',
+    });
+</script>
+</html>
