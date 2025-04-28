@@ -266,13 +266,14 @@ class ApprovalController extends Controller
 
     public function store(Request $request)
     {
+        if($request->file) {
+            $request->validate([
+                'file' => 'required|mimes:docx,pdf|max:10240'
+            ]);
+            $file = $request->file('file');
+            $fileName = $file->hashName();
+        }
 
-        $request->validate([
-            'file' => 'required|mimes:docx,pdf|max:10240'
-        ]);
-
-        $file = $request->file('file');
-        $fileName = $file->hashName();
         $random = Str::random();
 
 
@@ -281,19 +282,24 @@ class ApprovalController extends Controller
             $item = new Approval();
             $item->preparer_id = $request->preparer_id;
             $item->document_name = $request->document_name;
-            $item->original_name = $fileName;
+            $item->original_name = $fileName ?? $request->original_name;
             $item->base64 = $request->base64;
             $item->approval_id = $request->approval_id[$key];
             $item->approval_level = $level;
             $item->approval_progress = '1';
             $item->status = 'pending';
+            $item->stamp = '';
             $item->void = 'false';
             $item->token = $random;
             $item->save();
             $level++;
         }
 
-        Storage::put('public/document/', $file);
+        if($request->file) {
+            Storage::put('public/document/', $file);
+        } else {
+            Storage::put('public/document/' . $request->original_name, base64_decode(str_replace('data:application/pdf;base64,', '', $request->base64)));
+        }
         // $file->storeAs('', $fileName, 'pdf_uploads');
 
         Alert::success('Upload Successfully!', 'Document "' . $request->document_name . '" successfully uploaded!');

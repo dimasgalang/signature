@@ -63,6 +63,9 @@
                                         <td>{{ $handover->item_handovers->count() }}</td>
                                          <td>
                                             <center>
+                                                <a href="{{ route('handover.createApproval', $handover->id) }}" class="btn btn-success btn-circle btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
                                                 <a href="{{ route('handover.revisionHandover', $handover->id) }}" class="btn btn-warning btn-circle btn-sm">
                                                     <i class="fas fa-edit"></i>
                                                 </a>

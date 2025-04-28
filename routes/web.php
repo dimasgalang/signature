@@ -93,6 +93,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/handover/update', [HandoverController::class, 'update'])->name('handover.updateHandover');
     Route::post('/handover/void', [HandoverController::class, 'void'])->name('handover.void');
     Route::post('/handover/restore', [HandoverController::class, 'restore'])->name('handover.restore');
+    Route::get('/handover/create-approval/{id}', [HandoverController::class, 'createApproval'])->name('handover.createApproval');
 
 
     //Text To Speech

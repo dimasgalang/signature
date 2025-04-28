@@ -183,4 +183,11 @@ class HandoverController extends Controller
 
         return $pdf;
     }
+
+    public function createApproval($id) 
+    {
+        $handover = Handover::findOrFail($id);
+        $users = User::all();
+        return view('handover.createApprove', compact(['users', 'handover']));
+    }
 }
