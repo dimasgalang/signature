@@ -30,10 +30,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LoginController::class, 'login'])->name('/');
 
 Route::group(['middleware' => 'guest'], function () {
-    Route::get('/register', [RegisterController::class, 'index'])->name('register');
+    Route::get('/register', [RegisterController::class, 'index'])->name('registeri');
     Route::post('/register/guest', [RegisterController::class, 'store'])->name('register.guest');
 
-    Route::get('/login', [LoginController::class, 'login'])->name('login');
+    Route::get('/login', [LoginController::class, 'login'])->name('login.guest');
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
 });
 
@@ -85,6 +85,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/approval/approved', [ApprovalController::class, 'approved'])->name('approval.approved');
     Route::get('/approval/stamp/{id}', [ApprovalController::class, 'stamp'])->name('approval.stamp');
     Route::post('/approval/stamping', [ApprovalController::class, 'stamping'])->name('approval.stamping');
+    Route::get('/handover/create-approval/{id}', [HandoverController::class, 'createApproval'])->name('handover.createApproval');
 
     // Serah Terima
     Route::get('/handover/index', [HandoverController::class, 'index'])->name('handover.index');
@@ -103,6 +104,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/attachment/void', [AttachmentController::class, 'void'])->name('attachment.void');
     Route::post('/attachment/restore', [AttachmentController::class, 'restore'])->name('attachment.restore');
     Route::get('/attachment/fetchattachment/{id}', [AttachmentController::class, 'fetchattachment'])->name('attachment.fetchattachment');
+
 
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
