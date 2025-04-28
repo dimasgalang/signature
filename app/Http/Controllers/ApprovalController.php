@@ -18,6 +18,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use setasign\Fpdi\PdfParser\StreamReader;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Yajra\DataTables\Facades\DataTables;
 
 class ApprovalController extends Controller
 {
@@ -275,6 +276,7 @@ class ApprovalController extends Controller
         $fileName = $file->hashName();
         $random = Str::random();
 
+
         $level = 1;
         foreach ($request->approval_id as $key => $value) {
             $item = new Approval();
@@ -304,6 +306,21 @@ class ApprovalController extends Controller
         $fetchapproval = Approval::select('approval.*', 'users.name')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.id', '=', $id)->get();
         // dd($fetchapproval);
         return response()->json($fetchapproval);
+    }
+
+    public function fetchattachment($token)
+    {
+        $fetchattachment = DB::select('select attachment.* from attachment left join approval on attachment.token = approval.token where attachment.token = "' . $token . '" and attachment.void = "false"');
+        // return response()->json($fetchattachment);
+        return DataTables::of($fetchattachment)
+            ->addIndexColumn()
+            ->addColumn('viewbadge', function ($row) {
+                $storageurl = asset('/storage/attachment/' . $row->original_name);
+                $statusBadge = '<center><a href="' . $storageurl . '" class="btn btn-primary btn-circle btn-sm" target="_blank"><i class="fas fa-eye"></i></a></center>';
+                return $statusBadge;
+            })
+            ->rawColumns(['viewbadge'])
+            ->make(true);
     }
 
     public function revision(Request $request)

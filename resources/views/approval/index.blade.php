@@ -50,6 +50,7 @@
                                         <th>Need Approve</th>
                                         <th>Approval Date</th>
                                         <th>Status</th>
+                                        <th>Attachment</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -78,13 +79,18 @@
                                             </a></center>
                                         </td>
                                         @endif
+                                        <td align="center"><a id="show-detail-attachment" class="btn btn-primary btn-icon-split btn-sm btn-show-detail-attachment" data-url-attachment="{{ route('approval.fetchattachment', $approval->token) }}" data-show-title-attachment="{{ $approval->document_name }}">
+                                            <span class="text">Detail</span>
+                                        </a></td>
                                         <td class="text-center">
                                             @if (($approval->value_first == null) && ($approval->value_last == null))
-                                            <a id="show-view" href="{{ asset('/storage/document/' . $approval->original_name) }}" class="btn btn-primary btn-circle btn-sm show-view" target="_blank">
+                                            <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-show-approved="{{ asset('/storage/document/' . $approval->original_name) }}" data-show-stamped="{{ asset('/storage/document/' . $approval->document_stamp) }}">
+                                            <!-- <a id="show-view" href="{{ asset('/storage/document/' . $approval->original_name) }}" class="btn btn-primary btn-circle btn-sm show-view" target="_blank"> -->
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @elseif ((!is_null($approval->value_first)) && ($approval->value_last == null))
-                                            <a id="show-view" href="{{ asset('/storage/document/' . $approval->value_first) }}" class="btn btn-primary btn-circle btn-sm show-view" target="_blank">
+                                            <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-show-approved="{{ asset('/storage/document/' . $approval->value_first) }}" data-show-stamped="{{ asset('/storage/document/' . $approval->document_stamp) }}">
+                                            <!-- <a id="show-view" href="{{ asset('/storage/document/' . $approval->value_first) }}" class="btn btn-primary btn-circle btn-sm show-view" target="_blank"> -->
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @elseif ((!is_null($approval->value_first)) && (!is_null($approval->value_last)))
@@ -108,7 +114,7 @@
                                                         <i class="fas fa-times"></i>
                                                     </a>
                                                     @endif
-                                                @endif+
+                                                @endif
                                             @endif
                                             @if ($approval->preparer_id == $approval->approval_id)
                                                 @if (request()->get('void') == 'false' || request()->get('void') == '')
@@ -286,6 +292,58 @@
             </div>
         </div>
 
+        <div class="modal fade" id="attachmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="detail-title" class="modal-title" id="exampleModalLabel">Attachment Detail</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                            <h6 class="m-0 font-weight-bold text-primary"></h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                        aria-labelledby="dropdownMenuLink">
+                                    <!-- <div class="dropdown-header">Action:</div> -->
+                                    <a class="dropdown-item" href="{{ route('attachment.create') }}" target="_blank">Create Attachment</a>
+                                    <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-xl-12 col-md-6 mb-4">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-modal table-sm" id="table-attachment-detail" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Attachment Name</th>
+                                                <th>Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 @include('layout.footer')
 </body>
@@ -323,6 +381,26 @@
 
                 }
             });
+        });
+    });
+    $(document).ready(function () {
+        $('body').on('click', '#show-detail-attachment', function() {
+            var jsonAttachmentDetail = $(this).data('url-attachment');
+            $.get(jsonAttachmentDetail, function (data) {
+                $('#attachmentModal').modal('show');
+                var tableAttachmentDetail = $('#table-attachment-detail').DataTable({
+                        destroy: true,
+                        processing: true,
+                        responsive: true,
+                        ajax: jsonAttachmentDetail, 
+                        columns: [
+                            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                            { data: 'document_name', name: 'document_name', orderable: false },
+                            { data: 'created_at', name: 'created_at', orderable: false },
+                            { data: 'viewbadge', name: 'viewbadge', orderable: false },
+                        ],
+                    });
+            })
         });
     });
     $(function () {

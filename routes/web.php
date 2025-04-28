@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\ApprovalController;
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\ConverterController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\HandoverController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
@@ -75,6 +77,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/approval/create', [ApprovalController::class, 'create'])->name('approval.create');
     Route::get('/approval/approve/{id}', [ApprovalController::class, 'approve'])->name('approval.approve');
     Route::get('/approval/fetchapproval/{id}', [ApprovalController::class, 'fetchapproval'])->name('approval.fetchapproval');
+    Route::get('/approval/fetchattachment/{token}', [ApprovalController::class, 'fetchattachment'])->name('approval.fetchattachment');
     Route::post('/approval/revision', [ApprovalController::class, 'revision'])->name('approval.revision');
     Route::post('/approval/void', [ApprovalController::class, 'void'])->name('approval.void');
     Route::post('/approval/restore', [ApprovalController::class, 'restore'])->name('approval.restore');
@@ -82,6 +85,24 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/approval/approved', [ApprovalController::class, 'approved'])->name('approval.approved');
     Route::get('/approval/stamp/{id}', [ApprovalController::class, 'stamp'])->name('approval.stamp');
     Route::post('/approval/stamping', [ApprovalController::class, 'stamping'])->name('approval.stamping');
+
+    // Serah Terima
+    Route::get('/handover/index', [HandoverController::class, 'index'])->name('handover.index');
+    Route::get('/handover/create', [HandoverController::class, 'create'])->name('handover.create');
+    Route::post('/handover/store', [HandoverController::class, 'store'])->name('handover.store');
+    Route::get('/handover/revision/{id}', [HandoverController::class, 'revision'])->name('handover.revisionHandover');
+    Route::get('/handover/fetchHandover/{id}', [HandoverController::class, 'fetchHandover'])->name('handover.fetchHandover');
+    Route::post('/handover/update', [HandoverController::class, 'update'])->name('handover.updateHandover');
+    Route::post('/handover/void', [HandoverController::class, 'void'])->name('handover.void');
+    Route::post('/handover/restore', [HandoverController::class, 'restore'])->name('handover.restore');
+
+    //Attachment
+    Route::get('/attachment/index', [AttachmentController::class, 'index'])->name('attachment.index');
+    Route::get('/attachment/create', [AttachmentController::class, 'create'])->name('attachment.create');
+    Route::post('/attachment/store', [AttachmentController::class, 'store'])->name('attachment.store');
+    Route::post('/attachment/void', [AttachmentController::class, 'void'])->name('attachment.void');
+    Route::post('/attachment/restore', [AttachmentController::class, 'restore'])->name('attachment.restore');
+    Route::get('/attachment/fetchattachment/{id}', [AttachmentController::class, 'fetchattachment'])->name('attachment.fetchattachment');
 
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
@@ -91,6 +112,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Template
     Route::get('/template/lpp', [TemplateController::class, 'lpp'])->name('template.lpp');
+    Route::get('/template/serah-terima', [TemplateController::class, 'serah_terima'])->name('template.serah-terima');
 
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');

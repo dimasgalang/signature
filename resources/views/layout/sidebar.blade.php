@@ -44,6 +44,20 @@
         <div id="collapseApproval" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('approval.index') }}">Approval List</a>
+                <a class="collapse-item" href="{{ route('attachment.index') }}">Attachment List</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHandover"
+            aria-expanded="true" aria-controls="collapseHandover">
+            <i class="fas fa-fw fa-check-square"></i>
+            <span>Handover</span>
+        </a>
+        <div id="collapseHandover" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('handover.index') }}">Handover List</a>
             </div>
         </div>
     </li>
@@ -71,6 +85,7 @@
         <div id="collapseTemplate" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('template.lpp') }}">LPP</a>
+                <a class="collapse-item" href="{{ route('template.serah-terima') }}">Serah Terima</a>
             </div>
         </div>
     </li>
