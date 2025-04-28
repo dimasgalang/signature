@@ -66,6 +66,11 @@
                                         <input class="form-control" type="date" id="handoverDate" name="handoverDate" value="{{ \Carbon\Carbon::parse($handover->date)->format('Y-m-d') }}" disabled>
                                     </div>
                                     <br>
+                                    <div>
+                                        <label for="documentName">Document Name</label>
+                                        <input class="form-control" type="text" id="documentName" name="documentName" value="{{ $handover->document_name }}" readonly>
+                                    </div>
+                                    <br>
                                     <div class="row">
                                         <div class="col-12">
                                             <button id="submit" type="submit" class="btn btn-primary btn-block">Update</button>
@@ -99,7 +104,7 @@
                                             @if($loop->first)
                                                 <div class="col-xl-2">
                                                     <label></label>
-                                                    <button type="button" class="btn btn-sm btn-primary btn-block mt-3" onclick="addRecords()">Add</button>
+                                                    <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-handover" onclick="">Add</button>
                                                 </div>
                                             @else 
                                                 <div class="col-xl-2">
@@ -163,21 +168,90 @@
         }
     })
 </script> --}}
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     function addRecords() {
         let itemInput = document.getElementById('itemInput');
         let itemIndex = itemInput.children.length;
         $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" >@foreach ($items as $item )<option value="{{ $item->id }}">{{ $item->productName }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
-        // $('.approval_id').select2({
-        //     allowClear: true,
-        //     placeholder: 'Choose Approval',
-        // });
+        $('.product_id').select2({
+            allowClear: true,
+            placeholder: 'Choose Approval',
+        });
     }
 
     $(document).on('click', '.removeThis', function() {
         $(this).parent().parent().remove();
     })
+</script> --}}
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        // Inisialisasi Select2
+        $('.product_id').select2({
+            allowClear: true,
+            placeholder: 'Choose Product Item',
+        });
+
+        // Fungsi untuk memperbarui opsi di semua dropdown
+        function updateDropdownOptions() {
+            // Ambil semua nilai yang dipilih
+            let selectedValues = [];
+            $('.product_id').each(function() {
+                let value = $(this).val();
+                if (value) {
+                    selectedValues.push(value);
+                }
+            });
+
+            // Perbarui opsi di setiap dropdown
+            $('.product_id').each(function() {
+                let currentDropdown = $(this);
+                let currentValue = currentDropdown.val();
+
+                currentDropdown.find('option').each(function() {
+                    let optionValue = $(this).val();
+
+                    // Disabled opsi jika sudah dipilih di dropdown lain
+                    if (selectedValues.includes(optionValue) && optionValue !== currentValue) {
+                        $(this).attr('disabled', true);
+                    } else {
+                        $(this).attr('disabled', false);
+                    }
+                });
+
+                // Refresh Select2 untuk memperbarui tampilan
+                currentDropdown.trigger('change.select2');
+            });
+        }
+
+        // Panggil fungsi saat dropdown berubah
+        $(document).on('change', '.product_id', function() {
+            updateDropdownOptions();
+        });
+
+        $('.add-handover').on('click', function() {
+            let itemInput = document.getElementById('itemInput');
+            let itemIndex = itemInput.children.length;
+            $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" ><option></option>@foreach ($items as $item )<option value="{{ $item->id }}">{{ $item->productName }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
+            // console.log(itemIndex);
+            $('.product_id').select2({
+                placeholder: 'Choose Product Item',
+                allowClear: true,
+            });
+
+            // Perbarui opsi setelah menambahkan dropdown baru
+            updateDropdownOptions();
+        });
+
+        $(document).on('click', '.removeThis', function() {
+            $(this).parent().parent().remove();
+            // Perbarui opsi setelah menambahkan dropdown baru
+            updateDropdownOptions();
+        });
+    });
 </script>
+
 <script type="text/javascript">
     $('.product_id').select2({
           allowClear: true,

@@ -95,18 +95,18 @@
   <hr>
 
   <div class="section">
-    Kami yang bertanda tangan di bawah ini. Pada hari ini ……… Tanggal …… Bulan ……… Tahun ………
+    Kami yang bertanda tangan di bawah ini. Pada hari ini {{\Carbon\Carbon::parse($handover->date)->locale('id_ID')->dayName}} Tanggal {{\Carbon\Carbon::parse($handover->date)->day}} Bulan {{\Carbon\Carbon::parse($handover->date)->translatedFormat('F')}} Tahun {{\Carbon\Carbon::parse($handover->date)->year}}
   </div>
 
   <div class="section">
-    <div class="form-field"><span class="form-label">Nama:</span> ____________________________________________</div>
-    <div class="form-field"><span class="form-label">Department:</span> ____________________________________________</div>
+    <div class="form-field"><span class="form-label">Nama:</span> {{$handover->handoverName->name}}</div>
+    <div class="form-field"><span class="form-label">Department:</span> HARD CODE DEPARTMENT</div>
     <div>Selanjutnya disebut sebagai <strong>PIHAK PERTAMA</strong></div>
   </div>
 
   <div class="section">
-    <div class="form-field"><span class="form-label">Nama:</span> ____________________________________________</div>
-    <div class="form-field"><span class="form-label">Department:</span> ____________________________________________</div>
+    <div class="form-field"><span class="form-label">Nama:</span> {{$handover->receiverName->name}} </div>
+    <div class="form-field"><span class="form-label">Department:</span> {{$handover->department}}</div>
     <div>Selanjutnya disebut sebagai <strong>PIHAK KEDUA</strong></div>
   </div>
 
@@ -125,7 +125,13 @@
       </tr>
     </thead>
     <tbody>
-        
+        @foreach($itemHandover as $item)
+        <tr>
+          <td>{{ $loop->iteration }}</td>
+          <td>{{ $item->item_name }}</td>
+          <td>{{ $item->quantity }}</td>
+        </tr>
+        @endforeach
     </tbody>
   </table>
 
@@ -141,12 +147,12 @@
       <td style="text-align: center; padding-right: 50px; border: none;">
         Yang Menyerahkan:<br/>
         <strong>PIHAK PERTAMA</strong><br/><br/><br/><br/>
-        (......................................)
+        {{$handover->handoverName->name}}
       </td>
       <td style="text-align: center; border: none;">
         Yang Menerima:<br/>
         <strong>PIHAK KEDUA</strong><br/><br/><br/><br/>
-        (......................................)
+        {{$handover->receiverName->name}}
       </td>
     </tr>
   </table>

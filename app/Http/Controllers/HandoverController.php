@@ -6,10 +6,12 @@ use App\Models\Handover;
 use App\Models\Item;
 use App\Models\ItemHandover;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class HandoverController extends Controller
@@ -17,13 +19,13 @@ class HandoverController extends Controller
     public function index(Request $request)
     {
         $user_id = Auth::user()->id;
-        if($request->void) {
+        if ($request->void) {
             $handovers = Handover::with(['item_handovers', 'handoverName', 'receiverName'])
-                ->where('void', $request->void)
+                ->where('void', $request->void)->orderBy('date', 'desc')
                 ->get();
         } else {
             $handovers = Handover::with(['item_handovers', 'handoverName', 'receiverName'])
-                ->where('void', false)
+                ->where('void', false)->orderBy('date', 'desc')
                 ->get();
         }
         return view('handover.index', compact('handovers'));
@@ -33,8 +35,9 @@ class HandoverController extends Controller
     {
         $users = User::all();
         $items = Item::all();
-        $now = Carbon::now();
-        return view('handover.create', compact('users', 'now', 'items'));
+        $handover = Handover::all()->last();
+        // dd('HO' . date('y') . date('n') . date('d') . str_pad(intval(substr($handover?->document_name, -4)) + 1, 4, '0', STR_PAD_LEFT));
+        return view('handover.create', compact('users', 'items', 'handover'));
     }
 
     public function store(Request $request)
@@ -54,6 +57,23 @@ class HandoverController extends Controller
             $item->save();
         }
 
+        // Generate PDF and save it to storage
+        $pdfHandover = $this->generatePDF($handover->id, $request->documentName);
+
+        // Convert the PDF to base64
+        $pdfToBase64 = 'data:application/pdf;base64, ' . base64_encode($pdfHandover->output());
+
+        // Set the file name and save the PDF to storage
+        $originalName = sha1($request->documentName) . '.pdf';
+
+        Storage::put('public/handover_pdfs/' . $originalName, $pdfHandover->output());
+
+        // updating handover to saving document name and base64
+        $handover->document_name = $request->documentName;
+        $handover->original_name = $originalName;
+        $handover->base64 = $pdfToBase64;
+        $handover->save();
+
         Alert::success('Upload Successfully!', 'Document successfully uploaded!');
         return redirect()->intended('handover/index');
     }
@@ -67,13 +87,11 @@ class HandoverController extends Controller
 
     public function revision(Request $request)
     {
-        // cari dan relasi handover_id di item handover dengan id handover (buat dengan sql raw)
         $users = User::all();
         $items = Item::all();
         $handover = Handover::find($request->id);
         $itemHandover = DB::select("SELECT ih.* FROM item_handovers ih INNER JOIN handovers h ON ih.handover_id = h.id WHERE h.id = ? ", [$request->id]);
 
-        // dd($itemHandover[0]);
         return view('handover.revision', compact('users', 'items', 'handover', 'itemHandover'));
     }
 
@@ -81,11 +99,16 @@ class HandoverController extends Controller
     {
         $itemsToDelete = json_decode($request->input('items_to_delete'), true);
         if (!empty($itemsToDelete)) {
-            // Delete items from the database
+            // Delete old items from the database
             ItemHandover::whereIn('id', $itemsToDelete)->delete();
         }
 
         $handover = Handover::find($request->handover_id);
+        // delete old file document if exists
+        if ($handover->document_name) {
+            Storage::delete('public/handover_pdfs/' . $handover->original_name);
+        }
+
         $handover->handover_name_id = $request->handover_name_id;
         $handover->receiver_name_id = $request->receiver_name_id;
         $handover->department = $request->department;
@@ -113,6 +136,24 @@ class HandoverController extends Controller
             }
         }
 
+
+        // Generate PDF and save it to storage
+        $pdfHandover = $this->generatePDF($handover->id, $request->documentName);
+
+        // Convert the PDF to base64
+        $pdfToBase64 = 'data:application/pdf;base64, ' . base64_encode($pdfHandover->output());
+
+        // Set the file name and save the PDF to storage
+        $originalName = sha1($request->documentName) . '.pdf';
+
+        Storage::put('public/handover_pdfs/' . $originalName, $pdfHandover->output());
+
+        // updating handover to saving document name and base64
+        $handover->document_name = $request->documentName;
+        $handover->original_name = $originalName;
+        $handover->base64 = $pdfToBase64;
+        $handover->save();
+
         Alert::success('Upload Successfully!', 'Document successfully uploaded!');
         return redirect()->intended('handover/index');
     }
@@ -132,5 +173,14 @@ class HandoverController extends Controller
         $handover->save();
         Alert::success('Restore Successfully!', 'Document successfully restore!');
         return redirect()->intended('handover/index');
+    }
+
+    public function generatePDF(String $id)
+    {
+        $handover = Handover::with(['item_handovers', 'handoverName', 'receiverName'])->find($id);
+        $itemHandover = DB::select("SELECT ih.*, i.productName AS item_name FROM item_handovers ih INNER JOIN handovers h ON ih.handover_id = h.id INNER JOIN items i ON ih.item_id = i.id WHERE h.id = ? ", [$id]);
+        $pdf = PDF::loadView('template.handover', compact(['handover', 'itemHandover']));
+
+        return $pdf;
     }
 }

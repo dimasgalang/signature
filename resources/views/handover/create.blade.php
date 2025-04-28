@@ -48,6 +48,7 @@
                                         <div class="row">
                                             <div class="col-xl-9">
                                                     <select class="form-control receiver_name_id" id="receiver_name_id" name="receiver_name_id" >
+                                                        <option></option>
                                                         @foreach ($users as $user )
                                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                                                         @endforeach
@@ -58,12 +59,23 @@
                                     <br>
                                     <div>
                                         <label for="text">Department</label>
-                                        <input class="form-control" type="text" id="text" name="department" >
+                                        <input class="form-control" type="text" id="text" name="department">
                                     </div>
                                     <br>
                                     <div>
                                         <label for="handoverDate">Tanggal</label>
-                                        <input class="form-control" type="date" id="handoverDate" name="handoverDate" value="{{ date('Y-m-d') }}" disabled>
+                                        <input class="form-control" type="date" id="handoverDate" name="handoverDate" value="{{ date('Y-m-d') }}" readonly>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label for="documentName">Document Name</label>
+                                        @if(((substr($handover?->document_name,2,5)) != date('y') . date('n') . date('d')))
+                                        <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'HO' . date('y') . date('n') . date('d') . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
+                                        @elseif(((substr($handover?->document_name,2,5)) == (date('y') . date('n') . date('d'))) || ($handover?->document_name ?? ''))
+                                        <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'HO' . date('y') . date('n') . date('d') . str_pad(intval(substr($handover?->document_name,-4)) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
+                                        @else
+                                        <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'HO' . date('y') . date('n') . date('d') . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
+                                        @endif
                                     </div>
                                     <br>
                                     <div class="row">
@@ -85,6 +97,7 @@
                                         <div class="col-xl-5">
                                             <label>Product Name :</label>
                                             <select class="form-control product_id" id="product_id" name="product_id[0][item_id]" >
+                                                <option></option>
                                                 @foreach ($items as $item )
                                                     <option value="{{ $item->id }}">{{ $item->productName }}</option>
                                                 @endforeach
@@ -96,7 +109,7 @@
                                         </div>
                                         <div class="col-xl-2">
                                             <label></label>
-                                            <button type="button" class="btn btn-sm btn-primary btn-block mt-3" onclick="addRecords()">Add</button>
+                                            <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-handover" onclick="">Add</button>
                                         </div>
                                     </div>
                                 </div>
@@ -152,26 +165,79 @@
         }
     })
 </script> --}}
-<script type="text/javascript">
-    function addRecords() {
-        let itemInput = document.getElementById('itemInput');
-        let itemIndex = itemInput.children.length;
-        $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" >@foreach ($items as $item )<option value="{{ $item->id }}">{{ $item->productName }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
-        console.log(itemIndex);
-        // $('.approval_id').select2({
-        //     allowClear: true,
-        //     placeholder: 'Choose Approval',
-        // });
-    }
 
-    $(document).on('click', '.removeThis', function() {
-        $(this).parent().parent().remove();
-    })
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        // Inisialisasi Select2
+        $('.product_id').select2({
+            allowClear: true,
+            placeholder: 'Choose Product Item',
+        });
+
+        // Fungsi untuk memperbarui opsi di semua dropdown
+        function updateDropdownOptions() {
+            // Ambil semua nilai yang dipilih
+            let selectedValues = [];
+            $('.product_id').each(function() {
+                let value = $(this).val();
+                if (value) {
+                    selectedValues.push(value);
+                }
+            });
+
+            // Perbarui opsi di setiap dropdown
+            $('.product_id').each(function() {
+                let currentDropdown = $(this);
+                let currentValue = currentDropdown.val();
+
+                currentDropdown.find('option').each(function() {
+                    let optionValue = $(this).val();
+
+                    // Disabled opsi jika sudah dipilih di dropdown lain
+                    if (selectedValues.includes(optionValue) && optionValue !== currentValue) {
+                        $(this).attr('disabled', true);
+                    } else {
+                        $(this).attr('disabled', false);
+                    }
+                });
+
+                // Refresh Select2 untuk memperbarui tampilan
+                currentDropdown.trigger('change.select2');
+            });
+        }
+
+        // Panggil fungsi saat dropdown berubah
+        $(document).on('change', '.product_id', function() {
+            updateDropdownOptions();
+        });
+
+        $('.add-handover').on('click', function() {
+            let itemInput = document.getElementById('itemInput');
+            let itemIndex = itemInput.children.length;
+            $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" ><option></option>@foreach ($items as $item )<option value="{{ $item->id }}">{{ $item->productName }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
+            // console.log(itemIndex);
+            $('.product_id').select2({
+                placeholder: 'Choose Product Item',
+                allowClear: true,
+            });
+
+            // Perbarui opsi setelah menambahkan dropdown baru
+            updateDropdownOptions();
+        });
+
+        $(document).on('click', '.removeThis', function() {
+            $(this).parent().parent().remove();
+            // Perbarui opsi setelah menambahkan dropdown baru
+            updateDropdownOptions();
+        });
+    });
 </script>
+
 <script type="text/javascript">
     $('.product_id').select2({
           allowClear: true,
-          placeholder: 'Choose Approval',
+          placeholder: 'Choose Product Item',
     });
     $('.handover_name_id').select2({
           allowClear: true,
@@ -179,7 +245,7 @@
     });
     $('.receiver_name_id').select2({
           allowClear: true,
-          placeholder: 'Choose Approval',
+          placeholder: 'Choose Receiver Name',
     });
 </script>
 </html>

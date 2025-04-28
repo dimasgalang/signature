@@ -17,6 +17,9 @@ return new class extends Migration
             $table->foreignId('receiver_name_id')->constrained('users');
             $table->string('department');
             $table->dateTime('date');
+            $table->string('document_name')->nullable();
+            $table->string('original_name')->nullable();
+            $table->longText('base64')->nullable();
             $table->string('void')->default('false');
             $table->timestamps();
         });
