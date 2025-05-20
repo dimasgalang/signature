@@ -243,21 +243,21 @@ class ApprovalController extends Controller
         // dd($sendTo);
         $finishTo = Approval::select('users.email', 'approval.id')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->where('approval.approval_level', '=', 1)->get();
 
-        // if (count($sendTo) > 0) {
-        //     $email = [
-        //         'name' => 'Chutex E-Signature',
-        //         'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '". You can give document approval by opening the link below.',
-        //         'url' => URL::to("/approval/approve/" . $sendTo[0]->id)
-        //     ];
-        //     Mail::to($sendTo[0]->email)->send(new SendEmail($email));
-        // } else {
-        //     $email = [
-        //         'name' => 'Chutex E-Signature',
-        //         'body' => 'Your document "' . $approval->document_name . '" has been approved!',
-        //         'url' => URL::to("/approval/index")
-        //     ];
-        //     Mail::to($finishTo[0]->email)->send(new SendEmail($email));
-        // }
+        if (count($sendTo) > 0) {
+            $email = [
+                'name' => 'Chutex E-Signature',
+                'body' => 'Please check and give an approval on your pending document "' . $approval->document_name . '" from "' . $totalData[0]->name . '". You can give document approval by opening the link below.',
+                'url' => URL::to("/approval/approve/" . $sendTo[0]->id)
+            ];
+            Mail::to($sendTo[0]->email)->send(new SendEmail($email));
+        } else {
+            $email = [
+                'name' => 'Chutex E-Signature',
+                'body' => 'Your document "' . $approval->document_name . '" has been stamped!',
+                'url' => URL::to("/approval/index")
+            ];
+            Mail::to($finishTo[0]->email)->send(new SendEmail($email));
+        }
 
         Alert::success('Stamping Successfully!', 'Document "' . $approval->document_name . '" successfully stamped!');
 
@@ -267,7 +267,7 @@ class ApprovalController extends Controller
 
     public function store(Request $request)
     {
-        if($request->file) {
+        if ($request->file) {
             $request->validate([
                 'file' => 'required|mimes:docx,pdf|max:10240'
             ]);
@@ -296,7 +296,7 @@ class ApprovalController extends Controller
             $level++;
         }
 
-        if($request->file) {
+        if ($request->file) {
             Storage::put('public/document/', $file);
         } else {
             Storage::put('public/document/' . $request->original_name, base64_decode(str_replace('data:application/pdf;base64,', '', $request->base64)));
@@ -316,7 +316,7 @@ class ApprovalController extends Controller
 
     public function fetchattachment($token)
     {
-        $fetchattachment = DB::select('select attachment.* from attachment left join approval on attachment.token = approval.token where attachment.token = "' . $token . '" and attachment.void = "false"');
+        $fetchattachment = DB::select('select distinct attachment.* from attachment left join approval on attachment.token = approval.token where attachment.token = "' . $token . '" and attachment.void = "false"');
         // return response()->json($fetchattachment);
         return DataTables::of($fetchattachment)
             ->addIndexColumn()

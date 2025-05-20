@@ -33,6 +33,8 @@
             display: none;
             width: 120px;
             height: 70px;
+            top: 0;
+            right: 0;
             background-color: rgba(255, 0, 0, 0.4);
             touch-action: none;
             user-select: none;

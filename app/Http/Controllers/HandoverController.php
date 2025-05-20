@@ -25,7 +25,7 @@ class HandoverController extends Controller
                 ->get();
         } else {
             $handovers = Handover::with(['item_handovers', 'handoverName', 'receiverName'])
-                ->where('void', false)->orderBy('date', 'desc')
+                ->where('void', 'false')->orderBy('date', 'desc')
                 ->get();
         }
         return view('handover.index', compact('handovers'));
@@ -184,7 +184,7 @@ class HandoverController extends Controller
         return $pdf;
     }
 
-    public function createApproval($id) 
+    public function createApproval($id)
     {
         $handover = Handover::findOrFail($id);
         $users = User::all();

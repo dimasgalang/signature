@@ -64,8 +64,7 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Stamping</h6>
                             </div>
                             <div class="card-body">
-                                <center>
-                                    <div id=parent>
+                                    <div id="parent">
                                         <div class="draggable"><img src="{{ asset('/storage/signature/' . $user[0]->signature_img) }}" width="100%" height="100%"></div>
                                         <canvas class="border-solid border-2 dark:border-zinc-50" id="pdf-canvas"></canvas>
                                     </div>
@@ -75,7 +74,6 @@
                                     <input type="hidden" id="stampWidth" name="stampWidth" value="70">
                                     <input type="hidden" id="canvasHeight" name="canvasHeight">
                                     <input type="hidden" id="canvasWidth" name="canvasWidth">
-                                </center>
                             </div>
                         </div>
                     </div>
