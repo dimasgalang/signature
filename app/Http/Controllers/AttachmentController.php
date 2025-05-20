@@ -25,7 +25,7 @@ class AttachmentController extends Controller
 
     public function create()
     {
-        $approvals = DB::select('select DISTINCT document_name,token from approval');
+        $approvals = DB::select('select DISTINCT document_name,token from approval where void = "false"');
         return view('attachment.create', compact('approvals'));
     }
 
