@@ -45,7 +45,7 @@ class HandoverController extends Controller
         $handover = Handover::create([
             'handover_name_id' => $request->handover_name_id,
             'receiver_name_id' => $request->receiver_name_id,
-            'department' => $request->department,
+            'department' => $request->receiverDepartment,
             'date' => Carbon::now()->format('Y-m-d')
         ]);
 
@@ -111,7 +111,7 @@ class HandoverController extends Controller
 
         $handover->handover_name_id = $request->handover_name_id;
         $handover->receiver_name_id = $request->receiver_name_id;
-        $handover->department = $request->department;
+        $handover->department = $request->receiverDepartment;
         $handover->save();
 
         // update data item handover secara manual tanpa menghapus data yang ada
@@ -189,5 +189,11 @@ class HandoverController extends Controller
         $handover = Handover::findOrFail($id);
         $users = User::all();
         return view('handover.createApprove', compact(['users', 'handover']));
+    }
+
+    public function fetchDept($id_user)
+    {
+        $users = User::findOrFail($id_user);
+        return response()->json($users);
     }
 }

@@ -85,7 +85,7 @@
         <div id="collapseTemplate" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('template.lpp') }}">LPP</a>
-                <a class="collapse-item" href="{{ route('template.serah-terima') }}">Serah Terima</a>
+                <a class="collapse-item" href="{{ route('template.handover') }}">Handover</a>
             </div>
         </div>
     </li>

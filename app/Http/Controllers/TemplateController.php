@@ -11,8 +11,8 @@ class TemplateController extends Controller
         return view('template.lpp');
     }
 
-    public function serah_terima()
+    public function handover()
     {
-        return view('template.serah-terima');
+        return view('template.handover');
     }
 }

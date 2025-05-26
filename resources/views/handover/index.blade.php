@@ -45,8 +45,10 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Handover Name</th>
+                                        <th>From Department</th>
                                         <th>Receiver Name</th>
-                                        <th>Department</th>
+                                        <th>To Department</th>
+                                        <th>Document Name</th>
                                         <th>Handover Date</th>
                                         <th>Total Item</th>
                                         <th>Action</th>
@@ -57,8 +59,10 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $handover->handoverName->name }}</td>
+                                        <td>{{ $handover->handoverName->dept }}</td>
                                         <td>{{ $handover->receiverName->name }}</td>
                                         <td>{{ $handover->department }}</td>
+                                        <td>{{ $handover->document_name }}</td>
                                         <td>{{ $handover->date }}</td>
                                         <td>{{ $handover->item_handovers->count() }}</td>
                                          <td>

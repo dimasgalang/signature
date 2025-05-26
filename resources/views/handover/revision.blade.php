@@ -43,8 +43,13 @@
                                         </div>
                                     </div>
                                     <br>
+                                    <div>
+                                        <label for="text">Handover Department</label>
+                                        <input class="form-control" type="text" id="handoverDepartment" name="handoverDepartment" value="{{ Auth::user()->dept }}" readonly>
+                                    </div>
+                                    <br>
                                     <div id="handoverInput">
-                                        <label>Penerima Name :</label>
+                                        <label>Receiver Name :</label>
                                         <div class="row">
                                             <div class="col-xl-9">
                                                     <select class="form-control receiver_name_id" id="receiver_name_id" name="receiver_name_id" >
@@ -57,8 +62,8 @@
                                     </div>
                                     <br>
                                     <div>
-                                        <label for="text">Department</label>
-                                        <input class="form-control" type="text" id="text" value="{{ $handover->department }}" name="department" >
+                                        <label for="text">Receiver Department</label>
+                                        <input class="form-control" type="text" id="receiverDepartment" value="{{$handover->department}}" name="receiverDepartment" readonly>
                                     </div>
                                     <br>
                                     <div>
@@ -93,7 +98,7 @@
                                                 <label>Product Name :</label>
                                                 <select class="form-control product_id" id="product_id" name="product_id[{{$key}}][item_id]" >
                                                     @foreach ($items as $item )
-                                                        <option value="{{ $item->id }}" {{$itemsHdv->item_id == $item->id ? 'selected' : ''}}>{{ $item->productName }}</option>
+                                                        <option value="{{ $item->id }}" {{$itemsHdv->item_id == $item->id ? 'selected' : ''}}>{{ $item->itemNumber }} - {{ $item->productName }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -233,7 +238,7 @@
         $('.add-handover').on('click', function() {
             let itemInput = document.getElementById('itemInput');
             let itemIndex = itemInput.children.length;
-            $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" ><option></option>@foreach ($items as $item )<option value="{{ $item->id }}">{{ $item->productName }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
+            $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" ><option></option>@foreach ($items as $item )<option value="{{ $item->id }}">{{ $item->itemNumber }} - {{ $item->productName }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
             // console.log(itemIndex);
             $('.product_id').select2({
                 placeholder: 'Choose Product Item',
@@ -248,6 +253,24 @@
             $(this).parent().parent().remove();
             // Perbarui opsi setelah menambahkan dropdown baru
             updateDropdownOptions();
+        });
+
+        $(document).on("change", "#receiver_name_id", function(e){
+            e.preventDefault();
+            var receiverName_id = $(this).val();
+            if (receiverName_id) {
+                $.ajax({
+                    url: '/handover/fetchDept/'+receiverName_id,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#receiverDepartment').val(data.dept);
+                    }
+                });
+            } else{
+                $('#receiverDepartment').empty();
+                $('#receiverDepartment').attr('disabled','disabled');
+            }
         });
     });
 </script>

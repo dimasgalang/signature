@@ -100,7 +100,7 @@
 
   <div class="section">
     <div class="form-field"><span class="form-label">Nama:</span> {{$handover->handoverName->name}}</div>
-    <div class="form-field"><span class="form-label">Department:</span> HARD CODE DEPARTMENT</div>
+    <div class="form-field"><span class="form-label">Department: </span> {{$handover->handoverName->dept}}</div>
     <div>Selanjutnya disebut sebagai <strong>PIHAK PERTAMA</strong></div>
   </div>
 

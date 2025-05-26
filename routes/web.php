@@ -87,7 +87,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/approval/stamping', [ApprovalController::class, 'stamping'])->name('approval.stamping');
     Route::get('/handover/create-approval/{id}', [HandoverController::class, 'createApproval'])->name('handover.createApproval');
 
-    // Serah Terima
+    // Handover
     Route::get('/handover/index', [HandoverController::class, 'index'])->name('handover.index');
     Route::get('/handover/create', [HandoverController::class, 'create'])->name('handover.create');
     Route::post('/handover/store', [HandoverController::class, 'store'])->name('handover.store');
@@ -96,6 +96,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/handover/update', [HandoverController::class, 'update'])->name('handover.updateHandover');
     Route::post('/handover/void', [HandoverController::class, 'void'])->name('handover.void');
     Route::post('/handover/restore', [HandoverController::class, 'restore'])->name('handover.restore');
+    Route::get('/handover/fetchDept/{id_user}', [HandoverController::class, 'fetchDept'])->name('handover.fetchDept');
 
     //Attachment
     Route::get('/attachment/index', [AttachmentController::class, 'index'])->name('attachment.index');
@@ -114,7 +115,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Template
     Route::get('/template/lpp', [TemplateController::class, 'lpp'])->name('template.lpp');
-    Route::get('/template/serah-terima', [TemplateController::class, 'serah_terima'])->name('template.serah-terima');
+    Route::get('/template/handover', [TemplateController::class, 'handover'])->name('template.handover');
 
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');
