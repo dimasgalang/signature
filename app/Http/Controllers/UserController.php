@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -85,7 +86,9 @@ class UserController extends Controller
 
         $user->fill([
             'name' => $request->name,
+            'dept' => $request->dept,
             'email' => $request->email,
+            'password' => !empty($request->password) ? Hash::make($request->password) : $user->password,
         ]);
 
         $user->save();

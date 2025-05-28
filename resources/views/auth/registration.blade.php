@@ -61,6 +61,11 @@
                             </div>
                             <br>
                             <div>
+                                <label>Department :</label>
+                                <input class="form-control" type="text" id="dept" name="dept">
+                            </div>
+                            <br>
+                            <div>
                                 <label>Email :</label>
                                 <input class="form-control" type="email" id="email" name="email">
                             </div>
