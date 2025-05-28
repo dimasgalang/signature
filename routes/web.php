@@ -6,6 +6,7 @@ use App\Http\Controllers\ConverterController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HandoverController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RoleController;
@@ -106,6 +107,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/attachment/restore', [AttachmentController::class, 'restore'])->name('attachment.restore');
     Route::get('/attachment/fetchattachment/{id}', [AttachmentController::class, 'fetchattachment'])->name('attachment.fetchattachment');
 
+    // Item
+    Route::get('/item/index', [ItemController::class, 'index'])->name('item.index');
+    Route::get('/item/create', [ItemController::class, 'create'])->name('item.create');
+    Route::post('/item/store', [ItemController::class, 'store'])->name('item.store');
+    Route::get('/item/revision/{id}', [ItemController::class, 'revision'])->name('item.revisionItem');
+    Route::post('/item/update', [ItemController::class, 'update'])->name('item.updateItem');
+    Route::post('/item/void', [ItemController::class, 'void'])->name('item.void');
+    Route::post('/item/restore', [ItemController::class, 'restore'])->name('item.restore');
+    Route::get('/item/fetchItem/{id}', [ItemController::class, 'fetchItem'])->name('item.fetchItem');
 
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');

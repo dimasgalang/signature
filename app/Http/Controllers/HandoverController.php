@@ -175,11 +175,13 @@ class HandoverController extends Controller
         return redirect()->intended('handover/index');
     }
 
-    public function generatePDF(String $id)
+    public function generatePDF(String $id, String $documentName)
     {
         $handover = Handover::with(['item_handovers', 'handoverName', 'receiverName'])->find($id);
         $itemHandover = DB::select("SELECT ih.*, i.productName AS item_name FROM item_handovers ih INNER JOIN handovers h ON ih.handover_id = h.id INNER JOIN items i ON ih.item_id = i.id WHERE h.id = ? ", [$id]);
-        $pdf = PDF::loadView('template.handover', compact(['handover', 'itemHandover']));
+        $pdf = PDF::loadView('template.handover', compact(['handover', 'itemHandover', 'documentName']))
+            ->setPaper('a4', 'portrait')
+            ->setOptions(['defaultFont' => 'sans-serif']);
 
         return $pdf;
     }

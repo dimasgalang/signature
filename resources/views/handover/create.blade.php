@@ -35,7 +35,7 @@
                                     <div id="handoverInput">
                                         <label>Handover Name :</label>
                                         <div class="row">
-                                            <div class="col-xl-9">
+                                            <div class="col-xl-12">
                                                     <select class="form-control handover_name_id" id="handover_name_id" name="handover_name_id" >
                                                         <option value="{{ Auth::user()->id }}">{{ Auth::user()->name }}</option>
                                                     </select>
@@ -51,7 +51,7 @@
                                     <div id="handoverInput">
                                         <label>Receiver Name :</label>
                                         <div class="row">
-                                            <div class="col-xl-9">
+                                            <div class="col-xl-12">
                                                     <select class="form-control receiver_name_id" id="receiver_name_id" name="receiver_name_id" >
                                                         <option></option>
                                                         @foreach ($users as $user )

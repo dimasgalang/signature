@@ -9,8 +9,8 @@
       font-family: Arial, sans-serif;
       line-height: 1.6;
       max-width: 800px;
-      margin: 30px auto;
-      padding: 20px;
+      margin: 20px auto;
+      padding: 10px;
     }
     h1 {
       text-align: center;
@@ -87,7 +87,7 @@
               </center>
           </td>
           <td class="header">
-                  <p style="font-size: x-small;"><b>No. </b>B25A000106</p>
+                  <p style="font-size: x-small;"><b>No. </b>{{$documentName}}</p>
                   <p style="font-size: x-small;"><b>Tgl. </b>{{ now() }}</p>
           </td>
       </tr>
@@ -111,9 +111,7 @@
   </div>
 
   <div class="section">
-    PIHAK PERTAMA menyerahkan barang kepada PIHAK KEDUA, dan PIHAK KEDUA
-    menyatakan telah menerima barang dari PIHAK PERTAMA dengan baik sesuai dengan
-    informasi yang tercantum di dalam daftar terlampir:
+    PIHAK PERTAMA menyerahkan barang kepada PIHAK KEDUA, dan PIHAK KEDUA menyatakan telah menerima barang dari PIHAK PERTAMA dengan baik sesuai dengan informasi yang tercantum di dalam daftar terlampir:
   </div>
 
   <table id="handover-table">
@@ -136,10 +134,7 @@
   </table>
 
   <div class="note">
-    Demikian berita acara serah terima barang ini telah dibuat oleh kedua belah pihak. Adapun
-    barang-barang tersebut diserahkan dalam keadaan baik dan lengkap. Sejak penandatanganan
-    berita acara ini, maka barang tersebut menjadi tanggung jawab dari PIHAK KEDUA dan wajib
-    untuk memelihara/merawat dengan baik serta dipergunakan untuk keperluan sesuai kebutuhan.
+    Demikian berita acara serah terima barang ini telah dibuat oleh kedua belah pihak. Adapun barang-barang tersebut diserahkan dalam keadaan baik dan lengkap. Sejak penandatanganan berita acara ini, maka barang tersebut menjadi tanggung jawab dari PIHAK KEDUA dan wajib untuk memelihara/merawat dengan baik serta dipergunakan hanya untuk keperluan perusahaan. Dan akan mengembalikan ke departement IT ketika sudah tidak bekerja di PT Chutex Internasional Indonesia.
   </div>
 
   <table class="signature">
@@ -156,35 +151,6 @@
       </td>
     </tr>
   </table>
-
-
-
-<hr>
-<table>
-    <tr>
-        <td>
-            <i>
-                <p style="font-size: x-small;">ISO 9001</p>
-            </i>
-        </td>
-        <td>
-            <i>
-                <p style="font-size: x-small;">No. Dok. F.M.A-GA</p>
-            </i>
-        </td>
-        <td>
-            <i>
-                <p style="font-size: x-small;">Rev. 00      0.10.2010</p>
-            </i>
-        </td>
-        <td>
-            <i>
-                <p style="font-size: x-small;">0.10.2010</p>
-            </i>
-        </td>
-    </tr>
-</table>
-<hr>
 
 </body>
 </html>
