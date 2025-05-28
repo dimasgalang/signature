@@ -66,9 +66,12 @@
                                         <td>{{ $handover->date }}</td>
                                         <td>{{ $handover->item_handovers->count() }}</td>
                                          <td>
-                                            <center>
+                                             <center>
+                                                <a href="{{asset('storage/handover_pdfs/'.$handover->original_name)}}" target="_blank" class="btn btn-primary btn-circle btn-sm">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
                                                 <a href="{{ route('handover.createApproval', $handover->id) }}" class="btn btn-success btn-circle btn-sm">
-                                                    <i class="fas fa-edit"></i>
+                                                    <i class="fas fa-file"></i>
                                                 </a>
                                                 <a href="{{ route('handover.revisionHandover', $handover->id) }}" class="btn btn-warning btn-circle btn-sm">
                                                     <i class="fas fa-edit"></i>
@@ -359,17 +362,5 @@
             });
         });
     });
-    // $(function () {
-    //     $('body').on('click', '#show-comment', function() {
-    //     var jsonComment = $(this).data('comment-url'); 
-    //     $.get(jsonComment, function (data) {
-    //         if (data.length > 0) {
-    //             $('#modal_comment_detail').val(data[0].comment);
-    //             } else {
-
-    //             }
-    //         });
-    //     });
-    // });
 </script>
 </html>
