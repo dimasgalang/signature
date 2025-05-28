@@ -9,7 +9,9 @@ class Item extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'itemNumber',
         'productName',
+        'qtyType',
     ];
 
     public function ItemHandover() {
