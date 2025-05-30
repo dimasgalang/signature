@@ -183,7 +183,7 @@
             if (data.length > 0) {
                 $('#modal_item_id_void').val(data[0].id);
                 } else {
-
+                
                 }
             });
         });
@@ -195,7 +195,7 @@
             if (data.length > 0) {
                 $('#modal_item_id_restore').val(data[0].id);
                 } else {
-
+                
                 }
             });
         });

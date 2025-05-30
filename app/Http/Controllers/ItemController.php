@@ -13,7 +13,11 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::all();
+        if (request()->void) {
+            $items = Item::where('void', request()->void)->orderBy('itemNumber', 'desc')->get();
+        } else {
+            $items = Item::where('void', 'false')->orderBy('itemNumber', 'desc')->get();
+        }
         return view('item.index', compact('items'));
     }
 
@@ -87,7 +91,6 @@ class ItemController extends Controller
     public function fetchItem($id)
     {
         $item = Item::select('items.*')->where('items.id', '=', $id)->get();
-        dd($item);
         return response()->json($item);
     }
 

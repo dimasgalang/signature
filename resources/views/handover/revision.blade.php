@@ -93,7 +93,7 @@
                                 <div id="itemInput">
                                     @foreach($itemHandover as $key => $itemsHdv )
                                         <div class="row">
-                                            <div class="col-xl-5">
+                                            <div class="col-xl-6">
                                                 <input class="form-control" type="hidden" id="id" name="product_id[{{$key}}][id]" value="{{$itemsHdv->id}}">
                                                 <label>Product Name :</label>
                                                 <select class="form-control product_id" id="product_id" name="product_id[{{$key}}][item_id]" >
@@ -102,7 +102,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-xl-5">
+                                            <div class="col-xl-4">
                                                 <label>Quantity :</label>
                                                 <input class="form-control" type="number" id="number" name="product_id[{{$key}}][quantity]" value="{{$itemsHdv->quantity}}">
                                             </div>

@@ -99,7 +99,7 @@
                             <div class="card-body">
                                 <div id="itemInput">
                                     <div class="row">
-                                        <div class="col-xl-5">
+                                        <div class="col-xl-6">
                                             <label>Product Name :</label>
                                             <select class="form-control product_id" id="product_id" name="product_id[0][item_id]" >
                                                 <option></option>
@@ -108,7 +108,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-xl-5">
+                                        <div class="col-xl-4">
                                             <label>Quantity :</label>
                                             <input class="form-control" type="number" id="number" name="product_id[0][quantity]" >
                                         </div>

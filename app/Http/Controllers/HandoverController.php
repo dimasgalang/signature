@@ -34,7 +34,7 @@ class HandoverController extends Controller
     public function create()
     {
         $users = User::all();
-        $items = Item::all();
+        $items = Item::where('void', 'false')->get();
         $handover = Handover::all()->last();
         // dd('HO' . date('y') . date('n') . date('d') . str_pad(intval(substr($handover?->document_name, -4)) + 1, 4, '0', STR_PAD_LEFT));
         return view('handover.create', compact('users', 'items', 'handover'));
@@ -88,7 +88,7 @@ class HandoverController extends Controller
     public function revision(Request $request)
     {
         $users = User::all();
-        $items = Item::all();
+        $items = Item::where('void', 'false')->get();
         $handover = Handover::find($request->id);
         $itemHandover = DB::select("SELECT ih.* FROM item_handovers ih INNER JOIN handovers h ON ih.handover_id = h.id WHERE h.id = ? ", [$request->id]);
 
