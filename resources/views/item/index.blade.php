@@ -46,6 +46,7 @@
                                         <th>ID</th>
                                         <th>Item Number</th>
                                         <th>Product Name</th>
+                                        <th>Qty Type</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -55,6 +56,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->itemNumber }}</td>
                                         <td>{{ $item->productName }}</td>
+                                        <td>{{ $item->qtyType }}</td>
                                          <td>
                                             <center>
                                                 <a href="{{ route('item.revisionItem', $item->id) }}" class="btn btn-warning btn-circle btn-sm">
