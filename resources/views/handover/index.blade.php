@@ -65,7 +65,7 @@
                                         <td>{{ $handover->document_name }}</td>
                                         <td>{{ $handover->date }}</td>
                                         <td>{{ $handover->item_handovers->count() }}</td>
-                                         <td>
+                                         <td style="width: 8%">
                                              <center>
                                                 <a href="{{asset('storage/handover_pdfs/'.$handover->original_name)}}" target="_blank" class="btn btn-primary btn-circle btn-sm">
                                                     <i class="fas fa-eye"></i>
