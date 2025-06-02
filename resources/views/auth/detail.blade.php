@@ -70,6 +70,11 @@
                                 <input class="form-control" type="email" id="email" name="email" value="{{ $users->email }}">
                             </div>
                             <br>
+                            <div>
+                                <label>Dept :</label>
+                                <input class="form-control" type="text" id="dept" name="dept" value="{{ $users->dept }}">
+                            </div>
+                            <br>
                             <div class="row">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary btn-block">Update</button>
