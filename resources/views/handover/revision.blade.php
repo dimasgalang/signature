@@ -35,7 +35,7 @@
                                     <div id="handoverInput">
                                         <label>Handover Name :</label>
                                         <div class="row">
-                                            <div class="col-xl-9">
+                                            <div class="col-xl-12">
                                                     <select class="form-control handover_name_id" id="handover_name_id" name="handover_name_id" >
                                                         <option value="{{ Auth::user()->id }}">{{ Auth::user()->name }}</option>
                                                     </select>
@@ -51,7 +51,7 @@
                                     <div id="handoverInput">
                                         <label>Receiver Name :</label>
                                         <div class="row">
-                                            <div class="col-xl-9">
+                                            <div class="col-xl-12">
                                                     <select class="form-control receiver_name_id" id="receiver_name_id" name="receiver_name_id" >
                                                         @foreach ($users as $user )
                                                             <option value="{{ $user->id }}" {{$user->id == $handover->receiver_name_id ? 'selected' : ''}}>{{ $user->name }}</option>
@@ -98,7 +98,7 @@
                                                 <label>Product Name :</label>
                                                 <select class="form-control product_id" id="product_id" name="product_id[{{$key}}][item_id]" >
                                                     @foreach ($items as $item )
-                                                        <option value="{{ $item->id }}" {{$itemsHdv->item_id == $item->id ? 'selected' : ''}}>{{ $item->itemNumber }} - {{ $item->productName }}</option>
+                                                        <option value="{{ $item->barang_code }}" {{$itemsHdv->item_id == $item->barang_code ? 'selected' : ''}}>{{ $item->barang_code }} - {{ $item->barang_name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -177,7 +177,7 @@
     function addRecords() {
         let itemInput = document.getElementById('itemInput');
         let itemIndex = itemInput.children.length;
-        $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" >@foreach ($items as $item )<option value="{{ $item->id }}">{{ $item->productName }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
+        $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" >@foreach ($items as $item )<option value="{{ $item->barang_code }}">{{ $item->barang_name }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
         $('.product_id').select2({
             allowClear: true,
             placeholder: 'Choose Approval',
@@ -238,7 +238,7 @@
         $('.add-handover').on('click', function() {
             let itemInput = document.getElementById('itemInput');
             let itemIndex = itemInput.children.length;
-            $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" ><option></option>@foreach ($items as $item )<option value="{{ $item->id }}">{{ $item->itemNumber }} - {{ $item->productName }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
+            $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" ><option></option>@foreach ($items as $item )<option value="{{ $item->barang_code }}">{{ $item->barang_code }} - {{ $item->barang_name }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
             // console.log(itemIndex);
             $('.product_id').select2({
                 placeholder: 'Choose Product Item',

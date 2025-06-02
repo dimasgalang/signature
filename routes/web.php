@@ -11,6 +11,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\SignaturePadController;
+use App\Http\Controllers\SmartITController;
 use App\Http\Controllers\SpeechController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
@@ -97,6 +98,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/handover/void', [HandoverController::class, 'void'])->name('handover.void');
     Route::post('/handover/restore', [HandoverController::class, 'restore'])->name('handover.restore');
     Route::get('/handover/fetchDept/{id_user}', [HandoverController::class, 'fetchDept'])->name('handover.fetchDept');
+    Route::get('/handover/generatePDF/{id}', [HandoverController::class, 'generatePDF'])->name('handover.generatePDF');
 
     //Attachment
     Route::get('/attachment/index', [AttachmentController::class, 'index'])->name('attachment.index');
@@ -105,7 +107,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/attachment/void', [AttachmentController::class, 'void'])->name('attachment.void');
     Route::post('/attachment/restore', [AttachmentController::class, 'restore'])->name('attachment.restore');
     Route::get('/attachment/fetchattachment/{id}', [AttachmentController::class, 'fetchattachment'])->name('attachment.fetchattachment');
-
 
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
@@ -124,4 +125,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Converter
     Route::get('/converter', [ConverterController::class, 'index'])->name('converter.index');
     Route::post('/converter/converter', [ConverterController::class, 'converter'])->name('converter.converter');
+
+    //SmartIT
+    Route::get('/smartit/fetchitem', [SmartITController::class, 'fetchitem'])->name('smartit.fetchitem');
 });

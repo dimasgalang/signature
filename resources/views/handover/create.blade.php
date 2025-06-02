@@ -35,7 +35,7 @@
                                     <div id="handoverInput">
                                         <label>Handover Name :</label>
                                         <div class="row">
-                                            <div class="col-xl-9">
+                                            <div class="col-xl-12">
                                                     <select class="form-control handover_name_id" id="handover_name_id" name="handover_name_id" >
                                                         <option value="{{ Auth::user()->id }}">{{ Auth::user()->name }}</option>
                                                     </select>
@@ -51,7 +51,7 @@
                                     <div id="handoverInput">
                                         <label>Receiver Name :</label>
                                         <div class="row">
-                                            <div class="col-xl-9">
+                                            <div class="col-xl-12">
                                                     <select class="form-control receiver_name_id" id="receiver_name_id" name="receiver_name_id" >
                                                         <option></option>
                                                         @foreach ($users as $user )
@@ -101,10 +101,10 @@
                                     <div class="row">
                                         <div class="col-xl-5">
                                             <label>Product Name :</label>
-                                            <select class="form-control product_id" id="product_id" name="product_id[0][item_id]" >
+                                            <select class="form-control product_id" id="product_id" name="product_id[0][barang_code]" >
                                                 <option></option>
                                                 @foreach ($items as $item )
-                                                    <option value="{{ $item->id }}">{{ $item->itemNumber }} - {{ $item->productName }}</option>
+                                                    <option value="{{ $item->barang_code }}">{{ $item->barang_code }} - {{ $item->barang_name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -139,37 +139,6 @@
 <script type="module" src="{{asset('vendor/module/pdf.min.mjs')}}"></script>
 <script type="module" src="{{asset('vendor/module/pdf.worker.min.mjs')}}"></script>
 <script src="{{asset('vendor/jquery/interact.min.js')}}"></script>
-
-{{-- <script>
-    $("#submit").click(function() {
-        $(this).hide();
-    });
-    document.getElementById('file').onchange = function () {
-        var name = document.getElementById('file')
-        document.getElementById('document_name').value = name.files.item(0).name.split('.')[0];
-    };
-</script> --}}
-
-{{-- <script>
-    document.querySelector("#file").addEventListener("change", async function(e){
-        var file = e.target.files[0]
-        const toBase64 = file => new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-        });
-        console.log(await toBase64(file));
-
-        document.getElementById('base64').value = await toBase64(file);
-        if (file.type === "application/pdf") {
-            const fileURL = URL.createObjectURL(file);
-            document.getElementById('pdfPreview').src = fileURL;
-        } else {
-            alert("Please upload a valid PDF file.");
-        }
-    })
-</script> --}}
 
 <script type="text/javascript">
 
@@ -220,7 +189,7 @@
         $('.add-handover').on('click', function() {
             let itemInput = document.getElementById('itemInput');
             let itemIndex = itemInput.children.length;
-            $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" ><option></option>@foreach ($items as $item )<option value="{{ $item->id }}">{{ $item->itemNumber }} - {{ $item->productName }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
+            $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][barang_code]" ><option></option>@foreach ($items as $item )<option value="{{ $item->barang_code }}">{{ $item->barang_code }} - {{ $item->barang_name }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
             // console.log(itemIndex);
             $('.product_id').select2({
                 placeholder: 'Choose Product Item',
