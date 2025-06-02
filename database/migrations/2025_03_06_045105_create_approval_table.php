@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('original_name');
             $table->longText('base64');
             $table->string('approval_id');
+            $table->string('type');
             $table->integer('approval_level');
             $table->date('approval_date')->nullable();
             $table->string('approval_progress');

@@ -38,6 +38,7 @@
                                             <input class="form-control" type="text" id="document_name" name="document_name" value="{{$handover->document_name}}" required readonly>
                                             <input class="form-control" type="hidden" id="original_name" name="original_name" value="{{$handover->original_name}}">
                                             <input class="form-control" type="hidden" id="base64" name="base64" value="{{$handover->base64}}">
+                                            <input class="form-control" type="hidden" id="type" name="type" value="handover">
                                         </div>
                                         <br>
                                         <div id="approvalInput">

@@ -286,6 +286,7 @@ class ApprovalController extends Controller
             $item->original_name = $fileName ?? $request->original_name;
             $item->base64 = $request->base64;
             $item->approval_id = $request->approval_id[$key];
+            $item->type = $request->type;
             $item->approval_level = $level;
             $item->approval_progress = '1';
             $item->status = 'pending';

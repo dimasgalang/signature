@@ -49,7 +49,7 @@ class HandoverController extends Controller
             'receiver_name_id' => $request->receiver_name_id,
             'department' => $request->receiverDepartment,
             'document_name' => $request->documentName,
-            'date' => Carbon::now()->format('Y-m-d')
+            'date' => $request->handoverDate,
         ]);
 
         foreach ($request->product_id as $key => $value) {
@@ -187,11 +187,12 @@ class HandoverController extends Controller
         // dd($handover);
         $itemData = [];
         foreach ($itemHandover as $item) {
-            $itemsSmartIT = DB::connection('smartit')->table('ms_barang')->select('barang_code', 'barang_name')->where('barang_status', '=', 'Active')->where('barang_code', '=', $item->item_id)->get();
+            $itemsSmartIT = DB::connection('smartit')->table('ms_barang')->select('barang_code', 'barang_name', 'satuan_code')->where('barang_status', '=', 'Active')->where('barang_code', '=', $item->item_id)->get();
             $data = array(
                 'item_id' => $itemsSmartIT[0]->barang_code,
                 'item_name' => $itemsSmartIT[0]->barang_name,
-                'quantity' => $item->quantity
+                'quantity' => $item->quantity,
+                'item_unit' => $itemsSmartIT[0]->satuan_code,
             );
             $itemData[] = $data;
         }

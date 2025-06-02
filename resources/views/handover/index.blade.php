@@ -68,7 +68,7 @@
                                          <td>
                                             <center>
                                                 <a href="{{ route('handover.createApproval', $handover->id) }}" class="btn btn-success btn-circle btn-sm">
-                                                    <i class="fas fa-edit"></i>
+                                                    <i class="fas fa-file"></i>
                                                 </a>
                                                 <a href="{{ route('handover.revisionHandover', $handover->id) }}" class="btn btn-warning btn-circle btn-sm">
                                                     <i class="fas fa-edit"></i>
