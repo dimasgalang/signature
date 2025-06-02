@@ -69,7 +69,7 @@
                                     <br>
                                     <div>
                                         <label for="handoverDate">Tanggal</label>
-                                        <input class="form-control" type="date" id="handoverDate" name="handoverDate" value="{{ date('Y-m-d') }}" readonly>
+                                        <input class="form-control" type="date" id="handoverDate" name="handoverDate" value="{{ date('Y-m-d') }}">
                                     </div>
                                     <br>
                                     <div>
