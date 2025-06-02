@@ -78,7 +78,7 @@
       <tr>
           <td class="header">
               <center>
-                  <img src="data:image/png;base64,{{ base64_encode(file_get_contents(asset('/storage/images/chutex_logo.png'))) }}" style="width: 70px;">
+                <img src="{{ public_path('img/chutex_logo.png') }}" style="width: 70px;">
               </center>
           </td>
           <td class="header">
