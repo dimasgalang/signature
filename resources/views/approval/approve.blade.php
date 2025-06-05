@@ -30,6 +30,7 @@
                             <div class="card-body">
                                 <input class="form-control" type="hidden" id="id" name="id" value="{{ $approval[0]->id }}" readonly>
                                 <input class="form-control" type="hidden" id="url" name="url" value="{{ url()->current() }}" readonly>
+                                <input class="form-control" type="hidden" id="type" name="type" value="{{ $approval[0]->type }}" readonly>
                                 <input class="form-control" type="hidden" id="token" name="token" value="{{ $approval[0]->token }}" readonly>
                                 <input class="form-control" type="hidden" id="preparer_id" name="preparer_id" value="{{ $approval[0]->preparer_id }}" readonly>
                                 <input class="form-control" type="hidden" id="base64" name="base64" value="{{ $approval[0]->base64 }}" readonly>
@@ -52,13 +53,13 @@
                                 </div>
                                 <br>
                                 {{-- btn --}}
-                                <button id="submit" type="submit" class="btn btn-primary btn-block">
+                                <button id="submit" type="submit" class="btn btn-success btn-block">
                                     <span class="mt-2 text-base dark:text-white leading-normal">Submit</span>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-8">
+                    <div class="col-md-8">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Stamping</h6>
@@ -70,8 +71,8 @@
                                     </div>
                                     <input type="hidden" id="stampX" name="stampX">
                                     <input type="hidden" id="stampY" name="stampY">
-                                    <input type="hidden" id="stampHeight" name="stampHeight" value="70">
-                                    <input type="hidden" id="stampWidth" name="stampWidth" value="70">
+                                    <input type="hidden" id="stampHeight" name="stampHeight" value="35">
+                                    <input type="hidden" id="stampWidth" name="stampWidth" value="60">
                                     <input type="hidden" id="canvasHeight" name="canvasHeight">
                                     <input type="hidden" id="canvasWidth" name="canvasWidth">
                             </div>
@@ -110,7 +111,7 @@
     pageNum = 1,
     pageRendering = false,
     pageNumPending = null,
-    scale = 1.7,
+    scale = 0.9, //default 1.7
     canvas = document.getElementById('pdf-canvas'),
     ctx = canvas.getContext('2d');
 
@@ -273,7 +274,7 @@
         ],
     }).resizable({
     // resize from all edges and corners
-    edges: { left: true, right: true, bottom: true, top: true },
+    edges: { left: false, right: true, bottom: true, top: false },
 
     listeners: {
       move (event) {
@@ -309,7 +310,7 @@
 
       // minimum size
       interact.modifiers.restrictSize({
-        min: { width: 70, height: 70 }
+        min: { width: 60, height: 35 }
       })
     ],
 

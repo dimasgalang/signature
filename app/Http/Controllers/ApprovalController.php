@@ -80,12 +80,21 @@ class ApprovalController extends Controller
         $totalData = Approval::select('approval.*', 'users.name', 'users.email')->leftJoin('users', 'approval.preparer_id', '=', 'users.id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->get();
         // dd($totalData[0]->email);
         // Stamp scale is 1.7, change to 1.
-        $stampX = ($data['stampX'] / 1.7);
-        $stampY = ($data['stampY'] / 1.7);
-        $stampHeight = ($data['stampHeight'] / 4.2);
-        $stampWidth = ($data['stampWidth'] / 3.2);
-        $canvasHeight = ($data['canvasHeight'] / 1.7);
-        $canvasWidth = ($data['canvasWidth'] / 1.7);
+
+        // $stampX = ($data['stampX'] / 1.7);
+        // $stampY = ($data['stampY'] / 1.7);
+        // $stampHeight = ($data['stampHeight'] / 4.2);
+        // $stampWidth = ($data['stampWidth'] / 3.2);
+        // $canvasHeight = ($data['canvasHeight'] / 1.7);
+        // $canvasWidth = ($data['canvasWidth'] / 1.7);
+
+        $stampX = ($data['stampX'] / 1);
+        $stampY = ($data['stampY'] / 1);
+        $stampHeight = ($data['stampHeight'] / 2);
+        $stampWidth = ($data['stampWidth'] / 1.8);
+        $canvasHeight = ($data['canvasHeight'] / 0.995);
+        $canvasWidth = ($data['canvasWidth'] / 0.995);
+
         $pageNumber = $data['pageNumber'];
         $qrPath = Storage::disk('signature_uploads')->path($request->signature_img);
         // dd($qrPath);
@@ -172,7 +181,11 @@ class ApprovalController extends Controller
         Alert::success('Approval Successfully!', 'Document "' . $approval->document_name . '" successfully approved!');
 
         // return PDF::Output('Signature.pdf', 'I');
-        return redirect('approval/index');
+        if ($request->type == "signature") {
+            return redirect('approval/index');
+        } else {
+            return redirect('approval/indexHandover');
+        }
     }
 
     public function stamp($id)
