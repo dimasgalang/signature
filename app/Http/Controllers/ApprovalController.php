@@ -330,7 +330,11 @@ class ApprovalController extends Controller
         // $file->storeAs('', $fileName, 'pdf_uploads');
 
         Alert::success('Upload Successfully!', 'Document "' . $request->document_name . '" successfully uploaded!');
-        return redirect()->intended('approval/index');
+        if ($request->type == "signature") {
+            return redirect()->intended('approval/index');
+        } else {
+            return redirect()->intended('approval/indexHandover');
+        }
     }
 
     public function fetchapproval($id)
