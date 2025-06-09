@@ -64,7 +64,7 @@
                                         <th>ID</th>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        <th>Department</th>
+                                        <th>Dept</th>
                                         <th>Created At</th>
                                         <th>Updated At</th>
                                         <th>Action</th>

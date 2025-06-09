@@ -23,7 +23,7 @@
     <tr>
         <td>
             <center>
-                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(asset('/storage/images/chutex_logo.png'))) }}" style="width: 70px;">
+                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(url('/storage/images/chutex_logo.svg'))) }}" style="width: 70px;">
             </center>
         </td>
         <td>

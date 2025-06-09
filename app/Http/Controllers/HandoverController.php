@@ -34,7 +34,9 @@ class HandoverController extends Controller
     public function create()
     {
         $users = User::all();
-        $items = Item::where('void', 'false')->get();
+        // $items = Item::all();
+
+        $items = DB::connection('smartit')->table('ms_barang')->select('barang_code', 'barang_name')->where('barang_status', '=', 'Active')->get();
         $handover = Handover::all()->last();
         // dd('HO' . date('y') . date('n') . date('d') . str_pad(intval(substr($handover?->document_name, -4)) + 1, 4, '0', STR_PAD_LEFT));
         return view('handover.create', compact('users', 'items', 'handover'));
@@ -46,13 +48,14 @@ class HandoverController extends Controller
             'handover_name_id' => $request->handover_name_id,
             'receiver_name_id' => $request->receiver_name_id,
             'department' => $request->receiverDepartment,
+            'document_name' => $request->documentName,
             'date' => Carbon::now()->format('Y-m-d')
         ]);
 
         foreach ($request->product_id as $key => $value) {
             $item = new ItemHandover();
             $item->handover_id = $handover->id;
-            $item->item_id = $value['item_id'];
+            $item->item_id = $value['barang_code'];
             $item->quantity = $value['quantity'];
             $item->save();
         }
@@ -88,7 +91,8 @@ class HandoverController extends Controller
     public function revision(Request $request)
     {
         $users = User::all();
-        $items = Item::where('void', 'false')->get();
+        // $items = Item::all();
+        $items = DB::connection('smartit')->table('ms_barang')->select('barang_code', 'barang_name')->where('barang_status', '=', 'Active')->get();
         $handover = Handover::find($request->id);
         $itemHandover = DB::select("SELECT ih.* FROM item_handovers ih INNER JOIN handovers h ON ih.handover_id = h.id WHERE h.id = ? ", [$request->id]);
 
@@ -178,10 +182,26 @@ class HandoverController extends Controller
     public function generatePDF(String $id, String $documentName)
     {
         $handover = Handover::with(['item_handovers', 'handoverName', 'receiverName'])->find($id);
-        $itemHandover = DB::select("SELECT ih.*, i.productName AS item_name FROM item_handovers ih INNER JOIN handovers h ON ih.handover_id = h.id INNER JOIN items i ON ih.item_id = i.id WHERE h.id = ? ", [$id]);
-        $pdf = PDF::loadView('template.handover', compact(['handover', 'itemHandover', 'documentName']))
-            ->setPaper('a4', 'portrait')
-            ->setOptions(['defaultFont' => 'sans-serif']);
+        // $itemHandover = DB::select("SELECT ih.*, i.productName AS item_name FROM item_handovers ih INNER JOIN handovers h ON ih.handover_id = h.id INNER JOIN items i ON ih.item_id = i.id WHERE h.id = ? ", [$id]);
+        $itemHandover = DB::select("SELECT ih.* FROM item_handovers ih WHERE ih.handover_id = ?", [$id]);
+        // dd($handover);
+        $itemData = [];
+        foreach ($itemHandover as $item) {
+            $itemsSmartIT = DB::connection('smartit')->table('ms_barang')->select('barang_code', 'barang_name')->where('barang_status', '=', 'Active')->where('barang_code', '=', $item->item_id)->get();
+            $data = array(
+                'item_id' => $itemsSmartIT[0]->barang_code,
+                'item_name' => $itemsSmartIT[0]->barang_name,
+                'quantity' => $item->quantity
+            );
+            $itemData[] = $data;
+        }
+
+        // foreach($itemData as $list) {
+        //     dd($list['item_name']);
+        // }
+        // dd($itemData);
+        // $pdf = PDF::loadView('template.handover', compact(['handover', 'itemHandover']));
+        $pdf = PDF::loadView('template.handover', compact(['handover', 'itemData']));
 
         return $pdf;
     }

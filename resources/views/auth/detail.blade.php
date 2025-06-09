@@ -66,18 +66,13 @@
                             </div>
                             <br>
                             <div>
-                                <label>Department :</label>
-                                <input class="form-control" type="text" id="dept" name="dept" value="{{ $users->dept }}">
-                            </div>
-                            <br>
-                            <div>
                                 <label>Email :</label>
                                 <input class="form-control" type="email" id="email" name="email" value="{{ $users->email }}">
                             </div>
                             <br>
                             <div>
-                                <label>Password :</label>
-                                <input class="form-control" type="password" id="password" name="password" value="">
+                                <label>Dept :</label>
+                                <input class="form-control" type="text" id="dept" name="dept" value="{{ $users->dept }}">
                             </div>
                             <br>
                             <div class="row">

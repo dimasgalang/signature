@@ -9,6 +9,7 @@ class Handover extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'document_name',
         'handover_name_id',
         'receiver_name_id',
         'department',

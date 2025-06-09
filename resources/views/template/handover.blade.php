@@ -52,7 +52,7 @@
     }
     table #handover-table {
       width: 100%;
-      border-collapse: collapse;
+      /* border-collapse: collapse; */
       margin-top: 15px;
     }
     table {
@@ -78,7 +78,7 @@
       <tr>
           <td class="header">
               <center>
-                  {{-- <img src="data:image/png;base64,{{ base64_encode(file_get_contents(asset('/storage/images/chutex_logo.png'))) }}" style="width: 70px;"> --}}
+                <img src="{{ public_path('img/chutex_logo.png') }}" style="width: 70px;">
               </center>
           </td>
           <td class="header">
@@ -87,7 +87,7 @@
               </center>
           </td>
           <td class="header">
-                  <p style="font-size: x-small;"><b>No. </b>{{$documentName}}</p>
+                  <p style="font-size: x-small;"><b>No. </b>{{$handover->document_name}}</p>
                   <p style="font-size: x-small;"><b>Tgl. </b>{{ now() }}</p>
           </td>
       </tr>
@@ -110,8 +110,10 @@
     <div>Selanjutnya disebut sebagai <strong>PIHAK KEDUA</strong></div>
   </div>
 
-  <div class="section">
-    PIHAK PERTAMA menyerahkan barang kepada PIHAK KEDUA, dan PIHAK KEDUA menyatakan telah menerima barang dari PIHAK PERTAMA dengan baik sesuai dengan informasi yang tercantum di dalam daftar terlampir:
+  <div class="section" style="text-align: justify;">
+    PIHAK PERTAMA menyerahkan barang kepada PIHAK KEDUA, dan PIHAK KEDUA
+    menyatakan telah menerima barang dari PIHAK PERTAMA dengan baik sesuai dengan
+    informasi yang tercantum di dalam daftar terlampir:
   </div>
 
   <table id="handover-table">
@@ -123,18 +125,18 @@
       </tr>
     </thead>
     <tbody>
-        @foreach($itemHandover as $item)
+        @foreach($itemData as $item)
         <tr>
           <td>{{ $loop->iteration }}</td>
-          <td>{{ $item->item_name }}</td>
-          <td>{{ $item->quantity }}</td>
+          <td>{{ $item['item_name'] }}</td>
+          <td>{{ $item['quantity'] }}</td>
         </tr>
         @endforeach
     </tbody>
   </table>
 
-  <div class="note">
-    Demikian berita acara serah terima barang ini telah dibuat oleh kedua belah pihak. Adapun barang-barang tersebut diserahkan dalam keadaan baik dan lengkap. Sejak penandatanganan berita acara ini, maka barang tersebut menjadi tanggung jawab dari PIHAK KEDUA dan wajib untuk memelihara/merawat dengan baik serta dipergunakan hanya untuk keperluan perusahaan. Dan akan mengembalikan ke departement IT ketika sudah tidak bekerja di PT Chutex Internasional Indonesia.
+  <div class="note" style="text-align: justify;">
+    Demikian berita acara serah terima barang ini telah dibuat oleh kedua belah pihak. Adapun barang-barang tersebut diserahkan dalam keadaan baik dan lengkap. Sejak penandatanganan berita acara ini, maka barang tersebut menjadi tanggung jawab dari PIHAK KEDUA dan wajib untuk memelihara/merawat dengan baik serta dipergunakan untuk keperluan sesuai kebutuhan.
   </div>
 
   <table class="signature">
@@ -151,6 +153,7 @@
       </td>
     </tr>
   </table>
+<hr>
 
 </body>
 </html>
