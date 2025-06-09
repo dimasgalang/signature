@@ -36,6 +36,7 @@
                                         <label>Document Name :</label>
                                         <input class="form-control" type="text" id="document_name" name="document_name" required readonly>
                                         <input class="form-control" type="hidden" id="base64" name="base64">
+                                        <input class="form-control" type="hidden" id="type" name="type" value="signature">
                                     </div>
                                     <br>
                                     <div>

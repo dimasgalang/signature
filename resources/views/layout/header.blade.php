@@ -31,8 +31,8 @@
         #parent{position:relative; overflow:scroll; width:auto; border:1px solid blue; }
         .draggable {
             display: none;
-            width: 120px;
-            height: 70px;
+            width: 72px;
+            height: 42px;
             background-color: rgba(255, 0, 0, 0.4);
             touch-action: none;
             user-select: none;
@@ -62,8 +62,10 @@
 			border-radius: 5px;
             height: 300px;
 			cursor: crosshair;
-            background-image: url("{{ asset('/storage/signature/chutex_stamp.png') }}") 
+            /* background-image: url("{{ asset('/storage/signature/chutex_stamp.png') }}")  */
 		}
+        #pdf-canvas {
+        }
 
 		#sig-dataUrl {
 			width: 100%;

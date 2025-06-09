@@ -58,7 +58,7 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Draw Signature</h6>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="sig-canvas"></canvas>
+                                    <!-- <canvas id="sig-canvas"></canvas> -->
                                     <canvas id="sig-canvas-2"></canvas>
                                     <textarea id="sig-dataUrl" name="signed" class="form-control" style="display: none;"></textarea>
                                     <br>

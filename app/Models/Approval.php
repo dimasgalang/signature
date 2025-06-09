@@ -15,6 +15,7 @@ class Approval extends Model
         'original_name',
         'base64',
         'approval_id',
+        'type',
         'approval_level',
         'approval_date',
         'approval_progress',

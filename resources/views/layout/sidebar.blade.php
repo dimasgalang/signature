@@ -45,6 +45,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('approval.index') }}">Approval List</a>
                 <a class="collapse-item" href="{{ route('attachment.index') }}">Attachment List</a>
+                <a class="collapse-item" href="{{ route('approval.indexHandover') }}">Handover List</a>
             </div>
         </div>
     </li>
@@ -63,7 +64,7 @@
         </div>
     </li>
 
-    @if($roleusers[0]->rolename == 'Admin')
+    <!-- @if($roleusers[0]->rolename == 'Admin')
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTools"
             aria-expanded="true" aria-controls="collapseTools">
@@ -103,7 +104,7 @@
             </div>
         </div>
     </li>
-    @endif
+    @endif -->
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

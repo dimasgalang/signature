@@ -7,10 +7,10 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      line-height: 1.6;
+      line-height: 1.5;
       max-width: 800px;
       margin: 20px auto;
-      padding: 10px;
+      padding: 15px;
     }
     h1 {
       text-align: center;
@@ -19,7 +19,7 @@
       margin-bottom: 30px;
     }
     .section {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
     .form-field {
       margin-bottom: 10px;
@@ -52,23 +52,23 @@
     }
     table #handover-table {
       width: 100%;
-      /* border-collapse: collapse; */
-      margin-top: 15px;
+      border-collapse: collapse;
+      margin-top: 5px;
     }
     table {
       width: 100%;
-      margin-top: 15px;
+      margin-top: 5px;
     }
     th, td {
       border: 1px solid #000;
-      padding: 8px;
+      padding: 5px;
       text-align: center;
     }
     .header {
       border: none;
     }
     .note {
-      margin-top: 30px;
+      margin-top: 15px;
     }
   </style>
 </head>
@@ -88,14 +88,14 @@
           </td>
           <td class="header">
                   <p style="font-size: x-small;"><b>No. </b>{{$handover->document_name}}</p>
-                  <p style="font-size: x-small;"><b>Tgl. </b>{{ now() }}</p>
+                  <p style="font-size: x-small;"><b>Tgl. </b>{{ date('Y-m-d', strtotime($handover->date)) }}</p>
           </td>
       </tr>
   </table>
   <hr>
 
   <div class="section">
-    Kami yang bertanda tangan di bawah ini. Pada hari ini {{\Carbon\Carbon::parse($handover->date)->locale('id_ID')->dayName}} Tanggal {{\Carbon\Carbon::parse($handover->date)->day}} Bulan {{\Carbon\Carbon::parse($handover->date)->translatedFormat('F')}} Tahun {{\Carbon\Carbon::parse($handover->date)->year}}
+    Kami yang bertanda tangan di bawah ini. Pada hari <b>{{\Carbon\Carbon::parse($handover->date)->locale('id_ID')->dayName}}, {{\Carbon\Carbon::parse($handover->date)->day}} {{\Carbon\Carbon::parse($handover->date)->translatedFormat('F')}} {{\Carbon\Carbon::parse($handover->date)->year}}.</b>
   </div>
 
   <div class="section">
@@ -113,15 +113,16 @@
   <div class="section" style="text-align: justify;">
     PIHAK PERTAMA menyerahkan barang kepada PIHAK KEDUA, dan PIHAK KEDUA
     menyatakan telah menerima barang dari PIHAK PERTAMA dengan baik sesuai dengan
-    informasi yang tercantum di dalam daftar terlampir:
+    informasi yang tercantum di dalam daftar berikut:
   </div>
 
   <table id="handover-table">
     <thead>
       <tr>
         <th>No.</th>
-        <th>Nama Barang</th>
-        <th>Jumlah</th>
+        <th>Item</th>
+        <th>Qty</th>
+        <th>Unit</th>
       </tr>
     </thead>
     <tbody>
@@ -130,26 +131,29 @@
           <td>{{ $loop->iteration }}</td>
           <td>{{ $item['item_name'] }}</td>
           <td>{{ $item['quantity'] }}</td>
+          <td>{{ $item['item_unit'] }}</td>
         </tr>
         @endforeach
     </tbody>
   </table>
 
   <div class="note" style="text-align: justify;">
-    Demikian berita acara serah terima barang ini telah dibuat oleh kedua belah pihak. Adapun barang-barang tersebut diserahkan dalam keadaan baik dan lengkap. Sejak penandatanganan berita acara ini, maka barang tersebut menjadi tanggung jawab dari PIHAK KEDUA dan wajib untuk memelihara/merawat dengan baik serta dipergunakan untuk keperluan sesuai kebutuhan.
+    Demikian berita acara serah terima barang ini telah dibuat oleh kedua belah pihak. Adapun barang-barang tersebut diserahkan dalam keadaan baik dan lengkap. Sejak penandatanganan berita acara ini, maka barang tersebut menjadi tanggung jawab dari PIHAK KEDUA dan wajib untuk memelihara/merawat dengan baik serta dipergunakan hanya untuk keperluan perusahaan.
   </div>
 
   <table class="signature">
     <tr>
       <td style="text-align: center; padding-right: 50px; border: none;">
-        Yang Menyerahkan:<br/>
+        Yang Menyerahkan,<br/>
         <strong>PIHAK PERTAMA</strong><br/><br/><br/><br/>
-        {{$handover->handoverName->name}}
+        <b>{{$handover->handoverName->name}}</b><br>
+        {{$handover->handoverName->dept}}
       </td>
       <td style="text-align: center; border: none;">
-        Yang Menerima:<br/>
+        Yang Menerima,<br/>
         <strong>PIHAK KEDUA</strong><br/><br/><br/><br/>
-        {{$handover->receiverName->name}}
+        <b>{{$handover->receiverName->name}}</b><br>
+        {{$handover->department}}
       </td>
     </tr>
   </table>

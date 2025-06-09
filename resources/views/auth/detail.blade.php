@@ -71,6 +71,11 @@
                             </div>
                             <br>
                             <div>
+                                <label>Password :</label>
+                                <input class="form-control" type="password" id="password" name="password">
+                            </div>
+                            <br>
+                            <div>
                                 <label>Dept :</label>
                                 <input class="form-control" type="text" id="dept" name="dept" value="{{ $users->dept }}">
                             </div>

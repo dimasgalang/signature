@@ -26,9 +26,21 @@ class ApprovalController extends Controller
     {
         $user_id = Auth::user()->id;
         if ($request->void) {
-            $approvals = DB::select('with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by id) and document_name = lag(document_name) over (order by id) and token = lag(token) over (order by id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = "' . $request->void . '"),data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = ' . $user_id . ') select * from data3 where approval_id = ' . $user_id . ' order by id desc');
+            $approvals = DB::select('with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by id) and document_name = lag(document_name) over (order by id) and token = lag(token) over (order by id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = "' . $request->void . '"),data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = ' . $user_id . ') select * from data3 where approval_id = ' . $user_id . ' and type = "signature" order by id desc');
         } else {
-            $approvals = DB::select('with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by id) and document_name = lag(document_name) over (order by id) and token = lag(token) over (order by id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = "false"),data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = ' . $user_id . ') select * from data3 where approval_id = ' . $user_id . ' order by id desc');
+            $approvals = DB::select('with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by id) and document_name = lag(document_name) over (order by id) and token = lag(token) over (order by id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = "false"),data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = ' . $user_id . ') select * from data3 where approval_id = ' . $user_id . ' and type = "signature" order by id desc');
+        }
+        // dd($approvals);
+        return view('approval.index', compact('approvals'));
+    }
+
+    public function indexHandover(Request $request)
+    {
+        $user_id = Auth::user()->id;
+        if ($request->void) {
+            $approvals = DB::select('with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by id) and document_name = lag(document_name) over (order by id) and token = lag(token) over (order by id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = "' . $request->void . '"),data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = ' . $user_id . ') select * from data3 where approval_id = ' . $user_id . ' and type = "handover" order by id desc');
+        } else {
+            $approvals = DB::select('with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by id) and document_name = lag(document_name) over (order by id) and token = lag(token) over (order by id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = "false"),data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = ' . $user_id . ') select * from data3 where approval_id = ' . $user_id . ' and type = "handover" order by id desc');
         }
         // dd($approvals);
         return view('approval.index', compact('approvals'));
@@ -68,12 +80,21 @@ class ApprovalController extends Controller
         $totalData = Approval::select('approval.*', 'users.name', 'users.email')->leftJoin('users', 'approval.preparer_id', '=', 'users.id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->get();
         // dd($totalData[0]->email);
         // Stamp scale is 1.7, change to 1.
-        $stampX = ($data['stampX'] / 1.7);
-        $stampY = ($data['stampY'] / 1.7);
-        $stampHeight = ($data['stampHeight'] / 4.2);
-        $stampWidth = ($data['stampWidth'] / 3.2);
-        $canvasHeight = ($data['canvasHeight'] / 1.7);
-        $canvasWidth = ($data['canvasWidth'] / 1.7);
+
+        // $stampX = ($data['stampX'] / 1.7);
+        // $stampY = ($data['stampY'] / 1.7);
+        // $stampHeight = ($data['stampHeight'] / 4.2);
+        // $stampWidth = ($data['stampWidth'] / 3.2);
+        // $canvasHeight = ($data['canvasHeight'] / 1.7);
+        // $canvasWidth = ($data['canvasWidth'] / 1.7);
+
+        $stampX = ($data['stampX'] / 1);
+        $stampY = ($data['stampY'] / 1);
+        $stampHeight = ($data['stampHeight'] / 2);
+        $stampWidth = ($data['stampWidth'] / 1.8);
+        $canvasHeight = ($data['canvasHeight'] / 0.995);
+        $canvasWidth = ($data['canvasWidth'] / 0.995);
+
         $pageNumber = $data['pageNumber'];
         $qrPath = Storage::disk('signature_uploads')->path($request->signature_img);
         // dd($qrPath);
@@ -160,7 +181,11 @@ class ApprovalController extends Controller
         Alert::success('Approval Successfully!', 'Document "' . $approval->document_name . '" successfully approved!');
 
         // return PDF::Output('Signature.pdf', 'I');
-        return redirect('approval/index');
+        if ($request->type == "signature") {
+            return redirect('approval/index');
+        } else {
+            return redirect('approval/indexHandover');
+        }
     }
 
     public function stamp($id)
@@ -286,6 +311,7 @@ class ApprovalController extends Controller
             $item->original_name = $fileName ?? $request->original_name;
             $item->base64 = $request->base64;
             $item->approval_id = $request->approval_id[$key];
+            $item->type = $request->type;
             $item->approval_level = $level;
             $item->approval_progress = '1';
             $item->status = 'pending';
@@ -304,7 +330,11 @@ class ApprovalController extends Controller
         // $file->storeAs('', $fileName, 'pdf_uploads');
 
         Alert::success('Upload Successfully!', 'Document "' . $request->document_name . '" successfully uploaded!');
-        return redirect()->intended('approval/index');
+        if ($request->type == "signature") {
+            return redirect()->intended('approval/index');
+        } else {
+            return redirect()->intended('approval/indexHandover');
+        }
     }
 
     public function fetchapproval($id)
