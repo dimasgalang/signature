@@ -139,16 +139,113 @@ class ClearanceController extends Controller
     }
 
 
-
     public function revision(Request $request)
     {
         $users = User::all();
-        // $items = Item::all();
         $items = DB::connection('smartit')->table('ms_barang')->select('barang_code', 'barang_name')->where('barang_status', '=', 'Active')->get();
         $clearance = Clearance::find($request->id);
         $itemClearance = DB::select("SELECT ic.* FROM item_clearances ic INNER JOIN clearances c ON ic.clearance_id = c.id WHERE c.id = ? ", [$request->id]);
-        $itemServices = DB::select("SELECT sc.* FROM service_clearances sc INNER JOIN clearances c ON sc.clearance_id = c.id WHERE c.id = ? ", [$request->id]);
+        // $itemServices = DB::select("SELECT sc.* FROM service_clearances sc INNER JOIN clearances c ON sc.clearance_id = c.id WHERE c.id = ? ", [$request->id]);
+        $services = ServiceClearance::all();
+        $itemServices = DB::table('item_services')
+            ->join('service_clearances', 'item_services.clearance_code', '=', 'service_clearances.clearance_code')
+            ->where('item_services.clearance_id', $request->id)
+            ->select('item_services.*', 'service_clearances.clearance_name')
+            ->get();
 
-        return view('clearance.revision', compact('users', 'items', 'clearance', 'itemClearance'));
+        // dd($itemServices);
+
+        return view('clearance.revision', compact('users', 'items', 'clearance', 'itemClearance', 'services', 'itemServices'));
+    }
+
+
+    public function update(Request $request)
+    {
+        // dd($request->all());
+        $itemsToDelete = json_decode($request->input('items_to_delete'), true);
+        if (!empty($itemsToDelete)) {
+            // Delete old items from the database
+            ItemClearance::whereIn('id', $itemsToDelete)->delete();
+        }
+
+        $servicesToDelete = json_decode($request->input('services_to_delete'), true);
+        if (!empty($servicesToDelete)) {
+            // Delete old services from the database
+            ItemService::whereIn('id', $servicesToDelete)->delete();
+        }
+
+        $clearance = Clearance::find($request->clearance_id);
+        // delete old file document if exists
+        if ($clearance->document_name) {
+            Storage::delete('public/clearance_pdfs/' . $clearance->original_name);
+        }
+
+        $clearance->clearance_name_id = $request->clearance_name_id;
+        $clearance->receiver_name_id = $request->receiver_name_id;
+        $clearance->department = $request->receiverDepartment;
+        $clearance->save();
+
+        // update data item clearance secara manual tanpa menghapus data yang ada
+        foreach ($request->product_id as $key => $value) {
+            // If items exist, update each one
+            if (isset($value['id'])) {
+                $items = ItemClearance::where('clearance_id', $request->clearance_id)
+                    ->where('id', $value['id'])->get();
+                foreach ($items as $item) {
+                    $item->clearance_id = $request->clearance_id;
+                    $item->item_id = $value['item_id'];
+                    $item->quantity = $value['quantity'];
+                    $item->save();
+                }
+                // If id is null, create a new item
+            } else {
+                $item = new ItemClearance();
+                $item->clearance_id = $request->clearance_id;
+                $item->item_id = $value['item_id'];
+                $item->quantity = $value['quantity'];
+                $item->save();
+            }
+        }
+
+        // update data item service secara manual tanpa menghapus data yang ada
+        foreach ($request->service_id as $key => $value) {
+            // If items exist, update each one
+            if (isset($value['id'])) {
+                $services = ItemService::where('clearance_id', $request->clearance_id)
+                    ->where('id', $value['id'])->get();
+                foreach ($services as $service) {
+                    $service->clearance_id = $request->clearance_id;
+                    $service->clearance_code = $value['service_id'];
+                    $service->save();
+                }
+                // If id is null, create a new item
+            } else {
+                $service = new ItemService();
+                $service->clearance_id = $request->clearance_id;
+                $service->clearance_code = $value['service_id'];
+                $service->save();
+            }
+        }
+
+
+        // Generate PDF and save it to storage
+        $pdfClearance = $this->generatePDF($clearance->id, $request->documentName);
+
+        // Convert the PDF to base64
+        $pdfToBase64 = 'data:application/pdf;base64, ' . base64_encode($pdfClearance->output());
+
+        // Set the file name and save the PDF to storage
+        $originalName = sha1($request->documentName) . '.pdf';
+
+        Storage::put('public/clearance_pdfs/' . $originalName, $pdfClearance->output());
+
+        // updating handover to saving document name and base64
+        $clearance->document_name = $request->documentName;
+        $clearance->original_name = $originalName;
+        $clearance->base64 = $pdfToBase64;
+        $clearance->save();
+
+        Alert::success('Upload Successfully!', 'Document successfully uploaded!');
+        return redirect()->intended('clearance/index');
     }
 }
