@@ -68,6 +68,9 @@
                                                 <a href="{{asset('storage/clearance_pdfs/'.$clearance->original_name)}}" target="_blank" class="btn btn-primary btn-circle btn-sm">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
+                                                <a href="{{ route('clearance.createApproval', $clearance->id) }}" class="btn btn-success btn-circle btn-sm">
+                                                    <i class="fas fa-file"></i>
+                                                </a>
                                                 <a href="{{ route('clearance.revision', $clearance->id) }}" class="btn btn-warning btn-circle btn-sm">
                                                     <i class="fas fa-edit"></i>
                                                 </a>

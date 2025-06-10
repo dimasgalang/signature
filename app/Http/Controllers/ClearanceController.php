@@ -131,6 +131,15 @@ class ClearanceController extends Controller
         return response()->json($users);
     }
 
+    public function createApproval($id)
+    {
+        $clearance = Clearance::findOrFail($id);
+        $users = User::all();
+        return view('clearance.createApprove', compact(['users', 'clearance']));
+    }
+
+
+
     public function revision(Request $request)
     {
         $users = User::all();

@@ -46,6 +46,7 @@
                 <a class="collapse-item" href="{{ route('approval.index') }}">Approval List</a>
                 <a class="collapse-item" href="{{ route('attachment.index') }}">Attachment List</a>
                 <a class="collapse-item" href="{{ route('approval.indexHandover') }}">Handover List</a>
+                <a class="collapse-item" href="{{ route('approval.indexClearance') }}">Clearance List</a>
             </div>
         </div>
     </li>

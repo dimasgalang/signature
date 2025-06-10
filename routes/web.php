@@ -78,6 +78,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Approval
     Route::get('/approval/index', [ApprovalController::class, 'index'])->name('approval.index');
     Route::get('/approval/indexHandover', [ApprovalController::class, 'indexHandover'])->name('approval.indexHandover');
+    Route::get('/approval/indexClearance', [ApprovalController::class, 'indexClearance'])->name('approval.indexClearance');
     Route::get('/approval/create', [ApprovalController::class, 'create'])->name('approval.create');
     Route::get('/approval/approve/{id}', [ApprovalController::class, 'approve'])->name('approval.approve');
     Route::get('/approval/fetchapproval/{id}', [ApprovalController::class, 'fetchapproval'])->name('approval.fetchapproval');
@@ -113,6 +114,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/clearance/void', [ClearanceController::class, 'void'])->name('clearance.void');
     Route::post('/clearance/restore', [ClearanceController::class, 'restore'])->name('clearance.restore');
     Route::get('/clearance/fetchDept/{id_user}', [ClearanceController::class, 'fetchDept'])->name('clearance.fetchDept');
+    Route::get('/clearance/create-approval/{id}', [ClearanceController::class, 'createApproval'])->name('clearance.createApproval');
 
     //Attachment
     Route::get('/attachment/index', [AttachmentController::class, 'index'])->name('attachment.index');
