@@ -114,7 +114,7 @@
                                         </div>
                                         <div class="col-xl-2">
                                             <label></label>
-                                            <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-handover" onclick="">Add</button>
+                                            <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-clearance" onclick="">Add</button>
                                         </div>
                                     </div>
                                 </div>
@@ -139,7 +139,7 @@
                                         </div>
                                         <div class="col-xl-2">
                                             <label></label>
-                                            <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-clearance" onclick="addRecords()">Add</button>
+                                            <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-services" onclick="addRecords()">Add</button>
                                         </div>
                                     </div>
                                 </div>
@@ -216,7 +216,7 @@
             updateDropdownOptions();
         });
 
-        $('.add-handover').on('click', function() {
+        $('.add-clearance').on('click', function() {
             let itemInput = document.getElementById('itemInput');
             let itemIndex = itemInput.children.length;
             $("#itemInput").append(`<div class="row"><div class="col-xl-6"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][barang_code]" ><option></option>@foreach ($items as $item )<option value="{{ $item->barang_code }}">{{ $item->barang_code }} - {{ $item->barang_name }}</option>@endforeach</select></div><div class="col-xl-4"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" required></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
