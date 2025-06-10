@@ -59,7 +59,19 @@
         <div id="collapseHandover" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('handover.index') }}">Handover List</a>
-                <a class="collapse-item" href="{{ route('item.index') }}">Items List</a>
+            </div>
+        </div>
+    </li>
+
+     <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseClearance"
+            aria-expanded="true" aria-controls="collapseHandover">
+            <i class="fas fa-fw fa-check-square"></i>
+            <span>Clearance</span>
+        </a>
+        <div id="collapseClearance" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('clearance.index') }}">Clearance List</a>
             </div>
         </div>
     </li>

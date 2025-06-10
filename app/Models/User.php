@@ -56,4 +56,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Handover::class, 'receiver_name_id');
     }
+
+    public function clearenceGiven()
+    {
+        return $this->hasMany(Clearance::class, 'clearence_name_id');
+    }
+
+    // Relasi dengan handovers sebagai 'receiver_name'
+    public function clearenceReceived()
+    {
+        return $this->hasMany(Clearance::class, 'receiver_name_id');
+    }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AttachmentController;
+use App\Http\Controllers\ClearanceController;
 use App\Http\Controllers\ConverterController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HandoverController;
@@ -101,6 +102,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/handover/restore', [HandoverController::class, 'restore'])->name('handover.restore');
     Route::get('/handover/fetchDept/{id_user}', [HandoverController::class, 'fetchDept'])->name('handover.fetchDept');
     Route::get('/handover/generatePDF/{id}', [HandoverController::class, 'generatePDF'])->name('handover.generatePDF');
+
+    // Clearance
+    Route::get('/clearance/index', [ClearanceController::class, 'index'])->name('clearance.index');
+    Route::get('/clearance/create', [ClearanceController::class, 'create'])->name('clearance.create');
+    Route::post('/clearance/store', [ClearanceController::class, 'store'])->name('clearance.store');
+    Route::get('/clearance/revision/{id}', [ClearanceController::class, 'revision'])->name('clearance.revision');
+    Route::get('/clearance/fetchClearance/{id}', [ClearanceController::class, 'fetchClearance'])->name('clearance.fetchClearance');
+    Route::post('/clearance/update', [ClearanceController::class, 'update'])->name('clearance.update');
+    Route::post('/clearance/void', [ClearanceController::class, 'void'])->name('clearance.void');
+    Route::post('/clearance/restore', [ClearanceController::class, 'restore'])->name('clearance.restore');
+    Route::get('/clearance/fetchDept/{id_user}', [ClearanceController::class, 'fetchDept'])->name('clearance.fetchDept');
 
     //Attachment
     Route::get('/attachment/index', [AttachmentController::class, 'index'])->name('attachment.index');
