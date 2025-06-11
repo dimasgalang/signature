@@ -15,9 +15,9 @@ class AttachmentController extends Controller
     public function index(Request $request)
     {
         if ($request->void) {
-            $attachments = DB::select('select attachment.*,approval.document_name as approval_document from attachment left join approval on attachment.token = approval.token where attachment.void = "' . $request->void . '"');
+            $attachments = DB::select('select distinct attachment.id,attachment.token,attachment.document_name,attachment.original_name,attachment.created_at,attachment.updated_at,approval.document_name as approval_document from attachment left join approval on attachment.token = approval.token where attachment.void = "' . $request->void . '"');
         } else {
-            $attachments = DB::select('select attachment.*,approval.document_name as approval_document from attachment left join approval on attachment.token = approval.token where attachment.void = "false"');
+            $attachments = DB::select('select distinct attachment.id,attachment.token,attachment.document_name,attachment.original_name,attachment.created_at,attachment.updated_at,approval.document_name as approval_document from attachment left join approval on attachment.token = approval.token where attachment.void = "false"');
         }
 
         return view('attachment.index', compact('attachments'));

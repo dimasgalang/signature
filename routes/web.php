@@ -93,28 +93,28 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/handover/create-approval/{id}', [HandoverController::class, 'createApproval'])->name('handover.createApproval');
 
     // Handover
-    Route::get('/handover/index', [HandoverController::class, 'index'])->name('handover.index');
-    Route::get('/handover/create', [HandoverController::class, 'create'])->name('handover.create');
-    Route::post('/handover/store', [HandoverController::class, 'store'])->name('handover.store');
-    Route::get('/handover/revision/{id}', [HandoverController::class, 'revision'])->name('handover.revisionHandover');
-    Route::get('/handover/fetchHandover/{id}', [HandoverController::class, 'fetchHandover'])->name('handover.fetchHandover');
-    Route::post('/handover/update', [HandoverController::class, 'update'])->name('handover.updateHandover');
-    Route::post('/handover/void', [HandoverController::class, 'void'])->name('handover.void');
-    Route::post('/handover/restore', [HandoverController::class, 'restore'])->name('handover.restore');
-    Route::get('/handover/fetchDept/{id_user}', [HandoverController::class, 'fetchDept'])->name('handover.fetchDept');
-    Route::get('/handover/generatePDF/{id}', [HandoverController::class, 'generatePDF'])->name('handover.generatePDF');
+    Route::get('/handover/index', [HandoverController::class, 'index'])->name('handover.index')->middleware(['auth', 'role:Admin']);
+    Route::get('/handover/create', [HandoverController::class, 'create'])->name('handover.create')->middleware(['auth', 'role:Admin']);
+    Route::post('/handover/store', [HandoverController::class, 'store'])->name('handover.store')->middleware(['auth', 'role:Admin']);
+    Route::get('/handover/revision/{id}', [HandoverController::class, 'revision'])->name('handover.revisionHandover')->middleware(['auth', 'role:Admin']);
+    Route::get('/handover/fetchHandover/{id}', [HandoverController::class, 'fetchHandover'])->name('handover.fetchHandover')->middleware(['auth', 'role:Admin']);
+    Route::post('/handover/update', [HandoverController::class, 'update'])->name('handover.updateHandover')->middleware(['auth', 'role:Admin']);
+    Route::post('/handover/void', [HandoverController::class, 'void'])->name('handover.void')->middleware(['auth', 'role:Admin']);
+    Route::post('/handover/restore', [HandoverController::class, 'restore'])->name('handover.restore')->middleware(['auth', 'role:Admin']);
+    Route::get('/handover/fetchDept/{id_user}', [HandoverController::class, 'fetchDept'])->name('handover.fetchDept')->middleware(['auth', 'role:Admin']);
+    Route::get('/handover/generatePDF/{id}', [HandoverController::class, 'generatePDF'])->name('handover.generatePDF')->middleware(['auth', 'role:Admin']);
 
     // Clearance
-    Route::get('/clearance/index', [ClearanceController::class, 'index'])->name('clearance.index');
-    Route::get('/clearance/create', [ClearanceController::class, 'create'])->name('clearance.create');
-    Route::post('/clearance/store', [ClearanceController::class, 'store'])->name('clearance.store');
-    Route::get('/clearance/revision/{id}', [ClearanceController::class, 'revision'])->name('clearance.revision');
-    Route::get('/clearance/fetchClearance/{id}', [ClearanceController::class, 'fetchClearance'])->name('clearance.fetchClearance');
-    Route::post('/clearance/update', [ClearanceController::class, 'update'])->name('clearance.update');
-    Route::post('/clearance/void', [ClearanceController::class, 'void'])->name('clearance.void');
-    Route::post('/clearance/restore', [ClearanceController::class, 'restore'])->name('clearance.restore');
-    Route::get('/clearance/fetchDept/{id_user}', [ClearanceController::class, 'fetchDept'])->name('clearance.fetchDept');
-    Route::get('/clearance/create-approval/{id}', [ClearanceController::class, 'createApproval'])->name('clearance.createApproval');
+    Route::get('/clearance/index', [ClearanceController::class, 'index'])->name('clearance.index')->middleware(['auth', 'role:Admin']);
+    Route::get('/clearance/create', [ClearanceController::class, 'create'])->name('clearance.create')->middleware(['auth', 'role:Admin']);
+    Route::post('/clearance/store', [ClearanceController::class, 'store'])->name('clearance.store')->middleware(['auth', 'role:Admin']);
+    Route::get('/clearance/revision/{id}', [ClearanceController::class, 'revision'])->name('clearance.revision')->middleware(['auth', 'role:Admin']);
+    Route::get('/clearance/fetchClearance/{id}', [ClearanceController::class, 'fetchClearance'])->name('clearance.fetchClearance')->middleware(['auth', 'role:Admin']);
+    Route::post('/clearance/update', [ClearanceController::class, 'update'])->name('clearance.update')->middleware(['auth', 'role:Admin']);
+    Route::post('/clearance/void', [ClearanceController::class, 'void'])->name('clearance.void')->middleware(['auth', 'role:Admin']);
+    Route::post('/clearance/restore', [ClearanceController::class, 'restore'])->name('clearance.restore')->middleware(['auth', 'role:Admin']);
+    Route::get('/clearance/fetchDept/{id_user}', [ClearanceController::class, 'fetchDept'])->name('clearance.fetchDept')->middleware(['auth', 'role:Admin']);
+    Route::get('/clearance/create-approval/{id}', [ClearanceController::class, 'createApproval'])->name('clearance.createApproval')->middleware(['auth', 'role:Admin']);
 
     //Attachment
     Route::get('/attachment/index', [AttachmentController::class, 'index'])->name('attachment.index');

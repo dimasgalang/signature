@@ -51,6 +51,7 @@
         </div>
     </li>
 
+    @if($roleusers[0]->rolename == 'Admin')
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHandover"
             aria-expanded="true" aria-controls="collapseHandover">
@@ -76,6 +77,7 @@
             </div>
         </div>
     </li>
+    @endif
 
     <!-- @if($roleusers[0]->rolename == 'Admin')
     <li class="nav-item">
