@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('item_services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clearance_id')->constrained('clearances')->onDelete('cascade');
-            $table->string('clearance_code');
+            $table->foreignId('leaver_id')->constrained('leavers')->onDelete('cascade');
+            $table->string('leaver_code');
             $table->timestamps();
         });
     }

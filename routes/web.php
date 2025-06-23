@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AttachmentController;
-use App\Http\Controllers\ClearanceController;
+use App\Http\Controllers\LeaverController;
 use App\Http\Controllers\ConverterController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HandoverController;
@@ -78,7 +78,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Approval
     Route::get('/approval/index', [ApprovalController::class, 'index'])->name('approval.index');
     Route::get('/approval/indexHandover', [ApprovalController::class, 'indexHandover'])->name('approval.indexHandover');
-    Route::get('/approval/indexClearance', [ApprovalController::class, 'indexClearance'])->name('approval.indexClearance');
+    Route::get('/approval/indexLeaver', [ApprovalController::class, 'indexLeaver'])->name('approval.indexLeaver');
     Route::get('/approval/create', [ApprovalController::class, 'create'])->name('approval.create');
     Route::get('/approval/approve/{id}', [ApprovalController::class, 'approve'])->name('approval.approve');
     Route::get('/approval/fetchapproval/{id}', [ApprovalController::class, 'fetchapproval'])->name('approval.fetchapproval');
@@ -104,17 +104,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/handover/fetchDept/{id_user}', [HandoverController::class, 'fetchDept'])->name('handover.fetchDept')->middleware(['auth', 'role:Admin']);
     Route::get('/handover/generatePDF/{id}', [HandoverController::class, 'generatePDF'])->name('handover.generatePDF')->middleware(['auth', 'role:Admin']);
 
-    // Clearance
-    Route::get('/clearance/index', [ClearanceController::class, 'index'])->name('clearance.index')->middleware(['auth', 'role:Admin']);
-    Route::get('/clearance/create', [ClearanceController::class, 'create'])->name('clearance.create')->middleware(['auth', 'role:Admin']);
-    Route::post('/clearance/store', [ClearanceController::class, 'store'])->name('clearance.store')->middleware(['auth', 'role:Admin']);
-    Route::get('/clearance/revision/{id}', [ClearanceController::class, 'revision'])->name('clearance.revision')->middleware(['auth', 'role:Admin']);
-    Route::get('/clearance/fetchClearance/{id}', [ClearanceController::class, 'fetchClearance'])->name('clearance.fetchClearance')->middleware(['auth', 'role:Admin']);
-    Route::post('/clearance/update', [ClearanceController::class, 'update'])->name('clearance.update')->middleware(['auth', 'role:Admin']);
-    Route::post('/clearance/void', [ClearanceController::class, 'void'])->name('clearance.void')->middleware(['auth', 'role:Admin']);
-    Route::post('/clearance/restore', [ClearanceController::class, 'restore'])->name('clearance.restore')->middleware(['auth', 'role:Admin']);
-    Route::get('/clearance/fetchDept/{id_user}', [ClearanceController::class, 'fetchDept'])->name('clearance.fetchDept')->middleware(['auth', 'role:Admin']);
-    Route::get('/clearance/create-approval/{id}', [ClearanceController::class, 'createApproval'])->name('clearance.createApproval')->middleware(['auth', 'role:Admin']);
+    // Leaver
+    Route::get('/leaver/index', [LeaverController::class, 'index'])->name('leaver.index')->middleware(['auth', 'role:Admin']);
+    Route::get('/leaver/create', [LeaverController::class, 'create'])->name('leaver.create')->middleware(['auth', 'role:Admin']);
+    Route::post('/leaver/store', [LeaverController::class, 'store'])->name('leaver.store')->middleware(['auth', 'role:Admin']);
+    Route::get('/leaver/revision/{id}', [LeaverController::class, 'revision'])->name('leaver.revision')->middleware(['auth', 'role:Admin']);
+    Route::get('/leaver/fetchLeaver/{id}', [LeaverController::class, 'fetchLeaver'])->name('leaver.fetchLeaver')->middleware(['auth', 'role:Admin']);
+    Route::post('/leaver/update', [LeaverController::class, 'update'])->name('leaver.update')->middleware(['auth', 'role:Admin']);
+    Route::post('/leaver/void', [LeaverController::class, 'void'])->name('leaver.void')->middleware(['auth', 'role:Admin']);
+    Route::post('/leaver/restore', [LeaverController::class, 'restore'])->name('leaver.restore')->middleware(['auth', 'role:Admin']);
+    Route::get('/leaver/fetchDept/{id_user}', [LeaverController::class, 'fetchDept'])->name('leaver.fetchDept')->middleware(['auth', 'role:Admin']);
+    Route::get('/leaver/create-approval/{id}', [LeaverController::class, 'createApproval'])->name('leaver.createApproval')->middleware(['auth', 'role:Admin']);
 
     //Attachment
     Route::get('/attachment/index', [AttachmentController::class, 'index'])->name('attachment.index');

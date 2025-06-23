@@ -17,19 +17,19 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Clearance List</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Leaver List</h1>
                     <div>
                     <!-- <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Import Approval</a> -->
-                    <a href="{{ route('clearance.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-plus fa-sm text-white-50"></i> Create Clearance</a>
+                    <a href="{{ route('leaver.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                            class="fas fa-plus fa-sm text-white-50"></i> Create Leaver</a>
                     </div>
                 </div>
                 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
-                        <h6 class="m-0 font-weight-bold text-primary">Clearance Data</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Leaver Data</h6>
                         <form method="GET" id="form-void">
                                 <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
                                     <option disabled selected hidden>Select Status</option>
@@ -44,42 +44,42 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Clearance Name</th>
+                                        <th>Leaver Name</th>
                                         <th>From Department</th>
                                         <th>Receiver Name</th>
                                         <th>To Department</th>
                                         <th>Document Name</th>
-                                        <th>Clearance Date</th>
+                                        <th>Leaver Date</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($clearances as $clearance)
+                                    @foreach($leavers as $leaver)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $clearance->clearanceName->name }}</td>
-                                        <td>{{ $clearance->clearanceName->dept }}</td>
-                                        <td>{{ $clearance->receiverName->name }}</td>
-                                        <td>{{ $clearance->department }}</td>
-                                        <td>{{ $clearance->document_name }}</td>
-                                        <td>{{ $clearance->date }}</td>
+                                        <td>{{ $leaver->leaverName->name }}</td>
+                                        <td>{{ $leaver->leaverName->dept }}</td>
+                                        <td>{{ $leaver->receiverName->name }}</td>
+                                        <td>{{ $leaver->department }}</td>
+                                        <td>{{ $leaver->document_name }}</td>
+                                        <td>{{ $leaver->date }}</td>
                                          <td style="width: 8%">
                                              <center>
-                                                <a href="{{asset('storage/clearance_pdfs/'.$clearance->original_name)}}" target="_blank" class="btn btn-primary btn-circle btn-sm">
+                                                <a href="{{asset('storage/leaver_pdfs/'.$leaver->original_name)}}" target="_blank" class="btn btn-primary btn-circle btn-sm">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('clearance.createApproval', $clearance->id) }}" class="btn btn-success btn-circle btn-sm">
+                                                <a href="{{ route('leaver.createApproval', $leaver->id) }}" class="btn btn-success btn-circle btn-sm">
                                                     <i class="fas fa-file"></i>
                                                 </a>
-                                                <a href="{{ route('clearance.revision', $clearance->id) }}" class="btn btn-warning btn-circle btn-sm">
+                                                <a href="{{ route('leaver.revision', $leaver->id) }}" class="btn btn-warning btn-circle btn-sm">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 @if (request()->get('void') == 'false' || request()->get('void') == '')
-                                                <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('clearance.fetchClearance', $clearance->id) }}" data-void-link="{{ route('clearance.void') }}" data-void-name="data-clearance" data-toggle="modal" data-target="#voidModal">
+                                                <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('leaver.fetchLeaver', $leaver->id) }}" data-void-link="{{ route('leaver.void') }}" data-void-name="data-leaver" data-toggle="modal" data-target="#voidModal">
                                                     <i class="fas fa-ban"></i>
                                                 </a>
                                                 @elseif (request()->get('void') == 'true')
-                                                <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore" data-restore-url="{{ route('clearance.fetchClearance', $clearance->id) }}" data-restore-link="{{ route('clearance.restore') }}" data-restore-name="data-clearance" data-toggle="modal" data-target="#restoreModal">
+                                                <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore" data-restore-url="{{ route('leaver.fetchLeaver', $leaver->id) }}" data-restore-link="{{ route('leaver.restore') }}" data-restore-name="data-leaver" data-toggle="modal" data-target="#restoreModal">
                                                     <i class="fas fa-history"></i>
                                                 </a>
                                             </center>
@@ -212,11 +212,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('clearance.void') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('leaver.void') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-void"></p>
-                        <input class="form-control" type="hidden" id="modal_clearance_id_void" name="clearance_id" readonly>
+                        <input class="form-control" type="hidden" id="modal_leaver_id_void" name="leaver_id" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -236,11 +236,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('clearance.restore') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('leaver.restore') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-restore"></p>
-                        <input class="form-control" type="hidden" id="modal_clearance_id_restore" name="clearance_id" readonly>
+                        <input class="form-control" type="hidden" id="modal_leaver_id_restore" name="leaver_id" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -312,10 +312,10 @@
             $("#modal-text-record").text('Apakah anda yakin ingin menghapus Approval ' + $(this).data('delete-name') + '?');
     });
     $('.btn-void-record').on('click', function () {
-            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus clearance ' + $(this).data('void-name') + '?');
+            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus leaver ' + $(this).data('void-name') + '?');
     });
     $('.btn-restore-record').on('click', function () {
-            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Clearance ' + $(this).data('restore-name') + '?');
+            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Leaver ' + $(this).data('restore-name') + '?');
     });
     // $('.btn-revision-record').on('click', function () {
     //         $("#modal-text-record-revision").text('Apakah anda yakin ingin mengubah status Approval menjadi Revision ' + $(this).data('revision-name') + '?');
@@ -341,7 +341,7 @@
         var jsonVoid = $(this).data('void-url'); 
         $.get(jsonVoid, function (data) {
             if (data.length > 0) {
-                $('#modal_clearance_id_void').val(data[0].id);
+                $('#modal_leaver_id_void').val(data[0].id);
                 } else {
 
                 }
@@ -353,7 +353,7 @@
         var jsonRestore = $(this).data('restore-url'); 
         $.get(jsonRestore, function (data) {
             if (data.length > 0) {
-                $('#modal_clearance_id_restore').val(data[0].id);
+                $('#modal_leaver_id_restore').val(data[0].id);
                 } else {
 
                 }

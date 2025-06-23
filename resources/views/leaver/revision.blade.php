@@ -17,26 +17,26 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Revision Clearance</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Revision Leaver</h1>
                 </div>
                 
 
                 <!-- Approach -->
-                <form method="post" action="{{ route('clearance.update') }}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('leaver.update') }}" enctype="multipart/form-data">
                  <div class="row">
                     <div class="col-lg-6">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Form Revision Clearance</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Form Revision Leaver</h6>
                             </div>
                             <div class="card-body">
                                     @csrf
-                                    <input class="form-control" type="hidden" id="clearance_id" name="clearance_id" value="{{$clearance->id}}">
-                                    <div id="clearanceInput">
-                                        <label>Clearance Name :</label>
+                                    <input class="form-control" type="hidden" id="leaver_id" name="leaver_id" value="{{$leaver->id}}">
+                                    <div id="leaverInput">
+                                        <label>Leaver Name :</label>
                                         <div class="row">
                                             <div class="col-xl-12">
-                                                    <select class="form-control clearance_name_id" id="clearance_name_id" name="clearance_name_id" >
+                                                    <select class="form-control leaver_name_id" id="leaver_name_id" name="leaver_name_id" >
                                                         <option value="{{ Auth::user()->id }}">{{ Auth::user()->name }}</option>
                                                     </select>
                                             </div>
@@ -44,17 +44,17 @@
                                     </div>
                                     <br>
                                     <div>
-                                        <label for="text">Clearance Department</label>
-                                        <input class="form-control" type="text" id="clearanceDepartment" name="clearanceDepartment" value="{{ Auth::user()->dept }}" readonly>
+                                        <label for="text">Leaver Department</label>
+                                        <input class="form-control" type="text" id="leaverDepartment" name="leaverDepartment" value="{{ Auth::user()->dept }}" readonly>
                                     </div>
                                     <br>
-                                    <div id="clearanceInput">
+                                    <div id="leaverInput">
                                         <label>Receiver Name :</label>
                                         <div class="row">
                                             <div class="col-xl-12">
                                                     <select class="form-control receiver_name_id" id="receiver_name_id" name="receiver_name_id" >
                                                         @foreach ($users as $user )
-                                                            <option value="{{ $user->id }}" {{$user->id == $clearance->receiver_name_id ? 'selected' : ''}}>{{ $user->name }}</option>
+                                                            <option value="{{ $user->id }}" {{$user->id == $leaver->receiver_name_id ? 'selected' : ''}}>{{ $user->name }}</option>
                                                         @endforeach
                                                     </select>
                                             </div>
@@ -63,17 +63,17 @@
                                     <br>
                                     <div>
                                         <label for="text">Receiver Department</label>
-                                        <input class="form-control" type="text" id="receiverDepartment" value="{{$clearance->department}}" name="receiverDepartment" readonly>
+                                        <input class="form-control" type="text" id="receiverDepartment" value="{{$leaver->department}}" name="receiverDepartment" readonly>
                                     </div>
                                     <br>
                                     <div>
-                                        <label for="clearanceDate">Tanggal</label>
-                                        <input class="form-control" type="date" id="clearanceDate" name="clearanceDate" value="{{ \Carbon\Carbon::parse($clearance->date)->format('Y-m-d') }}" disabled>
+                                        <label for="leaverDate">Tanggal</label>
+                                        <input class="form-control" type="date" id="leaverDate" name="leaverDate" value="{{ \Carbon\Carbon::parse($leaver->date)->format('Y-m-d') }}" disabled>
                                     </div>
                                     <br>
                                     <div>
                                         <label for="documentName">Document Name</label>
-                                        <input class="form-control" type="text" id="documentName" name="documentName" value="{{ $clearance->document_name }}" readonly>
+                                        <input class="form-control" type="text" id="documentName" name="documentName" value="{{ $leaver->document_name }}" readonly>
                                     </div>
                                     <br>
                                     <div class="row">
@@ -91,7 +91,7 @@
                             </div>
                             <div class="card-body">
                                 <div id="itemInput">
-                                    @foreach($itemClearance as $key => $itemsClrc )
+                                    @foreach($itemLeaver as $key => $itemsClrc )
                                         <div class="row">
                                             <div class="col-xl-6">
                                                 <input class="form-control" type="hidden" id="id" name="product_id[{{$key}}][id]" value="{{$itemsClrc->id}}">
@@ -109,7 +109,7 @@
                                             @if($loop->first)
                                                 <div class="col-xl-2">
                                                     <label></label>
-                                                    <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-clearance" onclick="">Add</button>
+                                                    <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-leaver" onclick="">Add</button>
                                                 </div>
                                             @else 
                                                 <div class="col-xl-2">
@@ -138,7 +138,7 @@
                                                 <select class="form-control service_id" id="service_id" name="service_id[{{$key}}][service_id]" >
                                                     <option></option>
                                                     @foreach ($services as $service )
-                                                        <option value="{{ $service->clearance_code }}" {{$itemSvcs->clearance_code == $service->clearance_code ? 'selected' : ''}}>{{ $service->clearance_name }}</option>
+                                                        <option value="{{ $service->leaver_code }}" {{$itemSvcs->leaver_code == $service->leaver_code ? 'selected' : ''}}>{{ $service->leaver_name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -276,7 +276,7 @@
             updateDropdownOptions();
         });
 
-        $('.add-clearance').on('click', function() {
+        $('.add-leaver').on('click', function() {
             let itemInput = document.getElementById('itemInput');
             let itemIndex = itemInput.children.length;
             $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" ><option></option>@foreach ($items as $item )<option value="{{ $item->barang_code }}">{{ $item->barang_code }} - {{ $item->barang_name }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
@@ -301,7 +301,7 @@
             var receiverName_id = $(this).val();
             if (receiverName_id) {
                 $.ajax({
-                    url: '/clearance/fetchDept/'+receiverName_id,
+                    url: '/leaver/fetchDept/'+receiverName_id,
                     type: "GET",
                     dataType: "json",
                     success:function(data) {
@@ -318,7 +318,7 @@
 
 <script type="text/javascript">
     function addRecords() {
-        $("#serviceInput").append('<div class="row"><div class="col-xl-10"><label>Service :</label><select class="form-control service_id" id="service_id" name="service_id[]" ><option></option>@foreach ($services as $service )<option value="{{ $service->clearance_code }}">{{ $service->clearance_name }}</option>@endforeach</select></div> <div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThisServices">Remove</button></div></div>');
+        $("#serviceInput").append('<div class="row"><div class="col-xl-10"><label>Service :</label><select class="form-control service_id" id="service_id" name="service_id[]" ><option></option>@foreach ($services as $service )<option value="{{ $service->leaver_code }}">{{ $service->leaver_name }}</option>@endforeach</select></div> <div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThisServices">Remove</button></div></div>');
         $('.service_id').select2({
             allowClear: true,
             placeholder: 'Choose Services',
@@ -335,7 +335,7 @@
           allowClear: true,
           placeholder: 'Choose Approval',
     });
-    $('.clearance_name_id').select2({
+    $('.leaver_name_id').select2({
           allowClear: true,
           placeholder: 'Choose Approval',
     });

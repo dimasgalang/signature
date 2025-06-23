@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clearances', function (Blueprint $table) {
+        Schema::create('leavers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clearance_name_id')->constrained('users');
+            $table->foreignId('leaver_name_id')->constrained('users');
             $table->foreignId('receiver_name_id')->constrained('users');
             $table->string('department');
             $table->dateTime('date');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clearances');
+        Schema::dropIfExists('leavers');
     }
 };

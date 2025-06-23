@@ -10,7 +10,7 @@ class ItemService extends Model
     use HasFactory;
 
     protected $fillable = [
-        'clearance_id',
-        'clearance_code'
+        'leaver_id',
+        'leaver_code'
     ];
 }
