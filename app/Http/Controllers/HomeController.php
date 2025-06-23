@@ -43,10 +43,10 @@ class HomeController extends Controller
         // $totalrevision = DB::select('select ifnull(sum(total),0) as total from (select preparer_id,document_name,created_at,status,count(distinct status) as total from approval where preparer_id = "' . Auth::user()->id . '" and status = "revision" and void = "false" group by preparer_id,document_name,created_at,status,token) as subquery');
         // $totaldocument = DB::select('select ifnull(sum(total),0) as total from (select preparer_id,document_name,created_at,status,count(distinct status) as total from approval where preparer_id = "' . Auth::user()->id . '" and void = "false" group by preparer_id,document_name,created_at,status,token) as subquery');
 
-        $totalapproved = DB::select('select count(approval_id) as total from approval where approval_id = "' . Auth::user()->id . '" and type = "signature" and status = "approved" and void = "false"');
-        $totalpending = DB::select('select count(approval_id) as total from approval where approval_id = "' . Auth::user()->id . '" and type = "signature" and status = "pending" and void = "false"');
-        $totalrevision = DB::select('select count(approval_id) as total from approval where approval_id = "' . Auth::user()->id . '" and type = "signature" and status = "revision" and void = "false"');
-        $totaldocument = DB::select('select count(approval_id) as total from approval where approval_id = "' . Auth::user()->id . '" and type = "signature" and void = "false"');
+        $totalapproved = DB::select("select count(approval_id) as total from approval where approval_id = ' . Auth::user()->id . ' and type = 'signature' and status = 'approved' and void = 'false'");
+        $totalpending = DB::select("select count(approval_id) as total from approval where approval_id = ' . Auth::user()->id . ' and type = 'signature' and status = 'pending' and void = 'false'");
+        $totalrevision = DB::select("select count(approval_id) as total from approval where approval_id = ' . Auth::user()->id . ' and type = 'signature' and status = 'revision' and void = 'false'");
+        $totaldocument = DB::select("select count(approval_id) as total from approval where approval_id = ' . Auth::user()->id . ' and type = 'signature' and void = 'false'");
 
         $totaluser = count(User::all());
         // dd($totaluser);

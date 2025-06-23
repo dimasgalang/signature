@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'chutex'),
 
     /*
     |--------------------------------------------------------------------------
@@ -86,6 +86,21 @@ return [
             'database' => env('DB_SMARTIT_DATABASE', 'forge'),
             'username' => env('DB_SMARTIT_USERNAME', 'forge'),
             'password' => env('DB_SMARTIT_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'encrypt' => 'yes',
+            'trust_server_certificate' => true
+        ],
+
+        'chutex' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_CHUTEX_HOST', 'localhost'),
+            'port' => env('DB_CHUTEX_PORT', '1433'),
+            'database' => env('DB_CHUTEX_DATABASE', 'forge'),
+            'username' => env('DB_CHUTEX_USERNAME', 'forge'),
+            'password' => env('DB_CHUTEX_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
