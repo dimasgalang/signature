@@ -368,7 +368,7 @@ class ApprovalController extends Controller
 
     public function fetchattachment($token)
     {
-        $fetchattachment = DB::select('select distinct attachment.* from attachment left join approval on attachment.token = approval.token where attachment.token = "' . $token . '" and attachment.void = "false"');
+        $fetchattachment = DB::select("select distinct attachment.* from attachment left join approval on attachment.token = approval.token where attachment.token = '" . $token . "' and attachment.void = 'false'");
         // return response()->json($fetchattachment);
         return DataTables::of($fetchattachment)
             ->addIndexColumn()
