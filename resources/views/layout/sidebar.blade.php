@@ -67,13 +67,26 @@
 
      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLeaver"
-            aria-expanded="true" aria-controls="collapseHandover">
+            aria-expanded="true" aria-controls="collapseLeaver">
             <i class="fas fa-fw fa-check-square"></i>
             <span>Leaver</span>
         </a>
         <div id="collapseLeaver" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('leaver.index') }}">Leaver List</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseITRequestAccess"
+            aria-expanded="true" aria-controls="collapseITRequestAccess">
+            <i class="fas fa-fw fa-check-square"></i>
+            <span>IT Request Access</span>
+        </a>
+        <div id="collapseITRequestAccess" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('it-access-request.index') }}">IT Request List</a>
             </div>
         </div>
     </li>

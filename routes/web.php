@@ -7,6 +7,7 @@ use App\Http\Controllers\ConverterController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HandoverController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ItAccessRequestController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
@@ -115,6 +116,23 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/leaver/restore', [LeaverController::class, 'restore'])->name('leaver.restore')->middleware(['auth', 'role:Admin']);
     Route::get('/leaver/fetchDept/{id_user}', [LeaverController::class, 'fetchDept'])->name('leaver.fetchDept')->middleware(['auth', 'role:Admin']);
     Route::get('/leaver/create-approval/{id}', [LeaverController::class, 'createApproval'])->name('leaver.createApproval')->middleware(['auth', 'role:Admin']);
+
+    // IT Access Request
+    Route::get('/it-access-request/index', [ItAccessRequestController::class, 'index'])->name('it-access-request.index')->middleware(['auth', 'role:Admin']);
+    Route::get('/it-access-request/create', [ItAccessRequestController::class, 'create'])->name('it-access-request.create')->middleware(['auth', 'role:Admin']);
+    Route::post('/it-access-request/store', [ItAccessRequestController::class, 'store'])->name('it-access-request.store')->middleware(['auth', 'role:Admin']);
+    Route::get('/it-access-request/approve/{id_request_access}', [ItAccessRequestController::class, 'approve'])->name('it-access-request.approve')->middleware(['auth', 'role:Admin']);
+    Route::post('/it-access-request/approvedItem', [ItAccessRequestController::class, 'approvedItem'])->name('it-access-request.approvedItem')->middleware(['auth', 'role:Admin']);
+    Route::post('/it-access-request/approved', [ItAccessRequestController::class, 'approved'])->name('it-access-request.approved')->middleware(['auth', 'role:Admin']);
+    Route::get('/it-access-request/fetchitaccess/{id}', [ItAccessRequestController::class, 'fetchitaccess'])->name('it-access-request.fetchitaccess');
+    Route::post('/it-access-request/revision', [ItAccessRequestController::class, 'revision'])->name('it-access-request.revision');
+    // Route::get('/leaver/revision/{id}', [ItAccessRequestController::class, 'revision'])->name('leaver.revision')->middleware(['auth', 'role:Admin']);
+    // Route::get('/leaver/fetchLeaver/{id}', [ItAccessRequestController::class, 'fetchLeaver'])->name('leaver.fetchLeaver')->middleware(['auth', 'role:Admin']);
+    // Route::post('/leaver/update', [ItAccessRequestController::class, 'update'])->name('leaver.update')->middleware(['auth', 'role:Admin']);
+    // Route::post('/leaver/void', [ItAccessRequestController::class, 'void'])->name('leaver.void')->middleware(['auth', 'role:Admin']);
+    // Route::post('/leaver/restore', [ItAccessRequestController::class, 'restore'])->name('leaver.restore')->middleware(['auth', 'role:Admin']);
+    // Route::get('/leaver/fetchDept/{id_user}', [ItAccessRequestController::class, 'fetchDept'])->name('leaver.fetchDept')->middleware(['auth', 'role:Admin']);
+    // Route::get('/leaver/create-approval/{id}', [ItAccessRequestController::class, 'createApproval'])->name('leaver.createApproval')->middleware(['auth', 'role:Admin']);
 
     //Attachment
     Route::get('/attachment/index', [AttachmentController::class, 'index'])->name('attachment.index');
