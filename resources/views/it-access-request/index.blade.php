@@ -76,11 +76,11 @@
                                             <span class="text">Approved</span>
                                             </a></center>
                                         </td>
-                                        {{-- @elseif ($accessRequest->status == 'revision')
-                                        <td><center><a id="show-comment" class="btn btn-warning btn-icon-split btn-sm show-comment" data-toggle="modal" data-target="#commentModal" data-comment-url="{{ route('approval.fetchapproval', $approval->id) }}">
+                                        @elseif ($accessRequest->status == 'revision')
+                                        <td><center><a id="show-comment" class="btn btn-warning btn-icon-split btn-sm show-comment" data-toggle="modal" data-target="#commentModal" data-comment-url="{{ route('it-access-request.fetchitaccess', $accessRequest->id) }}">
                                             <span class="text">Revision</span>
                                             </a></center>
-                                        </td> --}}
+                                        </td>
                                         @endif
                                          <td style="width: 8%">
                                              <center>
@@ -100,6 +100,11 @@
                                                     <a href="{{route('it-access-request.approve', $accessRequest->id_request_access)}}" class="btn btn-primary btn-circle btn-sm mr-2">
                                                         <i class="fas fa-file"></i>
                                                     </a>
+                                                    @if($accessRequest->status == 'revision' && $accessRequest->employee_id == Auth::user()->id)
+                                                        <a href="{{route('it-access-request.approve', $accessRequest->id_request_access)}}" class="btn btn-warning btn-circle btn-sm mr-2">
+                                                            <i class="fas fa-pen"></i>
+                                                        </a>
+                                                    @endif
                                                     @if (request()->get('void') == 'false' || request()->get('void') == '')
                                                         @if ($accessRequest->approval_level == $accessRequest->approval_progress)
                                                             @if ($accessRequest->approval_progress === '3' && $accessRequest->status == 'pending')
@@ -222,7 +227,7 @@
                     <form action="{{ route('it-access-request.revision') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
-                            <input class="form-control" type="hidden" id="modal_preparer_id" name="preparer_id" readonly>
+                            <input class="form-control" type="hidden" id="modal_employee_id" name="employee_id" readonly>
                             <input class="form-control" type="hidden" id="modal_name" name="name" readonly>
                             <label>Document Name :</label>
                             <input class="form-control" type="text" id="modal_document_name" name="document_name" readonly>
@@ -288,7 +293,7 @@
             </div>
         </div>
 
-        {{-- <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
@@ -306,7 +311,7 @@
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
 
         {{-- <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
@@ -363,7 +368,7 @@
         var jsonRevision = $(this).data('revision-url'); 
         $.get(jsonRevision, function (data) {
             if (data.length > 0) {
-                $('#modal_preparer_id').val(data[0].preparer_id);
+                $('#modal_employee_id').val(data[0].employee_id);
                 $('#modal_name').val(data[0].name);
                 $('#modal_document_name').val(data[0].document_name);
                 $('#modal_token').val(data[0].token);
@@ -391,6 +396,19 @@
         $.get(jsonRestore, function (data) {
             if (data.length > 0) {
                 $('#modal_handover_id_restore').val(data[0].id);
+                } else {
+
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $('body').on('click', '#show-comment', function() {
+        var jsonComment = $(this).data('comment-url'); 
+        $.get(jsonComment, function (data) {
+            if (data.length > 0) {
+                $('#modal_comment_detail').val(data[0].comment);
                 } else {
 
                 }

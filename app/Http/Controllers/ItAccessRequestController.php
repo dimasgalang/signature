@@ -348,4 +348,23 @@ class ItAccessRequestController extends Controller
         Alert::success('Upload Successfully!', 'Document successfully uploaded!');
         return redirect()->intended('it-access-request/index');
     }
+
+    public function fetchitaccess($id)
+    {
+        $fetchitaccess = AccessRequest::select('access_requests.*', 'users.name')->leftJoin('users', 'users.id', '=', 'access_requests.approval_id')->where('access_requests.id', '=', $id)->get();
+
+        return response()->json($fetchitaccess);
+    }
+
+    public function revision(Request $request)
+    {
+        // dd($request->comment);
+        AccessRequest::select('*')->where('employee_id', '=', $request->employee_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
+            'status' => 'revision',
+            'comment' => $request->comment,
+        ]);
+
+        Alert::success('Comment to Revision Successfully!', 'Approval "' . $request->document_name . '" successfully commented!');
+        return redirect('it-access-request/index');
+    }
 }
