@@ -151,6 +151,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Template
     Route::get('/template/lpp', [TemplateController::class, 'lpp'])->name('template.lpp');
     Route::get('/template/handover', [TemplateController::class, 'handover'])->name('template.handover');
+    Route::get('/template/it-access', [TemplateController::class, 'it_access'])->name('template.itaccess');
 
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');

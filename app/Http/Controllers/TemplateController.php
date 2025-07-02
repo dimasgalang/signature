@@ -15,4 +15,9 @@ class TemplateController extends Controller
     {
         return view('template.handover');
     }
+
+    public function it_access()
+    {
+        return view('template.it-access');
+    }
 }
