@@ -66,18 +66,16 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Stamping</h6>
                             </div>
                             <div class="card-body">
-                                <center>
-                                    <div id=parent>
-                                        <div class="draggable-2"><img src="{{ asset('/storage/signature/chutex_stamp.png') }}" width="100%" height="100%"></div>
-                                        <canvas class="border-solid border-2 dark:border-zinc-50" id="pdf-canvas"></canvas>
-                                    </div>
-                                    <input type="hidden" id="stampX" name="stampX">
-                                    <input type="hidden" id="stampY" name="stampY">
-                                    <input type="hidden" id="stampHeight" name="stampHeight" value="35">
-                                    <input type="hidden" id="stampWidth" name="stampWidth" value="60">
-                                    <input type="hidden" id="canvasHeight" name="canvasHeight">
-                                    <input type="hidden" id="canvasWidth" name="canvasWidth">
-                                </center>
+                                <div id=parent>
+                                    <div class="draggable-2"><img src="{{ asset('/storage/signature/chutex_stamp.png') }}" width="100%" height="100%"></div>
+                                    <canvas class="border-solid border-2 dark:border-zinc-50" id="pdf-canvas"></canvas>
+                                </div>
+                                <input type="hidden" id="stampX" name="stampX">
+                                <input type="hidden" id="stampY" name="stampY">
+                                <input type="hidden" id="stampHeight" name="stampHeight" value="35">
+                                <input type="hidden" id="stampWidth" name="stampWidth" value="60">
+                                <input type="hidden" id="canvasHeight" name="canvasHeight">
+                                <input type="hidden" id="canvasWidth" name="canvasWidth">
                             </div>
                         </div>
                     </div>
