@@ -58,6 +58,26 @@ class ApprovalController extends Controller
         return view('approval.index', compact('approvals'));
     }
 
+    public function indexCommitment(Request $request)
+    {
+        $user_id = Auth::user()->id;
+        if ($request->void) {
+            if ($user_id == 1) {
+                $approvals = DB::select("with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by approval.id) and document_name = lag(document_name) over (order by approval.id) and token = lag(token) over (order by approval.id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = '" . $request->void . "'), data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2) select * from data3 where type = 'commitment' order by id desc");
+            } else {
+                $approvals = DB::select("with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by approval.id) and document_name = lag(document_name) over (order by approval.id) and token = lag(token) over (order by approval.id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = '" . $request->void . "'), data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = '" . $user_id . "') select * from data3 where approval_id = '" . $user_id . "' and type = 'commitment' order by id desc");
+            }
+        } else {
+            if ($user_id == 1) {
+            $approvals = DB::select("with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by approval.id) and document_name = lag(document_name) over (order by approval.id) and token = lag(token) over (order by approval.id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = 'false'), data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2) select * from data3 where type = 'commitment' order by id desc");
+            } else {
+            $approvals = DB::select("with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by approval.id) and document_name = lag(document_name) over (order by approval.id) and token = lag(token) over (order by approval.id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = 'false'), data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = '" . $user_id . "') select * from data3 where approval_id = '" . $user_id . "' and type = 'commitment' order by id desc");
+            }
+        }
+        // dd($approvals);
+        return view('approval.index', compact('approvals'));
+    }
+
     public function create()
     {
         $users = User::all();
@@ -195,8 +215,12 @@ class ApprovalController extends Controller
         // return PDF::Output('Signature.pdf', 'I');
         if ($request->type == "signature") {
             return redirect('approval/index');
-        } else {
+        } else if ($request->type == "handover") {
             return redirect('approval/indexHandover');
+        } else if ($request->type == "clearance") {
+            return redirect('approval/indexClearance');
+        } else if ($request->type == "commitment") {
+            return redirect('approval/indexCommitment');
         }
     }
 
@@ -354,8 +378,10 @@ class ApprovalController extends Controller
             return redirect()->intended('approval/index');
         } else if ($request->type == "handover") {
             return redirect()->intended('approval/indexHandover');
-        } else {
+        } else if ($request->type == "clearance") {
             return redirect()->intended('approval/indexClearance');
+        } else if ($request->type == "commitment") {
+            return redirect()->intended('approval/indexCommitment');
         }
     }
 
