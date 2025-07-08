@@ -53,32 +53,6 @@
     </li>
 
     @if($roleusers[0]->rolename == 'Admin')
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHandover"
-            aria-expanded="true" aria-controls="collapseHandover">
-            <i class="fas fa-fw fa-check-square"></i>
-            <span>Handover</span>
-        </a>
-        <div id="collapseHandover" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('handover.index') }}">Handover List</a>
-            </div>
-        </div>
-    </li>
-
-     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseClearance"
-            aria-expanded="true" aria-controls="collapseClearance">
-            <i class="fas fa-fw fa-check-square"></i>
-            <span>Clearance</span>
-        </a>
-        <div id="collapseClearance" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('clearance.index') }}">Clearance List</a>
-            </div>
-        </div>
-    </li>
-
      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCommitment"
             aria-expanded="true" aria-controls="collapseCommitment">
@@ -87,6 +61,8 @@
         </a>
         <div id="collapseCommitment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('handover.index') }}">Handover List</a>
+                <a class="collapse-item" href="{{ route('clearance.index') }}">Leaver List</a>
                 <a class="collapse-item" href="{{ route('commitment.index') }}">Commitment List</a>
             </div>
         </div>
