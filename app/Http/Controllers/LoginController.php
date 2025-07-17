@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,5 +40,24 @@ class LoginController extends Controller
         Auth::logout();
         Alert::success('Logout Successfully!', 'See You Next Time');
         return redirect('/login');
+    }
+
+    public function qrauth(Request $request)
+    {
+        $exploding = explode('_', $request->qrcode);
+        $npk = $exploding[0];
+
+        $userauth = User::where('npk', '=', $npk)->get();
+
+        if (Auth::loginUsingId($userauth[0]->id)) {
+            $request->session()->regenerate();
+            $username = Auth::user()->name;
+
+            Alert::success('Login Successfully!', 'Welcome To Chutex E-Signature Sistem');
+            return redirect()->intended('/home');
+        }
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
     }
 }

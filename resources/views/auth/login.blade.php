@@ -14,10 +14,10 @@
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Sign In</h1>
+                                <h1 class="h4 text-gray-900 mb-4">Sign In with Email</h1>
                             </div>
                             <form class="user" action="{{ route('login') }}" method="post">
                                 @csrf
@@ -77,6 +77,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-6">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Sign In with ID Card</h1>
+                            </div>
+                            <div id="reader"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,4 +93,30 @@
 
 @include('layout.footerscript')
 </body>
+<script src="{{ asset('vendor/jquery/html5-qrcode.min.js') }}"></script>
+<script>
+    let html5QRCodeScanner = new Html5QrcodeScanner(
+        "reader", {
+            fps: 10,
+            qrbox: {
+                width: 150,
+                height: 150,
+            },
+            
+            supportedScanTypes: [
+                // Html5QrcodeScanType.SCAN_TYPE_FILE, 
+                Html5QrcodeScanType.SCAN_TYPE_CAMERA
+            ],
+        }
+    );
+
+    function onScanSuccess(decodedText, decodedResult) {
+        // redirect ke link hasil scan
+        var decoder = decodedResult.decodedText;
+        window.location.href = "/login/qrauth?qrcode=" + decoder;
+        // window.location.href = decoder;
+        html5QRCodeScanner.clear();
+    }
+    html5QRCodeScanner.render(onScanSuccess);
+</script>
 </html>
