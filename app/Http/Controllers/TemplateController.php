@@ -20,4 +20,8 @@ class TemplateController extends Controller
     {
         return view('template.it-access');
     }
+    public function commitment()
+    {
+        return view('template.commitment_comp_user');
+    }
 }

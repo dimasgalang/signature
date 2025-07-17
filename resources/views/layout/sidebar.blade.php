@@ -46,54 +46,35 @@
                 <a class="collapse-item" href="{{ route('approval.index') }}">Approval List</a>
                 <a class="collapse-item" href="{{ route('attachment.index') }}">Attachment List</a>
                 <a class="collapse-item" href="{{ route('approval.indexHandover') }}">Handover List</a>
+<<<<<<< HEAD
                 <a class="collapse-item" href="{{ route('approval.indexLeaver') }}">Leaver List</a>
+=======
+                <a class="collapse-item" href="{{ route('approval.indexClearance') }}">Clearance List</a>
+                <a class="collapse-item" href="{{ route('approval.indexCommitment') }}">Commitment List</a>
+>>>>>>> ee1a045e2997b2469ecd79b68809e42031752c40
             </div>
         </div>
     </li>
 
     @if($roleusers[0]->rolename == 'Admin')
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHandover"
-            aria-expanded="true" aria-controls="collapseHandover">
+     <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCommitment"
+            aria-expanded="true" aria-controls="collapseCommitment">
             <i class="fas fa-fw fa-check-square"></i>
-            <span>Handover</span>
+            <span>IT SOP</span>
         </a>
-        <div id="collapseHandover" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseCommitment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('handover.index') }}">Handover List</a>
-            </div>
-        </div>
-    </li>
-
-     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLeaver"
-            aria-expanded="true" aria-controls="collapseLeaver">
-            <i class="fas fa-fw fa-check-square"></i>
-            <span>Leaver</span>
-        </a>
-        <div id="collapseLeaver" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('leaver.index') }}">Leaver List</a>
-            </div>
-        </div>
-    </li>
-
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseITRequestAccess"
-            aria-expanded="true" aria-controls="collapseITRequestAccess">
-            <i class="fas fa-fw fa-check-square"></i>
-            <span>IT Request Access</span>
-        </a>
-        <div id="collapseITRequestAccess" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('it-access-request.index') }}">IT Request List</a>
+                <a class="collapse-item" href="{{ route('clearance.index') }}">Leaver List</a>
+                <a class="collapse-item" href="{{ route('commitment.index') }}">Commitment List</a>
             </div>
         </div>
     </li>
     @endif
 
-    <!-- @if($roleusers[0]->rolename == 'Admin')
-    <li class="nav-item">
+    @if($roleusers[0]->rolename == 'Admin')
+    <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTools"
             aria-expanded="true" aria-controls="collapseTools">
             <i class="fas fa-fw fa-cog"></i>
@@ -105,7 +86,7 @@
                 <a class="collapse-item" href="{{ route('converter.index') }}">Excel To PDF</a>
             </div>
         </div>
-    </li>
+    </li> -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTemplate"
             aria-expanded="true" aria-controls="collapseTemplate">
@@ -116,10 +97,11 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('template.lpp') }}">LPP</a>
                 <a class="collapse-item" href="{{ route('template.handover') }}">Handover</a>
+                <a class="collapse-item" href="{{ route('template.commitment') }}">Commitment</a>
             </div>
         </div>
     </li>
-    <li class="nav-item">
+    <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseExport"
             aria-expanded="true" aria-controls="collapseExport">
             <i class="fas fa-fw fa-file-pdf"></i>
@@ -131,8 +113,8 @@
                 <a class="collapse-item" href="{{ route('export.lpp_pdf') }}">LPP PDF</a>
             </div>
         </div>
-    </li>
-    @endif -->
+    </li> -->
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

@@ -17,19 +17,19 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Approval List</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Commitment List</h1>
                     <div>
                     <!-- <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Import Approval</a> -->
-                    <a href="{{ route('approval.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-plus fa-sm text-white-50"></i> Create Approval</a>
+                    <a href="{{ route('commitment.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                            class="fas fa-plus fa-sm text-white-50"></i> Create Commitment</a>
                     </div>
                 </div>
                 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
-                        <h6 class="m-0 font-weight-bold text-primary">Approval Data</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Commitment Data</h6>
                         <form method="GET" id="form-void">
                                 <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
                                     <option disabled selected hidden>Select Status</option>
@@ -44,26 +44,45 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Preparer</th>
+                                        <th>NIK</th>
+                                        <th>Name</th>
+                                        <th>Dept</th>
+                                        <th>Position</th>
+                                        <th>Document Date</th>
                                         <th>Document Name</th>
-                                        <!-- <th>Original Name</th> -->
-                                        <th>Need Approve</th>
-                                        <th>Approval Date</th>
-                                        <th>Status</th>
-                                        <th>Attachment</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($approvals as $approval)
+                                    @foreach($commitments as $commitment)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $approval->name }}</td>
-                                        <td>{{ $approval->document_name }}</td>
-                                        <!-- <td>{{ $approval->original_name }}</td> -->
-                                        <td>{{ $approval->need_approve }}</td>
-                                        <td>{{ $approval->approval_date }}</td>
-                                        @if ($approval->status == 'pending')
+                                        <td>{{ $commitment->npk }}</td>
+                                        <td>{{ $commitment->name }}</td>
+                                        <td>{{ $commitment->dept }}</td>
+                                        <td>{{ $commitment->position }}</td>
+                                        <td>{{ $commitment->date }}</td>
+                                        <td>{{ $commitment->document_name }}</td>
+                                         <td style="width: 8%">
+                                             <center>
+                                                <a href="{{asset('storage/commitment_pdfs/'.$commitment->original_name)}}" target="_blank" class="btn btn-primary btn-circle btn-sm">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('commitment.createApproval', $commitment->id) }}" class="btn btn-success btn-circle btn-sm">
+                                                    <i class="fas fa-file"></i>
+                                                </a>
+                                                @if (request()->get('void') == 'false' || request()->get('void') == '')
+                                                <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('commitment.fetchCommitment', $commitment->id) }}" data-void-link="{{ route('commitment.void') }}" data-void-name="data-commitment" data-toggle="modal" data-target="#voidModal">
+                                                    <i class="fas fa-ban"></i>
+                                                </a>
+                                                @elseif (request()->get('void') == 'true')
+                                                <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore" data-restore-url="{{ route('commitment.fetchCommitment', $commitment->id) }}" data-restore-link="{{ route('commitment.restore') }}" data-restore-name="data-commitment" data-toggle="modal" data-target="#restoreModal">
+                                                    <i class="fas fa-history"></i>
+                                                </a>
+                                            </center>
+                                            @endif
+                                        </td>
+                                        {{-- @if ($approval->status == 'pending')
                                         <td><center><a class="btn btn-danger btn-icon-split btn-sm">
                                             <span class="text">Pending</span>
                                             </a></center>
@@ -79,39 +98,26 @@
                                             </a></center>
                                         </td>
                                         @endif
-                                        <td align="center"><a id="show-detail-attachment" class="btn btn-primary btn-icon-split btn-sm btn-show-detail-attachment" data-url-attachment="{{ route('approval.fetchattachment', $approval->token) }}" data-show-title-attachment="{{ $approval->document_name }}">
-                                            <span class="text">Detail</span>
-                                        </a></td>
                                         <td class="text-center">
                                             @if (($approval->value_first == null) && ($approval->value_last == null))
-                                            <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-show-approved="{{ asset('/storage/document/' . $approval->original_name) }}" data-show-stamped="{{ asset('/storage/document/' . $approval->document_stamp) }}">
-                                            <!-- <a id="show-view" href="{{ asset('/storage/document/' . $approval->original_name) }}" class="btn btn-primary btn-circle btn-sm show-view" target="_blank"> -->
+                                            <a href="{{ asset('/storage/document/' . $approval->original_name) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @elseif ((!is_null($approval->value_first)) && ($approval->value_last == null))
-                                            <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-show-approved="{{ asset('/storage/document/' . $approval->value_first) }}" data-show-stamped="{{ asset('/storage/document/' . $approval->document_stamp) }}">
-                                            <!-- <a id="show-view" href="{{ asset('/storage/document/' . $approval->value_first) }}" class="btn btn-primary btn-circle btn-sm show-view" target="_blank"> -->
+                                            <a href="{{ asset('/storage/document/' . $approval->value_first) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @elseif ((!is_null($approval->value_first)) && (!is_null($approval->value_last)))
-                                            <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-show-approved="{{ asset('/storage/document/' . $approval->value_last) }}" data-show-stamped="{{ asset('/storage/document/' . $approval->document_stamp) }}">
-                                                <!-- <a id="show-view" href="{{ asset('/storage/document/' . $approval->value_last) }}" class="btn btn-primary btn-circle btn-sm show-view" target="_blank"> -->
+                                            <a href="{{ asset('/storage/document/' . $approval->value_last) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                                @if ($approval->stamp != 'true')
-                                                <a href="{{ route('approval.stamp', ['id' => $approval->id]) }}" class="btn btn-success btn-circle btn-sm">
-                                                    <i class="fas fa-stop-circle"></i>
-                                                </a>
-                                                @endif
                                             @endif
                                             @if (request()->get('void') == 'false' || request()->get('void') == '')
                                                 @if ($approval->approval_level == $approval->approval_progress)
                                                     @if ($approval->status == 'pending')
-                                                        @if (Auth::id() == $approval->approval_id)
-                                                        <a href="{{ route('approval.approve', ['id' => $approval->id]) }}" class="btn btn-success btn-circle btn-sm">
-                                                            <i class="fas fa-check"></i>
-                                                        </a>
-                                                        @endif
+                                                    <a href="{{ route('approval.approve', ['id' => $approval->id]) }}" class="btn btn-success btn-circle btn-sm">
+                                                        <i class="fas fa-check"></i>
+                                                    </a>
                                                     <a id="show-revision" class="btn btn-warning btn-circle btn-sm show-revision" data-revision-url="{{ route('approval.fetchapproval', $approval->id) }}" data-revision-link="{{ route('approval.revision') }}" data-revision-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#revisionModal">
                                                         <i class="fas fa-times"></i>
                                                     </a>
@@ -129,7 +135,7 @@
                                                 </a>
                                                 @endif
                                             @endif
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -164,7 +170,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="revisionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade" id="revisionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
@@ -192,7 +198,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="modal fade" id="voidModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
@@ -203,14 +209,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('approval.void') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('commitment.void') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-void"></p>
-                        <input class="form-control" type="hidden" id="modal_preparer_id_void" name="preparer_id" readonly>
-                        <input class="form-control" type="hidden" id="modal_name_void" name="name" readonly>
-                        <input class="form-control" type="hidden" id="modal_document_name_void" name="document_name" readonly>
-                        <input class="form-control" type="hidden" id="modal_token_void" name="token">
+                        <input class="form-control" type="hidden" id="modal_commitment_id_void" name="commitment_id" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -230,14 +233,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('approval.restore') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('commitment.restore') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-restore"></p>
-                        <input class="form-control" type="hidden" id="modal_preparer_id_restore" name="preparer_id" readonly>
-                        <input class="form-control" type="hidden" id="modal_name_restore" name="name" readonly>
-                        <input class="form-control" type="hidden" id="modal_document_name_restore" name="document_name" readonly>
-                        <input class="form-control" type="hidden" id="modal_token_restore" name="token">
+                        <input class="form-control" type="hidden" id="modal_commitment_id_restore" name="commitment_id" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -248,7 +248,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
@@ -266,9 +266,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
-        <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
@@ -292,59 +292,7 @@
                     </form>
                 </div>
             </div>
-        </div>
-
-        <div class="modal fade" id="attachmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document" >
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 id="detail-title" class="modal-title" id="exampleModalLabel">Attachment Detail</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
-                            <h6 class="m-0 font-weight-bold text-primary"></h6>
-                            <div class="dropdown no-arrow">
-                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                        aria-labelledby="dropdownMenuLink">
-                                    <!-- <div class="dropdown-header">Action:</div> -->
-                                    <a class="dropdown-item" href="{{ route('attachment.create') }}" target="_blank">Create Attachment</a>
-                                    <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-xl-12 col-md-6 mb-4">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-modal table-sm" id="table-attachment-detail" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Attachment Name</th>
-                                                <th>Date</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </div> --}}
 
 
 @include('layout.footer')
@@ -355,88 +303,42 @@
 
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript">
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
             $("#modal-text-record").text('Apakah anda yakin ingin menghapus Approval ' + $(this).data('delete-name') + '?');
     });
     $('.btn-void-record').on('click', function () {
-            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Approval ' + $(this).data('void-name') + '?');
+            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Commitment ' + $(this).data('void-name') + '?');
     });
     $('.btn-restore-record').on('click', function () {
-            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Approval ' + $(this).data('restore-name') + '?');
+            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Commitment ' + $(this).data('restore-name') + '?');
     });
-    $('.btn-revision-record').on('click', function () {
-            $("#modal-text-record-revision").text('Apakah anda yakin ingin mengubah status Approval menjadi Revision ' + $(this).data('revision-name') + '?');
-    });
-    $(function () {
-        $('body').on('click', '#show-revision', function() {
-        var jsonRevision = $(this).data('revision-url'); 
-        $.get(jsonRevision, function (data) {
-            if (data.length > 0) {
-                $('#modal_preparer_id').val(data[0].preparer_id);
-                $('#modal_name').val(data[0].name);
-                $('#modal_document_name').val(data[0].document_name);
-                $('#modal_token').val(data[0].token);
-                } else {
+    // $('.btn-revision-record').on('click', function () {
+    //         $("#modal-text-record-revision").text('Apakah anda yakin ingin mengubah status Approval menjadi Revision ' + $(this).data('revision-name') + '?');
+    // });
+    
+    // $(function () {
+    //     $('body').on('click', '#show-revision', function() {
+    //     var jsonRevision = $(this).data('revision-url'); 
+    //     $.get(jsonRevision, function (data) {
+    //         if (data.length > 0) {
+    //             $('#modal_preparer_id').val(data[0].preparer_id);
+    //             $('#modal_name').val(data[0].name);
+    //             $('#modal_document_name').val(data[0].document_name);
+    //             $('#modal_token').val(data[0].token);
+    //             } else {
 
-                }
-            });
-        });
-    });
-    $(document).ready(function () {
-        $('body').on('click', '#show-detail-attachment', function() {
-            var jsonAttachmentDetail = $(this).data('url-attachment');
-            $.get(jsonAttachmentDetail, function (data) {
-                $('#attachmentModal').modal('show');
-                var tableAttachmentDetail = $('#table-attachment-detail').DataTable({
-                        destroy: true,
-                        processing: true,
-                        responsive: true,
-                        ajax: jsonAttachmentDetail, 
-                        columns: [
-                            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                            { data: 'document_name', name: 'document_name', orderable: false },
-                            { data: 'created_at', name: 'created_at', orderable: false },
-                            { data: 'viewbadge', name: 'viewbadge', orderable: false },
-                        ],
-                    });
-            })
-        });
-    });
-    $(function () {
-        $('body').on('click', '#show-view', function() {
-            console.log($(this).data('show-stamped'));
-            Swal.fire({
-                title: "View document?",
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: "View Document",
-                denyButtonText: `View Document + Stamp`
-                }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                    window.open($(this).data('show-approved'));
-                } else if (result.isDenied) {
-                    if($(this).data('show-stamped').substr($(this).data('show-stamped').length - 4) == ".pdf") {
-                        window.open($(this).data('show-stamped'));
-                    } else {
-                        Swal.fire("This document not stamped", "", "danger");
-                    }
-                }
-            });
-        });
-    });
+    //             }
+    //         });
+    //     });
+    // });
     $(function () {
         $('body').on('click', '#show-void', function() {
         var jsonVoid = $(this).data('void-url'); 
         $.get(jsonVoid, function (data) {
             if (data.length > 0) {
-                $('#modal_preparer_id_void').val(data[0].preparer_id);
-                $('#modal_name_void').val(data[0].name);
-                $('#modal_document_name_void').val(data[0].document_name);
-                $('#modal_token_void').val(data[0].token);
+                $('#modal_commitment_id_void').val(data[0].id);
                 } else {
 
                 }
@@ -448,22 +350,7 @@
         var jsonRestore = $(this).data('restore-url'); 
         $.get(jsonRestore, function (data) {
             if (data.length > 0) {
-                $('#modal_preparer_id_restore').val(data[0].preparer_id);
-                $('#modal_name_restore').val(data[0].name);
-                $('#modal_document_name_restore').val(data[0].document_name);
-                $('#modal_token_restore').val(data[0].token);
-                } else {
-
-                }
-            });
-        });
-    });
-    $(function () {
-        $('body').on('click', '#show-comment', function() {
-        var jsonComment = $(this).data('comment-url'); 
-        $.get(jsonComment, function (data) {
-            if (data.length > 0) {
-                $('#modal_comment_detail').val(data[0].comment);
+                $('#modal_commitment_id_restore').val(data[0].id);
                 } else {
 
                 }

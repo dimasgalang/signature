@@ -10,6 +10,7 @@ use App\Models\HardwareRequest;
 use App\Models\ResourceAccess;
 use App\Models\User;
 use App\Models\UserAccount;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -366,5 +367,28 @@ class ItAccessRequestController extends Controller
 
         Alert::success('Comment to Revision Successfully!', 'Approval "' . $request->document_name . '" successfully commented!');
         return redirect('it-access-request/index');
+    }
+
+    public function generatePdf($id)
+    {
+        $accessRequest = AccessRequest::select('access_requests.*', 'users.name', 'users.dept', 'signatures.signature_img')->leftJoin('users', 'users.id', '=', 'access_requests.approval_id')->leftJoin('signatures', 'signatures.user_id', '=', 'access_requests.approval_id')->where('id_request_access', $id)->get();
+        $computerRequests = HardwareRequest::where('id_request_access', $id)->where('hardware_device', 'Komputer')->get();
+        // dd($computerRequests);
+        $otherDevices = HardwareRequest::where('id_request_access', $id)->where('hardware_device', '!=', 'Komputer')->get();
+        $applicationPrograms = ApplicationProgram::where('id_request_access', $id)->get();
+        $fileFolderAccesses = FileFolderAccess::where('id_request_access', $id)->get();
+        $emailAccount = ResourceAccess::where('id_request_access', $id)->where('type', 'email_address')->get();
+        $internetAccess = ResourceAccess::where('id_request_access', $id)->where('type', 'internet_access')->get();
+        $otherRequests = ResourceAccess::where('id_request_access', $id)->where('type', 'other_request')->get();
+        $userAccounts = UserAccount::where('id_request_access', $id)->get();
+
+        // dd($accessRequest, $computerRequests, $otherDevices, $applicationPrograms, $fileFolderAccesses, $emailAccount, $internetAccess, $otherRequests, $userAccounts);
+        $pdf = Pdf::loadView('template.it-access', compact('accessRequest', 'computerRequests', 'otherDevices', 'applicationPrograms', 'fileFolderAccesses', 'emailAccount', 'internetAccess', 'otherRequests', 'userAccounts'));
+
+        // I: Show to Browser, D: Download, F: Save to File, S: Return as String
+        // return PDF::Output('Signature.pdf', 'I');
+        // PDF::Output(storage_path('app/public/document/') . $new_filename, 'F');
+
+        return $pdf->download($id . 'it-request.pdf');
     }
 }

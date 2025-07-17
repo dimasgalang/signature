@@ -30,6 +30,7 @@
                             <div class="card-body">
                                 <input class="form-control" type="hidden" id="id" name="id" value="{{ $approval[0]->id }}" readonly>
                                 <input class="form-control" type="hidden" id="url" name="url" value="{{ url()->current() }}" readonly>
+                                <input class="form-control" type="hidden" id="type" name="type" value="{{ $approval[0]->type }}" readonly>
                                 <input class="form-control" type="hidden" id="token" name="token" value="{{ $approval[0]->token }}" readonly>
                                 <input class="form-control" type="hidden" id="preparer_id" name="preparer_id" value="{{ $approval[0]->preparer_id }}" readonly>
                                 <input class="form-control" type="hidden" id="approval_base64" name="approval_base64" value="{{ $approval[0]->approval_base64 }}" readonly>
@@ -65,18 +66,16 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Stamping</h6>
                             </div>
                             <div class="card-body">
-                                <center>
-                                    <div id=parent>
-                                        <div class="draggable-2"><img src="{{ asset('/storage/signature/chutex_stamp.png') }}" width="100%" height="100%"></div>
-                                        <canvas class="border-solid border-2 dark:border-zinc-50" id="pdf-canvas"></canvas>
-                                    </div>
-                                    <input type="hidden" id="stampX" name="stampX">
-                                    <input type="hidden" id="stampY" name="stampY">
-                                    <input type="hidden" id="stampHeight" name="stampHeight" value="240">
-                                    <input type="hidden" id="stampWidth" name="stampWidth" value="150">
-                                    <input type="hidden" id="canvasHeight" name="canvasHeight">
-                                    <input type="hidden" id="canvasWidth" name="canvasWidth">
-                                </center>
+                                <div id=parent>
+                                    <div class="draggable-2"><img src="{{ asset('/storage/signature/chutex_stamp.png') }}" width="100%" height="100%"></div>
+                                    <canvas class="border-solid border-2 dark:border-zinc-50" id="pdf-canvas"></canvas>
+                                </div>
+                                <input type="hidden" id="stampX" name="stampX">
+                                <input type="hidden" id="stampY" name="stampY">
+                                <input type="hidden" id="stampHeight" name="stampHeight" value="35">
+                                <input type="hidden" id="stampWidth" name="stampWidth" value="60">
+                                <input type="hidden" id="canvasHeight" name="canvasHeight">
+                                <input type="hidden" id="canvasWidth" name="canvasWidth">
                             </div>
                         </div>
                     </div>
@@ -113,7 +112,7 @@
     pageNum = 1,
     pageRendering = false,
     pageNumPending = null,
-    scale = 1.7,
+    scale = 0.9, //default 1.7
     canvas = document.getElementById('pdf-canvas'),
     ctx = canvas.getContext('2d');
 
@@ -276,7 +275,7 @@
         ],
     }).resizable({
     // resize from all edges and corners
-    edges: { left: true, right: true, bottom: true, top: true },
+    edges: { left: false, right: true, bottom: true, top: false },
 
     listeners: {
       move (event) {
@@ -312,7 +311,7 @@
 
       // minimum size
       interact.modifiers.restrictSize({
-        min: { width: 240, height: 150 }
+        min: { width: 60, height: 35 }
       })
     ],
 

@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AttachmentController;
-use App\Http\Controllers\LeaverController;
+use App\Http\Controllers\ClearanceController;
+use App\Http\Controllers\CommitmentComputerController;
 use App\Http\Controllers\ConverterController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HandoverController;
@@ -39,6 +40,7 @@ Route::group(['middleware' => 'guest'], function () {
 
     Route::get('/login', [LoginController::class, 'login'])->name('login.guest');
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
+    Route::get('/login/qrauth', [LoginController::class, 'qrauth'])->name('login.qrauth');
 });
 
 
@@ -79,7 +81,8 @@ Route::group(['middleware' => 'auth'], function () {
     //Approval
     Route::get('/approval/index', [ApprovalController::class, 'index'])->name('approval.index');
     Route::get('/approval/indexHandover', [ApprovalController::class, 'indexHandover'])->name('approval.indexHandover');
-    Route::get('/approval/indexLeaver', [ApprovalController::class, 'indexLeaver'])->name('approval.indexLeaver');
+    Route::get('/approval/indexClearance', [ApprovalController::class, 'indexClearance'])->name('approval.indexClearance');
+    Route::get('/approval/indexCommitment', [ApprovalController::class, 'indexCommitment'])->name('approval.indexCommitment');
     Route::get('/approval/create', [ApprovalController::class, 'create'])->name('approval.create');
     Route::get('/approval/approve/{id}', [ApprovalController::class, 'approve'])->name('approval.approve');
     Route::get('/approval/fetchapproval/{id}', [ApprovalController::class, 'fetchapproval'])->name('approval.fetchapproval');
@@ -134,6 +137,19 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::get('/leaver/fetchDept/{id_user}', [ItAccessRequestController::class, 'fetchDept'])->name('leaver.fetchDept')->middleware(['auth', 'role:Admin']);
     // Route::get('/leaver/create-approval/{id}', [ItAccessRequestController::class, 'createApproval'])->name('leaver.createApproval')->middleware(['auth', 'role:Admin']);
 
+    // Commitment
+    Route::get('/commitment/index', [CommitmentComputerController::class, 'index'])->name('commitment.index');
+    Route::get('/commitment/create', [CommitmentComputerController::class, 'create'])->name('commitment.create');
+    Route::post('/commitment/store', [CommitmentComputerController::class, 'store'])->name('commitment.store');
+    Route::get('/commitment/revision/{id}', [CommitmentComputerController::class, 'revision'])->name('commitment.revisionHandover')->middleware(['auth', 'role:Admin']);
+    Route::get('/commitment/fetchCommitment/{id}', [CommitmentComputerController::class, 'fetchCommitment'])->name('commitment.fetchCommitment');
+    Route::post('/commitment/update', [CommitmentComputerController::class, 'update'])->name('commitment.updateHandover')->middleware(['auth', 'role:Admin']);
+    Route::post('/commitment/void', [CommitmentComputerController::class, 'void'])->name('commitment.void')->middleware(['auth', 'role:Admin']);
+    Route::post('/commitment/restore', [CommitmentComputerController::class, 'restore'])->name('commitment.restore')->middleware(['auth', 'role:Admin']);
+    Route::get('/commitment/fetchEmployee/{npk}', [CommitmentComputerController::class, 'fetchEmployee'])->name('commitment.fetchEmployee');
+    Route::get('/commitment/generatePDF/{id}', [CommitmentComputerController::class, 'generatePDF'])->name('commitment.generatePDF');
+    Route::get('/commitment/create-approval/{id}', [CommitmentComputerController::class, 'createApproval'])->name('commitment.createApproval');
+
     //Attachment
     Route::get('/attachment/index', [AttachmentController::class, 'index'])->name('attachment.index');
     Route::get('/attachment/create', [AttachmentController::class, 'create'])->name('attachment.create');
@@ -152,6 +168,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/template/lpp', [TemplateController::class, 'lpp'])->name('template.lpp');
     Route::get('/template/handover', [TemplateController::class, 'handover'])->name('template.handover');
     Route::get('/template/it-access', [TemplateController::class, 'it_access'])->name('template.itaccess');
+    Route::get('/template/commitment', [TemplateController::class, 'commitment'])->name('template.commitment');
 
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');

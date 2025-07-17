@@ -42,8 +42,8 @@
         }
         .draggable-2 {
             display: none;
-            width: 240px;
-            height: 150px;
+            width: 72px;
+            height: 42px;
             background-color: rgba(255, 0, 0, 0.4);
             touch-action: none;
             user-select: none;

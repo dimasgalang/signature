@@ -97,12 +97,16 @@
                                                 </a>
                                                 @endif --}}
                                                 <div class="row justify-content-center">
-                                                    <a href="{{route('it-access-request.approve', $accessRequest->id_request_access)}}" class="btn btn-primary btn-circle btn-sm mr-2">
+                                                    <a href="{{route('it-access-request.approve', $accessRequest->id_request_access)}}" class="btn btn-success btn-circle btn-sm mr-2">
                                                         <i class="fas fa-file"></i>
                                                     </a>
                                                     @if($accessRequest->status == 'revision' && $accessRequest->employee_id == Auth::user()->id)
                                                         <a href="{{route('it-access-request.approve', $accessRequest->id_request_access)}}" class="btn btn-warning btn-circle btn-sm mr-2">
                                                             <i class="fas fa-pen"></i>
+                                                        </a>
+                                                    @elseif($accessRequest->status == 'approved' && $accessRequest->employee_id == Auth::user()->id)
+                                                        <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-show-document="" data-download-document="{{ route('it-access-request.view', $accessRequest->id_request_access) }}">
+                                                            <i class="fas fa-eye"></i>
                                                         </a>
                                                     @endif
                                                     @if (request()->get('void') == 'false' || request()->get('void') == '')
@@ -347,6 +351,7 @@
 <script src="{{asset('vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
 
 <!-- Page level custom scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
 <script type="text/javascript">
     $('.btn-delete-record').on('click', function () {
@@ -411,6 +416,30 @@
                 $('#modal_comment_detail').val(data[0].comment);
                 } else {
 
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $('body').on('click', '#show-view', function() {
+            console.log($(this).data('show-stamped'));
+            Swal.fire({
+                title: "View document?",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "View Document",
+                denyButtonText: `Download Document`
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    window.open($(this).data('show-approved'));
+                } else if (result.isDenied) {
+                    window.open($(this).data('download-document'));
+                    // if($(this).data('show-stamped').substr($(this).data('show-stamped').length - 4) == ".pdf") {
+                    // } else {
+                    //     Swal.fire("This document not stamped", "", "danger");
+                    // }
                 }
             });
         });
