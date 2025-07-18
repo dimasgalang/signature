@@ -372,8 +372,8 @@ class ItAccessRequestController extends Controller
     public function generatePdf($id)
     {
         $accessRequest = AccessRequest::select('access_requests.*', 'users.name', 'users.dept', 'signatures.signature_img')->leftJoin('users', 'users.id', '=', 'access_requests.approval_id')->leftJoin('signatures', 'signatures.user_id', '=', 'access_requests.approval_id')->where('id_request_access', $id)->get();
+        // dd($accessRequest);
         $computerRequests = HardwareRequest::where('id_request_access', $id)->where('hardware_device', 'Komputer')->get();
-        // dd($computerRequests);
         $otherDevices = HardwareRequest::where('id_request_access', $id)->where('hardware_device', '!=', 'Komputer')->get();
         $applicationPrograms = ApplicationProgram::where('id_request_access', $id)->get();
         $fileFolderAccesses = FileFolderAccess::where('id_request_access', $id)->get();

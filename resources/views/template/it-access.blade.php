@@ -399,25 +399,34 @@
         font-size: 10px;
         font-style: italic;
         color: #666;
-        margin-bottom: 40px;
+        /* margin-bottom: 40px; */
     }
     
     .signature-image {
-        width: 120px;
-        height: 60px;
-        margin: 0 auto 20px;
-        border: 1px dashed #ccc;
+        width: 200px;
+        height: 100px;
+        /* margin: 0 auto 20px; */
+        /* border: 1px dashed #ccc; */
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 11px;
-        color: #999;
-        background-color: #fafafa;
+        /* color: #999; */
+        /* background-color: #fafafa; */
+    }
+
+    .signature-name {
+        margin-top: -10px;
+        font-size: 12px;
+        font-weight: normal;
+        color: #000;
     }
     
     .signature-line {
         width: 200px;
-        height: 1px;
+        height: 0.5px;
+        justify-content: center;
+        font-size: 11px;
         background-color: #000;
         margin: 0 auto;
     }
@@ -462,7 +471,7 @@
       <tr>
           <td class="header" style="margin: 0px;">
               <center>
-                <img src="{{ asset('img/chutex_logo.png') }}" style="width: 70px;">
+                <img src="{{ public_path('img/chutex_logo.png') }}" style="width: 70px;">
                 <h6 style="margin: 0px;">PT. CHUTEX INTERNASIONAL <br> INDONESIA</h6>
             </center>
           </td>
@@ -678,7 +687,7 @@
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
                     @foreach($userAccounts as $account)
-                    <div class="approval-item">
+                    <div class="approval-item" style="margin-top: 2px;">
                         <div class="approval-options">
                             <input type="checkbox" id="monitor-yes" {{$account->status_approved == 'true' ? 'checked' : ''}} disabled>
                             <label for="monitor-yes">Yes</label>
@@ -878,7 +887,6 @@
                 <td class="qty-cell other-devices-qty">
                     @foreach($applicationPrograms as $application)
                     <br>
-                    <br>
                     <div class="qty-details">
                         <div class="qty-item align-items-start">
                             <div class="">Nama Masuk/Login Name : {{$application->login_name}}</div>
@@ -889,8 +897,7 @@
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
                     @foreach($applicationPrograms as $application)
-                    <br>
-                    <div class="approval-item">
+                    <div class="approval-item" style="margin-top: 2px;">
                         <div class="approval-options">
                             <input type="checkbox" id="monitor-yes" {{$application->status_approved == 'true' ? 'checked' : '' }} disabled>
                             <label for="monitor-yes">Yes</label>
@@ -931,7 +938,6 @@
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
                     @foreach($otherRequests as $other)
-                    <br>
                     <div class="approval-item">
                         <div class="approval-options">
                             <input type="checkbox" id="request-yes" {{$other->status_approved == 'true' ? 'checked' : ''}} disabled>
@@ -956,11 +962,13 @@
                 <div class="signature-title">Orang yang Meminta</div>
                 <div class="signature-subtitle">Requesting Person</div>
                 <div class="signature-image">
-                    <img src='' alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    {{asset('signature/'. $accessRequest[0]->signature_img)}}
+                    <img src="{{public_path('storage/signature/'. $accessRequest[0]->signature_img)}}" alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                     {{-- @if(isset($requesting_person_signature))
                     @endif --}}
                 </div>
+                <center>
+                    <p class="signature-name">{{$accessRequest[0]->name}}</p>
+                </center>
                 <div class="signature-line"></div>
             </td>
             
@@ -968,11 +976,13 @@
                 <div class="signature-title">Disetujui oleh kepala Departemen</div>
                 <div class="signature-subtitle">Approved by Department Head</div>
                 <div class="signature-image">
-                    <img src='' alt="Department Head Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    {{asset('signature/'. $accessRequest[1]->signature_img)}}
+                    <img src="{{public_path('storage/signature/'. $accessRequest[1]->signature_img)}}" alt="Department Head Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                     {{-- @if(isset($department_head_signature))
                     @endif --}}
                 </div>
+                <center>
+                    <p class="signature-name">{{$accessRequest[1]->name}}</p>
+                </center>
                 <div class="signature-line"></div>
             </td>
             
@@ -980,11 +990,15 @@
                 <div class="signature-title">Disetujui oleh BOD</div>
                 <div class="signature-subtitle">Approved by BOD</div>
                 <div class="signature-image">
-                    <img src='' alt="BOD Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    {{asset('signature/'. $accessRequest[2]->signature_img)}}
+                    <center>
+                        <img src="{{public_path('storage/signature/'. $accessRequest[2]->signature_img)}}" alt="BOD Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    </center>
                     {{-- @if(isset($bod_signature))
                     @endif --}}
                 </div>
+                <center>
+                    <p class="signature-name">{{$accessRequest[2]->name}}</p>
+                </center>
                 <div class="signature-line"></div>
             </td>
         </tr>

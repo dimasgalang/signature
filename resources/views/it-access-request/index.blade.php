@@ -104,7 +104,7 @@
                                                         <a href="{{route('it-access-request.approve', $accessRequest->id_request_access)}}" class="btn btn-warning btn-circle btn-sm mr-2">
                                                             <i class="fas fa-pen"></i>
                                                         </a>
-                                                    @elseif($accessRequest->status == 'approved' && $accessRequest->employee_id == Auth::user()->id)
+                                                    @elseif($accessRequest->approval_progress == '3' && $accessRequest->employee_id == Auth::user()->id)
                                                         <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-show-document="" data-download-document="{{ route('it-access-request.view', $accessRequest->id_request_access) }}">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
