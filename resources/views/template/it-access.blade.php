@@ -100,13 +100,13 @@
     .label {
         font-size: 12px;
         font-weight: normal;
-        color: #333;
+        color: #000;
         margin-right: 10px;
         white-space: nowrap;
     }
     
     .underline {
-        /* border-bottom: 1px solid #333; */
+        /* border-bottom: 1px solid #000; */
         /* flex-grow: 1; */
         /* height: 20px; */
         /* display: flex; */
@@ -120,7 +120,7 @@
     .value {
         margin: 0;
         font-size: 12px;
-        color: #333;
+        color: #000;
         white-space: nowrap;
     }
 
@@ -153,11 +153,11 @@
     
     .request-text {
         font-size: 12px;
-        color: #333;
+        color: #000;
     }
     
     .request-underline {
-        border-bottom: 0.3px #333;
+        border-bottom: 0.3px #000;
         height: 20px;
         width: 100%;
     }
@@ -170,7 +170,7 @@
     .hardware-table {
         width: 100%;
         border-bottom: none !important;
-        /* border: 0.5px solid #333; */
+        /* border: 0.5px solid #000; */
         border-collapse: collapse;
         font-size: 12px;
     }
@@ -184,7 +184,7 @@
     }
     
     .hardware-table td {
-        /* border: 0.5px solid #333; */
+        /* border: 0.5px solid #000; */
         padding: 8px;
         vertical-align: top;
     }
@@ -221,7 +221,7 @@
     
     .checkbox-item label {
         font-size: 12px;
-        color: #333;
+        color: #000;
         cursor: default;
     }
     
@@ -231,7 +231,7 @@
     
     .qty-box {
         display: inline-block;
-        border-bottom: 1px solid #333;
+        border-bottom: 1px solid #000;
         min-width: 90px;
         text-align: center;
         /* padding: 2px 5px; */
@@ -260,7 +260,7 @@
     
     .approval-options label {
         font-size: 11px;
-        color: #333;
+        color: #000;
         cursor: default;
     }
     
@@ -273,11 +273,11 @@
         position: absolute;
         /* left: 8px; */
         font-size: 12px;
-        color: #333;
+        color: #000;
     }
     
     .detail-underline {
-        border-bottom: 1px solid #333;
+        border-bottom: 1px solid #000;
         height: 20px;
         display: flex;
         align-items: flex-start;
@@ -286,7 +286,7 @@
     
     .detail-value {
         font-size: 12px;
-        color: #333;
+        color: #000;
         padding-left: 5px;
     }
     
@@ -313,11 +313,11 @@
         position: absolute;
         left: 0;
         font-size: 12px;
-        color: #333;
+        color: #000;
     }
     
     .device-detail-item .detail-underline {
-        border-bottom: 1px solid #333;
+        border-bottom: 1px solid #000;
         height: 20px;
         display: flex;
         align-items: flex-start;
@@ -392,7 +392,7 @@
     .signature-title {
         font-size: 12px;
         font-weight: normal;
-        color: #333;
+        color: #000;
     }
     
     .signature-subtitle {
@@ -418,7 +418,7 @@
     .signature-line {
         width: 200px;
         height: 1px;
-        background-color: #333;
+        background-color: #000;
         margin: 0 auto;
     }
     
@@ -475,7 +475,7 @@
           <td class="header" style="text-align: center; vertical-align: middle;">
                   <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#</p>
                   <p style="font-size:11px; x-small; margin:0; text-align: left;">Revision: 00</p>
-                  <p style="font-size:11px; x-small; margin:0; text-align: left;">Date: </p>{{--  {{\Carbon\Carbon::parse($accessRequest[0]->date_of_request)->format('d/m/Y')}} --}}
+                  <p style="font-size:11px; x-small; margin:0; text-align: left;">Date: {{\Carbon\Carbon::parse($accessRequest[0]->date_of_request)->format('d/m/Y')}}</p>
           </td>
       </tr>
   </table>
@@ -523,7 +523,7 @@
     <!-- Row 1: Tanggal -->
     <tr style="border: none;">
         <td class="label short-field">Tanggal/ Date :</td>
-        <td class="underline value"> 01 Januari 2023</td>
+        <td class="underline value"> {{\Carbon\Carbon::parse($accessRequest[0]->date_of_request)->format('d F Y')}}</td>
         {{-- <span class="value"></span> --}}
         <td></td>
         {{-- <td></td> --}}
@@ -535,7 +535,7 @@
     <tr>
         <td class="label">Nama/ Name :</td>
         <td class="underline value">
-            Andhika Dian Hidayat
+            {{$accessRequest[0]->name}}
             {{-- <span class="value"></span>  --}}
         </td>
         
@@ -546,7 +546,7 @@
         
         <td class="label" style="width: 50px">Dep/ Dept :</td>
         <td class="underline value">
-            Networking
+            {{$accessRequest[0]->dept}}
             {{-- <span class="value"></span> --}}
         </td>
     </tr>
@@ -573,7 +573,7 @@
             </tr>
         </thead>
         <tbody>
-            {{-- @if(count($computerRequests) > 0) --}}
+            @if(count($computerRequests) > 0)
 
             <tr style="border-bottom: none !important;">
                 <td class="device-row">
@@ -584,25 +584,22 @@
                 </td>
                 <td class="qty-cell">
                     <div class="qty-box">
-                        5
-                        {{-- {{$computerRequests->qty}} --}}
+                        {{$computerRequests[0]->qty}}
                     </div>
                 </td>
                 <td class="approval-cell">
                     <div class="approval-options">
-                        <input type="checkbox" id="computer-yes" checked disabled> 
-                        {{-- {{$computerRequests->status_approved ? 'checked' : ''}} --}}
+                        <input type="checkbox" id="computer-yes" {{$computerRequests[0]->status_approved == 'true' ? 'checked' : ''}} disabled> 
                         <label for="computer-yes">Yes</label>
-                        <input type="checkbox" id="computer-no" disabled>
-                        {{-- {{ $computerRequests->status_approved == 'false' ? 'checked' : ''}} --}}
+                        <input type="checkbox" id="computer-no" {{$computerRequests[0]->status_approved == 'false' ? 'checked' : ''}} disabled>
                         <label for="computer-no">No</label>
                     </div>
                 </td>
             </tr>
 
-            {{-- @endif --}}
+            @endif
 
-            {{-- @if(count($otherDevices) > 0) --}}
+            @if(count($otherDevices) > 0)
             
             <tr class="other-devices-row">
                 <td class="device-row other-devices-cell">
@@ -610,55 +607,52 @@
                         <input type="checkbox" id="other-devices" checked disabled>
                         <label for="other-devices">Perangkat lainnya/ Other Devices :</label>
                     </div>
-                    {{-- @foreach($otherDevices as $device) --}}
+                    @foreach($otherDevices as $device)
                     <div class="device-details">
                         <div class="device-detail-item">
-                            <span class="detail-underline" style="color: #333">
-                                {{-- {{$device->hardware_device}} --}}
+                            <span class="detail-underline" style="color: #000">
+                                {{$device->hardware_device}}
                             </span>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
                 <td class="qty-cell other-devices-qty">
-                    {{-- @foreach($otherDevices as $device) --}}
+                    @foreach($otherDevices as $device)
                     <div class="qty-details">
                         <div class="qty-item"></div>
                         <div class="qty-box">
-                            5
-                            {{-- {{$device->qty}} --}}
+                            {{$device->qty}}
                         </div>
                         {{-- <div class="qty-item">
                         </div> --}}
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
                 <td class="approval-cell other-devices-approval">
-                    {{-- @foreach($otherDevices as $device) --}}
+                    @foreach($otherDevices as $device)
                     <div class="approval-details">
                         <div class="approval-item"></div>
                         <div class="approval-item">
                             <div class="approval-options">
-                                <input type="checkbox" id="monitor-yes" disabled>
-                                {{-- {{$device->status_approved ? 'checked' : ''}} --}}
+                                <input type="checkbox" id="monitor-yes" {{$device->status_approved == 'true' ? 'checked' : ''}} disabled>
                                 <label for="monitor-yes">Yes</label>
-                                <input type="checkbox" id="monitor-no" disabled>
-                                {{-- {{ $device->status_approved == 'false' ? 'checked' : ''}} --}}
+                                <input type="checkbox" id="monitor-no" {{ $device->status_approved == 'false' ? 'checked' : ''}} disabled>
                                 <label for="monitor-no">No</label>
                             </div>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
             </tr>
 
-            {{-- @endif --}}
+            @endif
 
         </tbody>
     </table>
 </div>
 
-{{-- @if(count($userAccounts) > 0) --}}
+@if(count($userAccounts) > 0)
 <!-- User Account Table -->
 <div class="hardware-section">
     <table class="hardware-table">
@@ -669,41 +663,38 @@
                         <input type="checkbox" id="other-devices" checked disabled>
                         <label for="computer">Akun Pengguna Domain Perusahaan/ Company Domain User Account</label>
                     </div>
-                    {{-- @foreach($userAccounts as $account) --}}
+                    @foreach($userAccounts as $account)
                     <div class="device-details">
                         <div class="device-detail-item">
                             <div class="detail-underline">
                                 {{-- <span class="number"></span> --}}
                                 <span class="detail-value"> Nama akun/ Account Name : </span>
-                                ojihugyfttgyhujkmjhg
-                                {{-- {{$account->account_name}} --}}
+                                {{$account->account_name}}
                             </div>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
-                    {{-- @foreach($userAccounts as $account) --}}
+                    @foreach($userAccounts as $account)
                     <div class="approval-item">
                         <div class="approval-options">
-                            <input type="checkbox" id="monitor-yes" disabled>
-                            {{-- {{$account->status_approved ? 'checked' : ''}} --}}
+                            <input type="checkbox" id="monitor-yes" {{$account->status_approved == 'true' ? 'checked' : ''}} disabled>
                             <label for="monitor-yes">Yes</label>
-                            <input type="checkbox" id="monitor-no" disabled>
-                            {{-- {{ $account->status_approved == 'false' ? 'checked' : ''}} --}}
+                            <input type="checkbox" id="monitor-no" {{ $account->status_approved == 'false' ? 'checked' : ''}} disabled>
                             <label for="monitor-no">No</label>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-{{-- @endif --}}
+@endif
 
-{{-- @if(count($emailAccount) > 0) --}}
+@if(count($emailAccount) > 0)
 <!-- Email Address Table -->
 <div class="hardware-section">
     <table class="hardware-table">
@@ -712,54 +703,49 @@
                 <td class="device-row other-devices-cell">
                     <div class="checkbox-item">
                         <input type="checkbox" id="other-devices" checked disabled>
-                        <label for="computer">Alamat email/Email Address:</label>
+                        <label for="computer">Alamat email / Email Address:</label>
                     </div>
-                    {{-- @foreach($emailAccount as $email) --}}
-                    <div class="device-details">
+                    @foreach($emailAccount as $email)
+                    <div class="device-details" style="margin-bottom: 3px;">
                         <div class="device-detail-item">
                             <div class="detail-underline" style="margin-bottom: 5px">
                                 <span class="detail-value"> Email Address :</span> 
-                                iuygtfdrftgyuhijhugy
-                                {{-- {{$email->email_address}} --}}
+                                {{$email->email_address}}
                             </div>
                             <div class="detail-underline" style="margin-bottom: 5px">
                                 <span class="detail-value"> Tujuan/Purpose :</span>
-                                jihugytfgyhuij
-                                {{-- {{$email->purpose}} --}}
+                                {{$email->purpose}}
                             </div>
                             <div class="detail-underline">
                                 <span class="detail-value"> Pembatasan/Restriction :</span>
-                                hgvcvhjkkjhugytfgyhu
-                                {{-- {{$email->restriction}} --}}
+                                {{$email->restriction}}
                             </div>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
-                    {{-- @foreach($emailAccount as $email) --}}
+                    @foreach($emailAccount as $email)
                     <br>
                     <br>
                     <div class="approval-item">
                         <div class="approval-options">
-                            <input type="checkbox" id="monitor-yes" disabled>
-                            {{-- {{$email->status_approved ? 'checked' : ''}} --}}
+                            <input type="checkbox" id="monitor-yes" {{$email->status_approved == 'true' ? 'checked' : ''}} disabled>
                             <label for="monitor-yes">Yes</label>
-                            <input type="checkbox" id="monitor-no" disabled>
-                            {{-- {{$email->status_approved == 'false' ? 'checked' : ''}}  --}}
+                            <input type="checkbox" id="monitor-no" {{$email->status_approved == 'false' ? 'checked' : ''}} disabled> 
                             <label for="monitor-no">No</label>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-{{-- @endif --}}
+@endif
 
-{{-- @if(count($internetAccess) > 0) --}}
+@if(count($internetAccess) > 0)
 <!-- Internet Access Table -->
 <div class="hardware-section">
     <table class="hardware-table">
@@ -770,48 +756,44 @@
                         <input type="checkbox" id="other-devices" checked disabled>
                         <label for="computer">Akses Internet/Internet Access :</label>
                     </div>
-                    {{-- @foreach($internetAccess as $internet) --}}
-                    <div class="device-details">
+                    @foreach($internetAccess as $internet)
+                    <div class="device-details" style="margin-bottom: 3px;">
                         <div class="device-detail-item">
                             <div class="detail-underline" style="margin-bottom: 5px">
                                 {{-- <span class="number"></span> --}}
                                 <span class="detail-value"> Tujuan/Purpose :</span>
-                                oiuhygtfgyhujiihugyv
-                                {{-- {{$internet->purpose}} --}}
+                                {{$internet->purpose}}
                             </div>
                             <div class="detail-underline">
                                 <span class="detail-value"> Pembatasan/Restriction :</span>
-                                kjihugytfyhujhugycfvgbh
-                                {{-- {{$internet->restriction}} --}}
+                                {{$internet->restriction}}
                             </div>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
-                    {{-- @foreach($internetAccess as $internet) --}}
+                    @foreach($internetAccess as $internet)
                     <br>
                     <br>
                     <div class="approval-item">
                         <div class="approval-options">
-                            <input type="checkbox" id="monitor-yes" disabled>
-                            {{-- {{$internet->status_approved ? 'checked' : ''}} --}}
+                            <input type="checkbox" id="monitor-yes" {{$internet->status_approved  == 'true' ? 'checked' : ''}} disabled>
                             <label for="monitor-yes">Yes</label>
-                            <input type="checkbox" id="monitor-no" disabled>
-                            {{-- {{$internet->status_approved == 'false' ? 'checked' : ''}} --}}
+                            <input type="checkbox" id="monitor-no" {{$internet->status_approved == 'false' ? 'checked' : ''}} disabled>
                             <label for="monitor-no">No</label>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-{{-- @endif --}}
+@endif
 
-{{-- @if(count($fileFolderAccesses) > 0) --}}
+@if(count($fileFolderAccesses) > 0)
 <!-- File Folder Access Table -->
 <div class="hardware-section">
     <table class="hardware-table">
@@ -822,60 +804,55 @@
                         <input type="checkbox" id="other-devices" checked disabled>
                         <label for="computer">Akses file dan folder/ File and folder Access :</label>
                     </div>
-                    {{-- @foreach($fileFolderAccesses as $fileFolder) --}}
+                    @foreach($fileFolderAccesses as $fileFolder)
                     <div class="device-details">
                         <div class="device-detail-item">
                             <div class="detail-underline">
                                 <span class="detail-value">
-                                    {{-- {{$fileFolder->file_folder_name}} --}}
-                                    kjihugfcghujiokijhusgveh
+                                    {{$fileFolder->file_folder_name}}
                                 </span>
                             </div>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
                 <td class="qty-cell other-devices-qty">
-                    {{-- @foreach($fileFolderAccesses as $fileFolder) --}}
+                    @foreach($fileFolderAccesses as $fileFolder)
                     <br>
                     <div class="qty-details">
                         <div class="qty-item">
                             <div class="qty-box">Hak Akses/Access Right : 
-                                <input type="checkbox" id="monitor-yes" checked disabled>
-                                {{-- {{$fileFolder->read == 'true' ? 'checked' : ''}} --}}
+                                <input type="checkbox" id="monitor-yes" {{$fileFolder->read == 'true' ? 'checked' : ''}} disabled>
                                 <label for="monitor-yes">R</label>
-                                <input type="checkbox" id="monitor-no" disabled>
-                                {{-- {{$fileFolder->write == 'true' ? 'checked' : ''}} --}}
+                                <input type="checkbox" id="monitor-no" {{$fileFolder->write == 'true' ? 'checked' : ''}} disabled>
                                 <label for="monitor-no">W</label>
                                 {{-- <div class="approval-options">
                                 </div> --}}
                             </div>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
-                    {{-- @foreach($fileFolderAccesses as $fileFolder) --}}
-                    <div class="approval-item">
+                    @foreach($fileFolderAccesses as $fileFolder)
+                    <div class="approval-item" style="margin-top: 5px;">
                         <div class="approval-options">
-                            <input type="checkbox" id="monitor-yes" disabled>
-                            {{-- {{$fileFolder->status_approved == 'true' ? 'checked' : ''}} --}}
+                            <input type="checkbox" id="monitor-yes" {{$fileFolder->status_approved == 'true' ? 'checked' : ''}} disabled>
                             <label for="monitor-yes">Yes</label>
-                            <input type="checkbox" id="monitor-no" checked disabled>
-                            {{-- {{$fileFolder->status_approved == 'false' ? 'checked' : ''}} --}}
+                            <input type="checkbox" id="monitor-no" {{$fileFolder->status_approved == 'false' ? 'checked' : ''}} disabled>
                             <label for="monitor-no">No</label>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-{{-- @endif --}}
+@endif
 
-{{-- @if(count($applicationPrograms) > 0) --}}
+@if(count($applicationPrograms) > 0)
 <!-- Application Program Access Table -->
 <div class="hardware-section">
     <table class="hardware-table">
@@ -886,53 +863,50 @@
                         <input type="checkbox" id="other-devices" checked disabled>
                         <label for="computer">Akses program aplikasi/ Application Program :</label>
                     </div>
-                    {{-- @foreach($applicationPrograms as $application) --}}
+                    @foreach($applicationPrograms as $application)
                     <div class="device-details">
                         <div class="device-detail-item">
                             <div class="detail-underline">
                                 <span class="detail-value">
-                                    jihugyftgyhujiuygftgyhj
-                                    {{-- {{$application->application_name}} --}}
+                                    {{$application->application_name}}
                                 </span>
                             </div>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
                 <td class="qty-cell other-devices-qty">
-                    {{-- @foreach($applicationPrograms as $application) --}}
+                    @foreach($applicationPrograms as $application)
+                    <br>
                     <br>
                     <div class="qty-details">
                         <div class="qty-item align-items-start">
-                            <div class="">Nama Masuk/Login Name :</div>
-                            jihugytfgyhujiuhgytfvhbn 
-                            {{-- {{$application->login_name}} --}}
+                            <div class="">Nama Masuk/Login Name : {{$application->login_name}}</div>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
-                    {{-- @foreach($applicationPrograms as $application) --}}
+                    @foreach($applicationPrograms as $application)
+                    <br>
                     <div class="approval-item">
                         <div class="approval-options">
-                            <input type="checkbox" id="monitor-yes" checked disabled>
-                            {{-- {{$application->status_approved == 'true' ? 'checked' : '' }} --}}
+                            <input type="checkbox" id="monitor-yes" {{$application->status_approved == 'true' ? 'checked' : '' }} disabled>
                             <label for="monitor-yes">Yes</label>
-                            <input type="checkbox" id="monitor-no" disabled>
-                            {{-- {{$application->status_approved == 'false' ? 'checked' : ''}} --}}
+                            <input type="checkbox" id="monitor-no" {{$application->status_approved == 'false' ? 'checked' : ''}} disabled>
                             <label for="monitor-no">No</label>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-{{-- @endif --}}
+@endif
 
-{{-- @if(count($otherRequests) > 0) --}}
+@if(count($otherRequests) > 0)
 <div class="hardware-section">
     <table class="hardware-table">
         <tbody>
@@ -942,49 +916,48 @@
                         <input type="checkbox" id="other-devices" checked disabled>
                         <label for="other-devices">Permintaan Lainnya/ <i>Other Request</i> :</label>
                     </div>
-                    {{-- @foreach($otherRequests as $other) --}}
+                    @foreach($otherRequests as $other)
                     <div class="device-details">
                         <div class="device-detail-item">
                             <div class="detail-underline">
                                 <span class="detail-value">
-                                    {{-- {{$other->other_request}} --}}
+                                    {{$other->other_request}}
                                 </span>
                             </div>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
-                    {{-- @foreach($otherRequests as $other) --}}
+                    @foreach($otherRequests as $other)
+                    <br>
                     <div class="approval-item">
                         <div class="approval-options">
-                            <input type="checkbox" id="request-yes"  disabled>
-                            {{-- {{$other->status_approved == 'true' ? 'checked' : ''}} --}}
+                            <input type="checkbox" id="request-yes" {{$other->status_approved == 'true' ? 'checked' : ''}} disabled>
                             <label for="request-yes">Yes</label>
-                            <input type="checkbox" id="request-no"  disabled>
-                            {{-- {{$other->status_approved == 'false' ? 'checked' : ''}} --}}
+                            <input type="checkbox" id="request-no" {{$other->status_approved == 'false' ? 'checked' : ''}} disabled>
                             <label for="request-no">No</label>
                         </div>
                     </div>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-{{-- @endif --}}
+@endif
 
 <div class="signature-container">
     <table class="signature-table">
-        {{-- @if($accessRequest[0]->approval_progress == '3') --}}
+        @if($accessRequest[0]->approval_progress == '3')
         <tr>
             <td class="signature-cell">
                 <div class="signature-title">Orang yang Meminta</div>
                 <div class="signature-subtitle">Requesting Person</div>
                 <div class="signature-image">
                     <img src='' alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    {{-- {{asset('signature/'. $accessRequest[0]->signature_img)}} --}}
+                    {{asset('signature/'. $accessRequest[0]->signature_img)}}
                     {{-- @if(isset($requesting_person_signature))
                     @endif --}}
                 </div>
@@ -996,7 +969,7 @@
                 <div class="signature-subtitle">Approved by Department Head</div>
                 <div class="signature-image">
                     <img src='' alt="Department Head Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    {{-- {{asset('signature/'. $accessRequest[1]->signature_img)}} --}}
+                    {{asset('signature/'. $accessRequest[1]->signature_img)}}
                     {{-- @if(isset($department_head_signature))
                     @endif --}}
                 </div>
@@ -1008,14 +981,14 @@
                 <div class="signature-subtitle">Approved by BOD</div>
                 <div class="signature-image">
                     <img src='' alt="BOD Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    {{-- {{asset('signature/'. $accessRequest[2]->signature_img)}} --}}
+                    {{asset('signature/'. $accessRequest[2]->signature_img)}}
                     {{-- @if(isset($bod_signature))
                     @endif --}}
                 </div>
                 <div class="signature-line"></div>
             </td>
         </tr>
-        {{-- @endif --}}
+        @endif
     </table>
 </div>
 

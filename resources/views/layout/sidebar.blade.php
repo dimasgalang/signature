@@ -46,12 +46,8 @@
                 <a class="collapse-item" href="{{ route('approval.index') }}">Approval List</a>
                 <a class="collapse-item" href="{{ route('attachment.index') }}">Attachment List</a>
                 <a class="collapse-item" href="{{ route('approval.indexHandover') }}">Handover List</a>
-<<<<<<< HEAD
                 <a class="collapse-item" href="{{ route('approval.indexLeaver') }}">Leaver List</a>
-=======
-                <a class="collapse-item" href="{{ route('approval.indexClearance') }}">Clearance List</a>
                 <a class="collapse-item" href="{{ route('approval.indexCommitment') }}">Commitment List</a>
->>>>>>> ee1a045e2997b2469ecd79b68809e42031752c40
             </div>
         </div>
     </li>
@@ -66,8 +62,9 @@
         <div id="collapseCommitment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('handover.index') }}">Handover List</a>
-                <a class="collapse-item" href="{{ route('clearance.index') }}">Leaver List</a>
+                <a class="collapse-item" href="{{ route('leaver.index') }}">Leaver List</a>
                 <a class="collapse-item" href="{{ route('commitment.index') }}">Commitment List</a>
+                <a class="collapse-item" href="{{ route('it-access-request.index') }}">It Access List</a>
             </div>
         </div>
     </li>

@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AttachmentController;
-use App\Http\Controllers\ClearanceController;
 use App\Http\Controllers\CommitmentComputerController;
+use App\Http\Controllers\LeaverController;
 use App\Http\Controllers\ConverterController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HandoverController;
@@ -40,7 +40,6 @@ Route::group(['middleware' => 'guest'], function () {
 
     Route::get('/login', [LoginController::class, 'login'])->name('login.guest');
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
-    Route::get('/login/qrauth', [LoginController::class, 'qrauth'])->name('login.qrauth');
 });
 
 
@@ -81,7 +80,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Approval
     Route::get('/approval/index', [ApprovalController::class, 'index'])->name('approval.index');
     Route::get('/approval/indexHandover', [ApprovalController::class, 'indexHandover'])->name('approval.indexHandover');
-    Route::get('/approval/indexClearance', [ApprovalController::class, 'indexClearance'])->name('approval.indexClearance');
+    Route::get('/approval/indexLeaver', [ApprovalController::class, 'indexLeaver'])->name('approval.indexLeaver');
     Route::get('/approval/indexCommitment', [ApprovalController::class, 'indexCommitment'])->name('approval.indexCommitment');
     Route::get('/approval/create', [ApprovalController::class, 'create'])->name('approval.create');
     Route::get('/approval/approve/{id}', [ApprovalController::class, 'approve'])->name('approval.approve');
@@ -129,6 +128,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/it-access-request/approved', [ItAccessRequestController::class, 'approved'])->name('it-access-request.approved')->middleware(['auth', 'role:Admin']);
     Route::get('/it-access-request/fetchitaccess/{id}', [ItAccessRequestController::class, 'fetchitaccess'])->name('it-access-request.fetchitaccess');
     Route::post('/it-access-request/revision', [ItAccessRequestController::class, 'revision'])->name('it-access-request.revision');
+    Route::get('/it-access-request/view/{id}', [ItAccessRequestController::class, 'generatePdf'])->name('it-access-request.view')->middleware(['auth', 'role:Admin']);
     // Route::get('/leaver/revision/{id}', [ItAccessRequestController::class, 'revision'])->name('leaver.revision')->middleware(['auth', 'role:Admin']);
     // Route::get('/leaver/fetchLeaver/{id}', [ItAccessRequestController::class, 'fetchLeaver'])->name('leaver.fetchLeaver')->middleware(['auth', 'role:Admin']);
     // Route::post('/leaver/update', [ItAccessRequestController::class, 'update'])->name('leaver.update')->middleware(['auth', 'role:Admin']);
@@ -167,8 +167,8 @@ Route::group(['middleware' => 'auth'], function () {
     //Template
     Route::get('/template/lpp', [TemplateController::class, 'lpp'])->name('template.lpp');
     Route::get('/template/handover', [TemplateController::class, 'handover'])->name('template.handover');
-    Route::get('/template/it-access', [TemplateController::class, 'it_access'])->name('template.itaccess');
     Route::get('/template/commitment', [TemplateController::class, 'commitment'])->name('template.commitment');
+    Route::get('/template/it-access', [TemplateController::class, 'it_access'])->name('template.itaccess');
 
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');
