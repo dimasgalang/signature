@@ -124,16 +124,15 @@
                                                 <input class="form-control" type="hidden" id="id" name="file_folder_access[{{$key}}][id]" value="{{$fileFolderAccess->id}}">
                                                 <input class="form-control" type="text" id="file_folder_access" value="{{ $fileFolderAccess->file_folder_name }}" name="file_folder_access[{{$key}}][file_folder_access]">
                                             </div>
-                                            {{-- buat checkbox read/white yang bisa dickeck dua duanya--}}
                                             <div class="col-xl-6">
                                                 <label>Access Rights :</label>
                                                 <br>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check input mr-2" type="checkbox" id="read_access" name="file_folder_access[{{$key}}][read]" value="{{ $fileFolderAccess->read }}" {{ $fileFolderAccess->read == 'true' ? 'checked' : '' }} >
+                                                    <input class="form-check input mr-2" type="checkbox" id="read_access" name="file_folder_access[{{$key}}][read]" value="true" {{ $fileFolderAccess->read == 'true' ? 'checked' : '' }} >
                                                     <label class="form-check-label" for="read_access">Read</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check input mr-2" type="checkbox" id="write_access" name="file_folder_access[{{$key}}][write]" value="{{ $fileFolderAccess->write }}" {{ $fileFolderAccess->write == 'true' ? 'checked' : '' }} >
+                                                    <input class="form-check input mr-2" type="checkbox" id="write_access" name="file_folder_access[{{$key}}][write]" value="true" {{ $fileFolderAccess->write == 'true' ? 'checked' : '' }} >
                                                     <label class="form-check-label" for="write_access">Write</label>
                                                 </div>
                                             </div>

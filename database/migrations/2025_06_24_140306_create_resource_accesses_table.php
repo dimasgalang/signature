@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('resource_accesses', function (Blueprint $table) {
             $table->id();
             $table->string('id_request_access');
-            $table->string('email_address');
-            $table->string('other_request');
+            $table->string('email_address')->nullable();
+            $table->string('other_request')->nullable();
             $table->string('type');
-            $table->string('purpose');
-            $table->string('restriction');
+            $table->string('purpose')->nullable();
+            $table->string('restriction')->nullable();
             $table->string('status_approved')->nullable();
             $table->string('void')->default('false');
             $table->timestamps();

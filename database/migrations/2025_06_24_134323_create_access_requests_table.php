@@ -16,9 +16,15 @@ return new class extends Migration
             $table->string('id_request_access');
             $table->date('date_of_request');
             $table->string('employee_id');
+            $table->string('approval_id');
+            $table->string('approval_level');
+            $table->string('approval_progress');
+            $table->string('approval_date')->nullable();
+            $table->string('token')->nullable();
             $table->string('document_name');
-            $table->string('original_name');
-            $table->string('base64');
+            $table->string('original_name')->nullable();
+            $table->string('base64')->nullable();
+            $table->string('status')->nullable();
             $table->string('void')->default('false');
             $table->timestamps();
         });

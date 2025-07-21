@@ -187,9 +187,11 @@ class ItAccessRequestController extends Controller
         return redirect()->intended('it-access-request/index');
     }
 
-    public function approve(Request $request)
+    public function approve($id_request_access)
     {
         // Data utama
+        $approval_progress = DB::table('access_requests')->select('approval_progress')->where('id_request_access', $id_request_access)->first()->approval_progress;
+
         $accessRequest = DB::table('access_requests')
             ->join('users as employee', 'employee.id', '=', 'access_requests.employee_id')
             ->join('users as approver', 'approver.id', '=', 'access_requests.approval_id')
@@ -199,7 +201,8 @@ class ItAccessRequestController extends Controller
                 DB::raw('employee.dept as preparer_dept'),
                 DB::raw('approver.name as need_approve')
             ])
-            ->where('id_request_access', $request->id_request_access)
+            ->where('id_request_access', $id_request_access)
+            ->where('approval_level', $approval_progress)
             ->first();
 
         // Semua hardware request terkait

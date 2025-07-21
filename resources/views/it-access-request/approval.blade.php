@@ -44,7 +44,7 @@
                                             <input class="form-control" type="text" id="document_name" name="document_name" value="{{ $accessRequest->document_name }}" readonly>
                                         </div>
                                         <div class="col-xl-3">
-                                            <label>Name :</label>
+                                            <label>Preparer Name :</label>
                                             <input class="form-control" type="text" id="name" name="name" value="{{ $accessRequest->preparer_name }}" readonly>
                                             <input class="form-control" type="hidden" id="department" name="department" value="{{ $accessRequest->preparer_dept }}">
                                             <input class="form-control" type="hidden" id="employee_id" name="employee_id" value="{{ $accessRequest->employee_id }}">
@@ -96,8 +96,8 @@
                                                         <label>Status</label>
                                                         <select class="form-control status" id="status" name="hardware_device[{{$key}}][status]">
                                                             <option>select status</option>
-                                                            <option value="true">Approved</option>
-                                                            <option value="false">Rejected</option>
+                                                            <option value="true" {{ $hardwareRequest->status_approved == 'true' ? 'selected' : ''}}>Approved</option>
+                                                            <option value="false" {{ $hardwareRequest->status_approved == 'false' ? 'selected' : ''}}>Rejected</option>
                                                         </select>
                                                     </div>
                                                 @endif
@@ -144,8 +144,8 @@
                                                     <label>Status</label>
                                                     <select class="form-control status" id="status" name="file_folder_access[{{$key}}][status]">
                                                         <option>select status</option>
-                                                        <option value="true">Approved</option>
-                                                        <option value="false">Rejected</option>
+                                                        <option value="true" {{ $fileFolderAccess->status_approved == 'true' ? 'selected' : ''}}>Approved</option>
+                                                        <option value="false" {{ $fileFolderAccess->status_approved == 'false' ? 'selected' : ''}}>Rejected</option>
                                                     </select>
                                                 </div>
                                             @endif
@@ -181,8 +181,8 @@
                                                         <label>Status</label>
                                                         <select class="form-control status" id="status" name="user_account[{{$key}}][status]">
                                                             <option>select status</option>
-                                                            <option value="true">Approved</option>
-                                                            <option value="false">Rejected</option>
+                                                            <option value="true" {{ $userAccount->status_approved == 'true' ? 'selected' : ''}}>Approved</option>
+                                                            <option value="false" {{ $userAccount->status_approved == 'false' ? 'selected' : ''}}>Rejected</option>
                                                         </select>
                                                     </div>
                                                 @endif
@@ -225,8 +225,8 @@
                                                     <label>Status</label>
                                                     <select class="form-control status" id="status" name="email_address[{{$key}}][status]">
                                                         <option>select status</option>
-                                                        <option value="true">Approved</option>
-                                                        <option value="false">Rejected</option>
+                                                        <option value="true" {{ $emailAddress->status_approved == 'true' ? 'selected' : ''}}>Approved</option>
+                                                        <option value="false" {{ $emailAddress->status_approved == 'false' ? 'selected' : ''}}>Rejected</option>
                                                     </select>
                                                 </div>
                                             @endif
@@ -266,8 +266,8 @@
                                                             <label>Status</label>
                                                             <select class="form-control status" id="status" name="application_program[{{$key}}][status]">
                                                                 <option>select status</option>
-                                                                <option value="true">Approved</option>
-                                                                <option value="false">Rejected</option>
+                                                                <option value="true" {{ $applicationProgram->status_approved == 'true' ? 'selected' : ''}}>Approved</option>
+                                                                <option value="false" {{ $applicationProgram->status_approved == 'false' ? 'selected' : ''}}>Rejected</option>
                                                             </select>
                                                         </div>
                                                     @endif
@@ -304,8 +304,8 @@
                                                         <label>Status</label>
                                                         <select class="form-control status" id="status" name="internet_access[{{$key}}][status]">
                                                             <option>select status</option>
-                                                            <option value="true">Approved</option>
-                                                            <option value="false">Rejected</option>
+                                                            <option value="true" {{ $internetAccess->status_approved == 'true' ? 'selected' : ''}}>Approved</option>
+                                                            <option value="false" {{ $internetAccess->status_approved == 'false' ? 'selected' : ''}}>Rejected</option>
                                                         </select>
                                                     </div>
                                                 @endif
@@ -349,8 +349,8 @@
                                                         <label>Status</label>
                                                         <select class="form-control status" id="status" name="other_request[{{$key}}][status]">
                                                             <option>select status</option>
-                                                            <option value="true">Approved</option>
-                                                            <option value="false">Rejected</option>
+                                                            <option value="true" {{ $otherRequest->status_approved == 'true' ? 'selected' : ''}}>Approved</option>
+                                                            <option value="false" {{ $otherRequest->status_approved == 'false' ? 'selected' : ''}}>Rejected</option>
                                                         </select>
                                                     </div>
                                                 @endif
