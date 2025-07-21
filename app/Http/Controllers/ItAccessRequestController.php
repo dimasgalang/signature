@@ -200,6 +200,7 @@ class ItAccessRequestController extends Controller
                 DB::raw('approver.name as need_approve')
             ])
             ->where('id_request_access', $request->id_request_access)
+            ->where('approval_id', Auth::user()->id)
             ->first();
 
         // Semua hardware request terkait
