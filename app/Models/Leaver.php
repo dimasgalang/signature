@@ -5,26 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Clearance extends Model
+class Leaver extends Model
 {
     use HasFactory;
     protected $fillable = [
         'document_name',
-        'clearance_name_id',
+        'leaver_name_id',
         'receiver_name_id',
         'department',
         'date',
         'void',
     ];
 
-    public function item_clearance()
+    public function item_leaver()
     {
-        return $this->hasMany(ItemClearance::class);
+        return $this->hasMany(ItemLeaver::class);
     }
 
-    public function clearanceName()
+    public function leaverName()
     {
-        return $this->belongsTo(User::class, 'clearance_name_id');
+        return $this->belongsTo(User::class, 'leaver_name_id');
     }
 
     public function receiverName()

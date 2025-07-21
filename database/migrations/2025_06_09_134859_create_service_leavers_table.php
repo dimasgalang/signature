@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('item_clearances', function (Blueprint $table) {
+        Schema::create('service_leavers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clearance_id')->constrained('clearances')->onDelete('cascade');
-            $table->string('item_id');
-            $table->integer('quantity');
+            $table->string('leaver_code');
+            $table->string('leaver_name');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('item_clearances');
+        Schema::dropIfExists('service_leavers');
     }
 };

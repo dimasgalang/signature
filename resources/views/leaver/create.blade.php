@@ -17,26 +17,26 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Create Clearance</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Create Leaver</h1>
                 </div>
                 
 
                 <!-- Approach -->
-                <form method="post" action="{{ route('clearance.store') }}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('leaver.store') }}" enctype="multipart/form-data">
                  <div class="row">
                     <div class="col-lg-6">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Form Create Clearance</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Form Create Leaver</h6>
                             </div>
                             <div class="card-body">
                                     @csrf
-                                    <input class="form-control" type="hidden" id="clearance_id" name="clearance_id">
-                                    <div id="clearanceInput">
-                                        <label>Clearance Name :</label>
+                                    <input class="form-control" type="hidden" id="leaver_id" name="leaver_id">
+                                    <div id="leaverInput">
+                                        <label>Leaver Name :</label>
                                         <div class="row">
                                             <div class="col-xl-12">
-                                                    <select class="form-control clearance_name_id" id="clearance_name_id" name="clearance_name_id" >
+                                                    <select class="form-control leaver_name_id" id="leaver_name_id" name="leaver_name_id" >
                                                         <option value="{{ Auth::user()->id }}">{{ Auth::user()->name }}</option>
                                                     </select>
                                             </div>
@@ -45,10 +45,10 @@
                                     <br>
                                      <div>
                                         <label for="text">From Department</label>
-                                        <input class="form-control" type="text" id="clearanceDepartment" name="clearanceDepartment" value="{{ Auth::user()->dept }}" readonly>
+                                        <input class="form-control" type="text" id="leaverDepartment" name="leaverDepartment" value="{{ Auth::user()->dept }}" readonly>
                                     </div>
                                     <br>
-                                    <div id="clearanceInput">
+                                    <div id="leaverInput">
                                         <label>Receiver Name :</label>
                                         <div class="row">
                                             <div class="col-xl-12">
@@ -68,16 +68,16 @@
                                     </div>
                                     <br>
                                     <div>
-                                        <label for="clearanceDate">Tanggal</label>
-                                        <input class="form-control" type="date" id="clearanceDate" name="clearanceDate" value="{{ date('Y-m-d') }}">
+                                        <label for="leaverDate">Tanggal</label>
+                                        <input class="form-control" type="date" id="leaverDate" name="leaverDate" value="{{ date('Y-m-d') }}">
                                     </div>
                                     <br>
                                     <div>
                                         <label for="documentName">Document Name</label>
-                                        @if(((substr($clearance?->document_name,1,5)) != date('y') . date('n') . date('d')))
+                                        @if(((substr($leaver?->document_name,1,5)) != date('y') . date('n') . date('d')))
                                         <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'C' . date('y') . date('n') . date('d') . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
-                                        @elseif(((substr($clearance?->document_name,1,5)) == (date('y') . date('n') . date('d'))) || ($clearance?->document_name ?? ''))
-                                        <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'C' . date('y') . date('n') . date('d') . str_pad(intval(substr($clearance?->document_name,-4)) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
+                                        @elseif(((substr($leaver?->document_name,1,5)) == (date('y') . date('n') . date('d'))) || ($leaver?->document_name ?? ''))
+                                        <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'C' . date('y') . date('n') . date('d') . str_pad(intval(substr($leaver?->document_name,-4)) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
                                         @else
                                         <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'C' . date('y') . date('n') . date('d') . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
                                         @endif
@@ -114,7 +114,7 @@
                                         </div>
                                         <div class="col-xl-2">
                                             <label></label>
-                                            <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-clearance" onclick="">Add</button>
+                                            <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-leaver" onclick="">Add</button>
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +133,7 @@
                                             <select class="form-control service_id" id="service_id" name="service_id[]" >
                                                 <option></option>
                                                 @foreach ($services as $service )
-                                                    <option value="{{ $service->clearance_code }}">{{ $service->clearance_name }}</option>
+                                                    <option value="{{ $service->leaver_code }}">{{ $service->leaver_name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -216,7 +216,7 @@
             updateDropdownOptions();
         });
 
-        $('.add-clearance').on('click', function() {
+        $('.add-leaver').on('click', function() {
             let itemInput = document.getElementById('itemInput');
             let itemIndex = itemInput.children.length;
             $("#itemInput").append(`<div class="row"><div class="col-xl-6"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][barang_code]" ><option></option>@foreach ($items as $item )<option value="{{ $item->barang_code }}">{{ $item->barang_code }} - {{ $item->barang_name }}</option>@endforeach</select></div><div class="col-xl-4"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" required></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
@@ -241,7 +241,7 @@
             var receiverName_id = $(this).val();
             if (receiverName_id) {
                 $.ajax({
-                    url: '/clearance/fetchDept/'+receiverName_id,
+                    url: '/leaver/fetchDept/'+receiverName_id,
                     type: "GET",
                     dataType: "json",
                     success:function(data) {
@@ -258,7 +258,7 @@
 
 <script type="text/javascript">
     function addRecords() {
-        $("#serviceInput").append('<div class="row"><div class="col-xl-10"><label>Service :</label><select class="form-control service_id" id="service_id" name="service_id[]" ><option></option>@foreach ($services as $service )<option value="{{ $service->clearance_code }}">{{ $service->clearance_name }}</option>@endforeach</select></div> <div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThisServices">Remove</button></div></div>');
+        $("#serviceInput").append('<div class="row"><div class="col-xl-10"><label>Service :</label><select class="form-control service_id" id="service_id" name="service_id[]" ><option></option>@foreach ($services as $service )<option value="{{ $service->leaver_code }}">{{ $service->leaver_name }}</option>@endforeach</select></div> <div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThisServices">Remove</button></div></div>');
         $('.service_id').select2({
             allowClear: true,
             placeholder: 'Choose Services',
@@ -275,7 +275,7 @@
           allowClear: true,
           placeholder: 'Choose Product Item',
     });
-    $('.clearance_name_id').select2({
+    $('.leaver_name_id').select2({
           allowClear: true,
           placeholder: 'Choose Approval',
     });

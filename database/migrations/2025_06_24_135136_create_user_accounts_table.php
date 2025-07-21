@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('service_clearances', function (Blueprint $table) {
+        Schema::create('user_accounts', function (Blueprint $table) {
             $table->id();
-            $table->string('clearance_code');
-            $table->string('clearance_name');
+            $table->string('id_request_access');
+            $table->string('account_name');
+            $table->string('status_approved')->nullable();
+            $table->string('void')->default('false');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('service_clearances');
+        Schema::dropIfExists('user_accounts');
     }
 };

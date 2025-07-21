@@ -35,10 +35,10 @@
                                         <input class="form-control" type="hidden" id="preparer_id" name="preparer_id" value="{{ Auth::user()->id }}">
                                         <div>
                                             <label>Document Name :</label>
-                                            <input class="form-control" type="text" id="document_name" name="document_name" value="{{$clearance->document_name}}" required readonly>
-                                            <input class="form-control" type="hidden" id="original_name" name="original_name" value="{{$clearance->original_name}}">
-                                            <input class="form-control" type="hidden" id="base64" name="base64" value="{{$clearance->base64}}">
-                                            <input class="form-control" type="hidden" id="type" name="type" value="clearance">
+                                            <input class="form-control" type="text" id="document_name" name="document_name" value="{{$leaver->document_name}}" required readonly>
+                                            <input class="form-control" type="hidden" id="original_name" name="original_name" value="{{$leaver->original_name}}">
+                                            <input class="form-control" type="hidden" id="base64" name="base64" value="{{$leaver->base64}}">
+                                            <input class="form-control" type="hidden" id="type" name="type" value="leaver">
                                         </div>
                                         <br>
                                         <div id="approvalInput">
@@ -69,7 +69,7 @@
                                         <h6 class="m-0 font-weight-bold text-primary">Display PDF</h6>
                                     </div>
                                     <div class="card-body">
-                                        <iframe src="{{$clearance->base64}}" id="pdfPreview" width="100%" height="500px"></iframe>
+                                        <iframe src="{{$leaver->base64}}" id="pdfPreview" width="100%" height="500px"></iframe>
                                     </div>
                                 </div>
                             </div>

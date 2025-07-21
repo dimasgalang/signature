@@ -50,7 +50,7 @@
       text-align: center;
       width: 45%;
     }
-    table #clearance-table {
+    table #leaver-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 5px;
@@ -87,26 +87,26 @@
               </center>
           </td>
           <td class="header">
-                  <p style="font-size: x-small;"><b>No. </b>{{$clearance->document_name}}</p>
-                  <p style="font-size: x-small;"><b>Tgl. </b>{{ date('Y-m-d', strtotime($clearance->date)) }}</p>
+                  <p style="font-size: x-small;"><b>No. </b>{{$leaver->document_name}}</p>
+                  <p style="font-size: x-small;"><b>Tgl. </b>{{ date('Y-m-d', strtotime($leaver->date)) }}</p>
           </td>
       </tr>
   </table>
   <hr>
 
   <div class="section">
-    Kami yang bertanda tangan di bawah ini. Pada hari <b>{{\Carbon\Carbon::parse($clearance->date)->locale('id_ID')->dayName}}, {{\Carbon\Carbon::parse($clearance->date)->day}} {{\Carbon\Carbon::parse($clearance->date)->translatedFormat('F')}} {{\Carbon\Carbon::parse($clearance->date)->year}}.</b>
+    Kami yang bertanda tangan di bawah ini. Pada hari <b>{{\Carbon\Carbon::parse($leaver->date)->locale('id_ID')->dayName}}, {{\Carbon\Carbon::parse($leaver->date)->day}} {{\Carbon\Carbon::parse($leaver->date)->translatedFormat('F')}} {{\Carbon\Carbon::parse($leaver->date)->year}}.</b>
   </div>
 
   <div class="section">
-    <div class="form-field"><span class="form-label">Nama:</span> {{$clearance->clearanceName->name}}</div>
-    <div class="form-field"><span class="form-label">Department: </span> {{$clearance->clearanceName->dept}}</div>
+    <div class="form-field"><span class="form-label">Nama:</span> {{$leaver->leaverName->name}}</div>
+    <div class="form-field"><span class="form-label">Department: </span> {{$leaver->leaverName->dept}}</div>
     <div>Selanjutnya disebut sebagai <strong>PIHAK PERTAMA</strong></div>
   </div>
 
   <div class="section">
-    <div class="form-field"><span class="form-label">Nama:</span> {{$clearance->receiverName->name}} </div>
-    <div class="form-field"><span class="form-label">Department:</span> {{$clearance->department}}</div>
+    <div class="form-field"><span class="form-label">Nama:</span> {{$leaver->receiverName->name}} </div>
+    <div class="form-field"><span class="form-label">Department:</span> {{$leaver->department}}</div>
     <div>Selanjutnya disebut sebagai <strong>PIHAK KEDUA</strong></div>
   </div>
 
@@ -116,7 +116,7 @@
     informasi yang tercantum di dalam daftar berikut:
   </div>
 
-  <table id="clearance-table">
+  <table id="leaver-table">
     <thead>
       <tr>
         <th>No.</th>
@@ -152,7 +152,7 @@
         @foreach($services as $service)
         <tr>
           <td>{{ $loop->iteration }}</td>
-          <td>{{ $service->clearance_name }}</td>
+          <td>{{ $service->leaver_name }}</td>
         </tr>
         @endforeach
     </tbody>
@@ -163,14 +163,14 @@
       <td style="text-align: center; padding-right: 50px; border: none;">
         Yang Menyerahkan,<br/>
         <strong>PIHAK PERTAMA</strong><br/><br/><br/><br/>
-        <b>{{$clearance->clearanceName->name}}</b><br>
-        {{$clearance->clearanceName->dept}}
+        <b>{{$leaver->leaverName->name}}</b><br>
+        {{$leaver->leaverName->dept}}
       </td>
       <td style="text-align: center; border: none;">
         Yang Menerima,<br/>
         <strong>PIHAK KEDUA</strong><br/><br/><br/><br/>
-        <b>{{$clearance->receiverName->name}}</b><br>
-        {{$clearance->department}}
+        <b>{{$leaver->receiverName->name}}</b><br>
+        {{$leaver->department}}
       </td>
     </tr>
   </table>

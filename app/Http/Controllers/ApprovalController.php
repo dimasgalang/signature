@@ -46,7 +46,7 @@ class ApprovalController extends Controller
         return view('approval.index', compact('approvals'));
     }
 
-    public function indexClearance(Request $request)
+    public function indexLeaver(Request $request)
     {
         $user_id = Auth::user()->id;
         if ($request->void) {

@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ItemService extends Model
+class FileFolderAccess extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'leaver_id',
-        'leaver_code'
+        'id_request_access',
+        'file_folder_name',
+        'read',
+        'write',
+        'status_approved',
     ];
 }

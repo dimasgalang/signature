@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ServiceClearance extends Model
+class ApplicationProgram extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'clearance_code',
-        'clearance_name',
-        'void',
+        'id_request_access',
+        'application_name',
+        'login_name',
+        'status_approved',
     ];
 }
