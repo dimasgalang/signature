@@ -22,7 +22,7 @@
                 
 
                 <!-- Approach -->
-                <form method="post" action="{{ route('it-access-request.approvedItem') }}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('it-access-request.update') }}" enctype="multipart/form-data">
                 @csrf
                 {{-- Other Request --}}
                 <div class="row">
@@ -37,21 +37,21 @@
                                     <div class="row">
                                         <div class="col-xl-3">
                                             <label>Date of Request :</label>
-                                            <input class="form-control" type="date" id="date_of_request" name="date_of_request" value="{{ $accessRequest->date_of_request }}">
+                                            <input class="form-control" type="date" id="date_of_request" name="date_of_request" value="{{ $accessRequest->date_of_request }}" readonly>
                                         </div>
                                         <div class="col-xl-3">
                                             <label>Document Name :</label>
-                                            <input class="form-control" type="text" id="document_name" name="document_name" value="{{ $accessRequest->document_name }}">
+                                            <input class="form-control" type="text" id="document_name" name="document_name" value="{{ $accessRequest->document_name }}" readonly>
                                         </div>
                                         <div class="col-xl-3">
                                             <label>Name :</label>
-                                            <input class="form-control" type="text" id="name" name="name" value="{{ $accessRequest->preparer_name }}">
+                                            <input class="form-control" type="text" id="name" name="name" value="{{ $accessRequest->preparer_name }}" readonly>
                                             <input class="form-control" type="hidden" id="department" name="department" value="{{ $accessRequest->preparer_dept }}">
                                             <input class="form-control" type="hidden" id="employee_id" name="employee_id" value="{{ $accessRequest->employee_id }}">
                                         </div>
                                         <div class="col-xl-3">
                                             <label>Need Approve:</label>
-                                            <input class="form-control" type="text" id="approval_it_id" name="approval_it_id" value="{{ $accessRequest->need_approve }}">
+                                            <input class="form-control" type="text" id="approval_it_id" name="approval_it_id" value="{{ $accessRequest->need_approve }}" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -77,22 +77,21 @@
                                                     <input class="form-control" type="hidden" id="id" name="hardware_device[{{$key}}][id]" value="{{$hardwareRequest->id}}">
                                                     <select class="form-control hardware_id" id="hardware_id" name="hardware_device[{{$key}}][hardware_name]">
                                                         <option></option>
-                                                        <option value="komputer" {{ $hardwareRequest->hardware_device == 'Komputer' ? 'selected' : ''}}>Komputer</option>
-                                                        <option value="router" {{ $hardwareRequest->hardware_device == 'Router' ? 'selected' : ''}}>Router</option>
-                                                        <option value="printer" {{ $hardwareRequest->hardware_device == 'Printer' ? 'selected' : ''}}>Printer</option>
-                                                        <option value="smart_it" {{ $hardwareRequest->hardware_device == 'Smart IT' ? 'selected' : ''}}>Smart IT</option>
+                                                        <option value="Komputer" {{ $hardwareRequest->hardware_device == 'Komputer' ? 'selected' : ''}}>Komputer</option>
+                                                        <option value="Router" {{ $hardwareRequest->hardware_device == 'Router' ? 'selected' : ''}}>Router</option>
+                                                        <option value="Printer" {{ $hardwareRequest->hardware_device == 'Printer' ? 'selected' : ''}}>Printer</option>
+                                                        <option value="Smart IT" {{ $hardwareRequest->hardware_device == 'Smart IT' ? 'selected' : ''}}>Smart IT</option>
                                                         {{-- @foreach ($items as $item )
                                                             <option value="{{ $item->barang_code }}">{{ $item->barang_code }} - {{ $item->barang_name }}</option>
                                                         @endforeach --}}
                                                     </select>
                                                 </div>
-                                                <div class="col-xl-3 mb-2">
+                                                <div class="col-xl-6 mb-2">
                                                     <label>Quantity :</label>
                                                     <input class="form-control" type="number" id="qty" name="hardware_device[{{$key}}][quantity]" value="{{ $hardwareRequest->qty }}">
                                                 </div>
-                                                @if (Auth::user()->id == '1')
+                                                {{-- @if (Auth::user()->id == '1')
                                                     <div class="col-xl-3 mb-2">
-                                                        {{-- buatkan select untuk approve dan tolak --}}
                                                         <label>Status</label>
                                                         <select class="form-control status" id="status" name="hardware_device[{{$key}}][status]">
                                                             <option>select status</option>
@@ -100,7 +99,7 @@
                                                             <option value="false">Rejected</option>
                                                         </select>
                                                     </div>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         @endforeach
                                     </div>
@@ -126,21 +125,20 @@
                                                 <input class="form-control" type="text" id="file_folder_access" value="{{ $fileFolderAccess->file_folder_name }}" name="file_folder_access[{{$key}}][file_folder_access]">
                                             </div>
                                             {{-- buat checkbox read/white yang bisa dickeck dua duanya--}}
-                                            <div class="col-xl-3">
+                                            <div class="col-xl-6">
                                                 <label>Access Rights :</label>
                                                 <br>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check input mr-2" type="checkbox" id="read_access" name="file_folder_access[{{$key}}][read]" value="{{ $fileFolderAccess->read }}" {{ $fileFolderAccess->read == 'true' ? 'checked' : '' }} onclick="return false;">
+                                                    <input class="form-check input mr-2" type="checkbox" id="read_access" name="file_folder_access[{{$key}}][read]" value="{{ $fileFolderAccess->read }}" {{ $fileFolderAccess->read == 'true' ? 'checked' : '' }} >
                                                     <label class="form-check-label" for="read_access">Read</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check input mr-2" type="checkbox" id="write_access" name="file_folder_access[{{$key}}][write]" value="{{ $fileFolderAccess->write }}" {{ $fileFolderAccess->write == 'true' ? 'checked' : '' }} onclick="return false;">
+                                                    <input class="form-check input mr-2" type="checkbox" id="write_access" name="file_folder_access[{{$key}}][write]" value="{{ $fileFolderAccess->write }}" {{ $fileFolderAccess->write == 'true' ? 'checked' : '' }} >
                                                     <label class="form-check-label" for="write_access">Write</label>
                                                 </div>
                                             </div>
-                                            @if (Auth::user()->id == '1')
+                                            {{-- @if (Auth::user()->id == '1')
                                                 <div class="col-xl-3 mb-2">
-                                                    {{-- buatkan select untuk approve dan tolak --}}
                                                     <label>Status</label>
                                                     <select class="form-control status" id="status" name="file_folder_access[{{$key}}][status]">
                                                         <option>select status</option>
@@ -148,7 +146,7 @@
                                                         <option value="false">Rejected</option>
                                                     </select>
                                                 </div>
-                                            @endif
+                                            @endif --}}
                                         </div>
                                     @endforeach
                                 </div>
@@ -170,14 +168,13 @@
                                     <div id="userAccount">
                                         @foreach ($userAccounts as $key => $userAccount)
                                             <div class="row">
-                                                <div class="col-xl-8">
+                                                <div class="col-xl-12">
                                                     <label>Account Name :</label>
                                                     <input class="form-control" type="hidden" id="id" name="user_account[{{$key}}][id]" value="{{$userAccount->id}}">
                                                     <input class="form-control" type="text" id="account_name" name="user_account[{{$key}}][account_name]" value="{{ $userAccount->account_name }}">
                                                 </div>
-                                                @if (Auth::user()->id == '1')
+                                                {{-- @if (Auth::user()->id == '1')
                                                     <div class="col-xl-4 mb-2">
-                                                        {{-- buatkan select untuk approve dan tolak --}}
                                                         <label>Status</label>
                                                         <select class="form-control status" id="status" name="user_account[{{$key}}][status]">
                                                             <option>select status</option>
@@ -185,7 +182,7 @@
                                                             <option value="false">Rejected</option>
                                                         </select>
                                                     </div>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         @endforeach
                                     </div>
@@ -205,23 +202,22 @@
                                 <div id="emailAddress">
                                     @foreach ($emailAccount as $key => $emailAddress)
                                         <div class="row">
-                                            <div class="col-xl-3">
+                                            <div class="col-xl-4">
                                                 <label>Email Address :</label>
                                                 <input class="form-control" type="hidden" id="id" name="email_address[{{$key}}][id]" value="{{$emailAddress->id}}">
                                                 <input class="form-control" type="text" id="email_address" name="email_address[{{$key}}][email_address]" value="{{ $emailAddress->email_address }}">
                                             </div>
-                                            <div class="col-xl-3">
+                                            <div class="col-xl-4">
                                                 <label>Purpose :</label>
                                                 <textarea class="form-control" id="purpose" name="email_address[{{$key}}][purpose]">{{ $emailAddress->purpose }}</textarea>
                                             </div>
-                                            <div class="col-xl-3">
+                                            <div class="col-xl-4">
                                                 <label>Restriction :</label>
                                                 <textarea class="form-control" id="restriction" name="email_address[{{$key}}][restriction]">{{ $emailAddress->restriction }}</textarea>
                                             </div>
 
-                                            @if (Auth::user()->id == '1')
+                                            {{-- @if (Auth::user()->id == '1')
                                                 <div class="col-xl-3 mb-2">
-                                                    {{-- buatkan select untuk approve dan tolak --}}
                                                     <label>Status</label>
                                                     <select class="form-control status" id="status" name="email_address[{{$key}}][status]">
                                                         <option>select status</option>
@@ -229,7 +225,7 @@
                                                         <option value="false">Rejected</option>
                                                     </select>
                                                 </div>
-                                            @endif
+                                            @endif --}}
                                         </div>
                                     @endforeach
                                 </div>
@@ -251,18 +247,17 @@
                                         <div id="applicationProgram">
                                             @foreach ($applicationPrograms as $key => $applicationProgram)
                                                 <div class="row">
-                                                    <div class="col-xl-4">
+                                                    <div class="col-xl-6">
                                                         <label>Application Name :</label>
                                                         <input class="form-control" type="hidden" id="id" name="application_program[{{$key}}][id]" value="{{$applicationProgram->id}}">
                                                         <input class="form-control" type="text" id="application_name" name="application_program[{{$key}}][application_name]" value="{{ $applicationProgram->application_name }}">
                                                     </div>
-                                                    <div class="col-xl-4">
+                                                    <div class="col-xl-6">
                                                         <label>Login Name :</label>
                                                         <input class="form-control" type="text" id="login_name" name="application_program[{{$key}}][login_name]" value="{{ $applicationProgram->login_name }}">
                                                     </div>
-                                                    @if (Auth::user()->id == '1')
+                                                    {{-- @if (Auth::user()->id == '1')
                                                         <div class="col-xl-4 mb-2">
-                                                            {{-- buatkan select untuk approve dan tolak --}}
                                                             <label>Status</label>
                                                             <select class="form-control status" id="status" name="application_program[{{$key}}][status]">
                                                                 <option>select status</option>
@@ -270,7 +265,7 @@
                                                                 <option value="false">Rejected</option>
                                                             </select>
                                                         </div>
-                                                    @endif
+                                                    @endif --}}
                                                 </div>
                                             @endforeach
                                         </div>
@@ -289,18 +284,17 @@
                                     <div id="internetAccess">
                                         @foreach ($internetAccess as $key => $internetAccess)
                                             <div class="row">
-                                                <div class="col-xl-4">
+                                                <div class="col-xl-6">
                                                     <label>Purpose :</label>
                                                     <input class="form-control" type="hidden" id="id" name="internet_access[{{$key}}][id]" value="{{$internetAccess->id}}">
                                                     <textarea class="form-control" id="purpose" name="internet_access[{{$key}}][purpose]">{{ $internetAccess->purpose }}</textarea>
                                                 </div>
-                                                <div class="col-xl-4">
+                                                <div class="col-xl-6">
                                                     <label>Restriction :</label>
                                                     <textarea class="form-control" id="restriction" name="internet_access[{{$key}}][restriction]">{{ $internetAccess->restriction }}</textarea>
                                                 </div>
-                                                @if (Auth::user()->id == '1')
+                                                {{-- @if (Auth::user()->id == '1')
                                                     <div class="col-xl-4 mb-2">
-                                                        {{-- buatkan select untuk approve dan tolak --}}
                                                         <label>Status</label>
                                                         <select class="form-control status" id="status" name="internet_access[{{$key}}][status]">
                                                             <option>select status</option>
@@ -308,7 +302,7 @@
                                                             <option value="false">Rejected</option>
                                                         </select>
                                                     </div>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         @endforeach
                                     </div>
@@ -330,22 +324,21 @@
                                     <div id="otherRequest">
                                         @foreach ($otherRequests as $key => $otherRequest)
                                             <div class="row">
-                                                <div class="col-xl-3">
+                                                <div class="col-xl-4">
                                                     <label>Other Request :</label>
                                                     <input class="form-control" type="hidden" id="id" name="other_request[{{$key}}][id]" value="{{$otherRequest->id}}">
                                                     <input class="form-control" type="text" id="other_request" name="other_request[{{$key}}][other_request]" value="{{ $otherRequest->other_request }}">
                                                 </div>
-                                                <div class="col-xl-3">
+                                                <div class="col-xl-4">
                                                     <label>Purpose :</label>
                                                     <textarea class="form-control" id="purpose" name="other_request[{{$key}}][purpose]">{{ $otherRequest->purpose }}</textarea>
                                                 </div>
-                                                <div class="col-xl-3">
+                                                <div class="col-xl-4">
                                                     <label>Restriction :</label>
                                                     <textarea class="form-control" id="restriction" name="other_request[{{$key}}][restriction]">{{ $otherRequest->restriction }}</textarea>
                                                 </div>
-                                                @if (Auth::user()->id == '1')
+                                                {{-- @if (Auth::user()->id == '1')
                                                     <div class="col-xl-3 mb-2">
-                                                        {{-- buatkan select untuk approve dan tolak --}}
                                                         <label>Status</label>
                                                         <select class="form-control status" id="status" name="other_request[{{$key}}][status]">
                                                             <option>select status</option>
@@ -353,7 +346,7 @@
                                                             <option value="false">Rejected</option>
                                                         </select>
                                                     </div>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         @endforeach
                                     </div>
@@ -362,13 +355,11 @@
                         </div>
                     </div>
                 @endif
-                @if (Auth::user()->id == '1')
                 <div class="row">
                     <div class="col-12">
-                        <button id="submit" type="submit" class="btn btn-primary btn-block">Approved</button>
+                        <button id="submit" type="submit" class="btn btn-primary btn-block">Update</button>
                     </div>
                 </div>
-                @endif
             </form>
 
                 <!-- Content Row -->

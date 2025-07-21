@@ -100,8 +100,8 @@
                                                     <a href="{{route('it-access-request.approve', $accessRequest->id_request_access)}}" class="btn btn-success btn-circle btn-sm mr-2">
                                                         <i class="fas fa-file"></i>
                                                     </a>
-                                                    @if($accessRequest->status == 'revision' && $accessRequest->employee_id == Auth::user()->id)
-                                                        <a href="{{route('it-access-request.approve', $accessRequest->id_request_access)}}" class="btn btn-warning btn-circle btn-sm mr-2">
+                                                    @if($accessRequest->approval_progress < '2' || $accessRequest->status == 'revision' && $accessRequest->employee_id == Auth::user()->id)
+                                                        <a href="{{route('it-access-request.edit', $accessRequest->id_request_access)}}" class="btn btn-warning btn-circle btn-sm mr-2">
                                                             <i class="fas fa-pen"></i>
                                                         </a>
                                                     @elseif($accessRequest->approval_progress == '3' && $accessRequest->employee_id == Auth::user()->id)

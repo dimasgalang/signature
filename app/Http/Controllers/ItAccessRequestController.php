@@ -176,6 +176,7 @@ class ItAccessRequestController extends Controller
                 ResourceAccess::create([
                     'id_request_access' => $acceessRequestPreparer->id_request_access,
                     'type' => 'other_request',
+                    'other_request' => $value['other_request'],
                     'purpose' => $value['purpose'],
                     'restriction' => $value['restriction'],
                 ]);
@@ -390,5 +391,229 @@ class ItAccessRequestController extends Controller
         // PDF::Output(storage_path('app/public/document/') . $new_filename, 'F');
 
         return $pdf->download($id . 'it-request.pdf');
+    }
+
+    // edit
+    public function edit($id_request_access)
+    {
+        // Data utama
+        $accessRequest = DB::table('access_requests')
+            ->join('users as employee', 'employee.id', '=', 'access_requests.employee_id')
+            ->join('users as approver', 'approver.id', '=', 'access_requests.approval_id')
+            ->select([
+                'access_requests.*',
+                DB::raw('employee.name as preparer_name'),
+                DB::raw('employee.dept as preparer_dept'),
+                DB::raw('approver.name as need_approve')
+            ])
+            ->where('id_request_access', $id_request_access)
+            ->first();
+
+        // Semua hardware request terkait
+        $hardwareRequests = DB::table('hardware_requests')
+            ->where('id_request_access', $accessRequest->id_request_access)
+            ->get();
+
+        // Semua application program terkait
+        $applicationPrograms = DB::table('application_programs')
+            ->where('id_request_access', $accessRequest->id_request_access)
+            ->get();
+
+        // Semua file folder access terkait
+        $fileFolderAccesses = DB::table('file_folder_accesses')
+            ->where('id_request_access', $accessRequest->id_request_access)
+            ->get();
+
+        $emailAccount = DB::table('resource_accesses')
+            ->where('id_request_access', $accessRequest->id_request_access)
+            ->where('type', 'email_address')
+            ->get();
+
+        $internetAccess = DB::table('resource_accesses')
+            ->where('id_request_access', $accessRequest->id_request_access)
+            ->where('type', 'internet_access')
+            ->get();
+
+        $otherRequests = DB::table('resource_accesses')
+            ->where('id_request_access', $accessRequest->id_request_access)
+            ->where('type', 'other_request')
+            ->get();
+
+        // Semua user account terkait
+        $userAccounts = DB::table('user_accounts')
+            ->where('id_request_access', $accessRequest->id_request_access)
+            ->get();
+
+        return view('it-access-request.revision', compact(['accessRequest', 'hardwareRequests', 'applicationPrograms', 'fileFolderAccesses', 'emailAccount', 'internetAccess', 'otherRequests', 'userAccounts', 'accessRequest',]));
+    }
+
+    public function update(Request $request)
+    {
+        // dd($request->all());
+        if ($request->hardware_device) {
+            foreach ($request->hardware_device as $key => $value) {
+                if (isset($value['id'])) {
+                    $items = HardwareRequest::where('id_request_access', $request->access_request_id)
+                        ->where('id', $value['id'])->get();
+                    foreach ($items as $item) {
+                        $item->id_request_access = $request->access_request_id;
+                        $item->hardware_device = $value['hardware_name'];
+                        $item->qty = $value['quantity'];
+                        $item->save();
+                    }
+                    // If id is null, create a new item
+                } else {
+                    HardwareRequest::create([
+                        'id_request_access' => $request->access_request_id,
+                        'hardware_device' => $value['hardware_name'],
+                        'qty' => $value['quantity'],
+                    ]);
+                }
+            }
+        }
+
+        // SAMPAIIIIII SINIIII DULUUU GESSSSSSSSSS
+
+        if ($request->user_account) {
+            foreach ($request->user_account as $key => $value) {
+                if (isset($value['id'])) {
+                    $items = UserAccount::where('id_request_access', $request->access_request_id)
+                        ->where('id', $value['id'])->get();
+                    foreach ($items as $item) {
+                        $item->id_request_access = $request->access_request_id;
+                        $item->account_name = $value['account_name'];
+                        $item->save();
+                    }
+                } else {
+                    UserAccount::create([
+                        'id_request_access' => $request->access_request_id,
+                        'account_name' => $value['account_name'],
+                    ]);
+                }
+            }
+        }
+
+        if ($request->application_program) {
+            foreach ($request->application_program as $key => $value) {
+                if (isset($value['id'])) {
+                    $items = ApplicationProgram::where('id_request_access', $request->access_request_id)
+                        ->where('id', $value['id'])->get();
+                    foreach ($items as $item) {
+                        $item->id_request_access = $request->access_request_id;
+                        $item->application_name = $value['application_name'];
+                        $item->login_name = $value['login_name'];
+                        $item->save();
+                    }
+                } else {
+                    ApplicationProgram::create([
+                        'id_request_access' => $request->access_request_id,
+                        'application_name' => $value['application_name'],
+                        'login_name' => $value['login_name'],
+                    ]);
+                }
+            }
+        }
+
+        if ($request->file_folder_access) {
+            foreach ($request->file_folder_access as $key => $value) {
+                if (isset($value['id'])) {
+                    $items = FileFolderAccess::where('id_request_access', $request->access_request_id)
+                        ->where('id', $value['id'])->get();
+                    foreach ($items as $item) {
+                        $item->id_request_access = $request->access_request_id;
+                        $item->file_folder_name = $value['file_folder_access'];
+                        $item->read = $value['read'] ?? 'false';
+                        $item->write = $value['write'] ?? 'false';
+                        $item->save();
+                    }
+                } else {
+                    FileFolderAccess::create([
+                        'id_request_access' => $request->access_request_id,
+                        'file_folder_name' => $value['file_folder_access'],
+                        'read' => $value['read'] ?? 'false',
+                        'write' => $value['write'] ?? 'false',
+                    ]);
+                }
+            }
+        }
+
+        if ($request->email_address) {
+            foreach ($request->email_address as $key => $value) {
+                if (isset($value['id'])) {
+                    $items = ResourceAccess::where('id_request_access', $request->access_request_id)
+                        ->where('type', 'email_address')
+                        ->where('id', $value['id'])->get();
+                    foreach ($items as $item) {
+                        $item->id_request_access = $request->access_request_id;
+                        $item->email_address = $value['email_address'];
+                        $item->purpose = $value['purpose'];
+                        $item->restriction = $value['restriction'];
+                        $item->save();
+                    }
+                } else {
+                    ResourceAccess::create([
+                        'id_request_access' => $request->access_request_id,
+                        'type' => 'email_address',
+                        'email_address' => $value['email_address'],
+                        'purpose' => $value['purpose'],
+                        'restriction' => $value['restriction'],
+
+                    ]);
+                }
+            }
+        }
+
+        if ($request->internet_access) {
+            foreach ($request->internet_access as $key => $value) {
+                if (isset($value['id'])) {
+                    $items = ResourceAccess::where('id_request_access', $request->access_request_id)
+                        ->where('type', 'internet_access')
+                        ->where('id', $value['id'])->get();
+                    foreach ($items as $item) {
+                        $item->id_request_access = $request->access_request_id;
+                        $item->type = 'internet_access';
+                        $item->purpose = $value['purpose'];
+                        $item->restriction = $value['restriction'];
+                        $item->save();
+                    }
+                } else {
+                    ResourceAccess::create([
+                        'id_request_access' => $request->access_request_id,
+                        'type' => 'internet_access',
+                        'purpose' => $value['purpose'],
+                        'restriction' => $value['restriction'],
+                    ]);
+                }
+            }
+        }
+
+        if ($request->other_request) {
+            foreach ($request->other_request as $key => $value) {
+                if (isset($value['id'])) {
+                    $items = ResourceAccess::where('id_request_access', $request->access_request_id)
+                        ->where('type', 'other_request')
+                        ->where('id', $value['id'])->get();
+                    foreach ($items as $item) {
+                        $item->id_request_access = $request->access_request_id;
+                        $item->other_request = $value['other_request'];
+                        $item->type = 'other_request';
+                        $item->purpose = $value['purpose'];
+                        $item->restriction = $value['restriction'];
+                        $item->save();
+                    }
+                } else {
+                    ResourceAccess::create([
+                        'id_request_access' => $request->access_request_id,
+                        'type' => 'other_request',
+                        'other_request' => $value['other_request'],
+                        'purpose' => $value['purpose'],
+                        'restriction' => $value['restriction'],
+                    ]);
+                }
+            }
+        }
+
+        Alert::success('Upload Successfully!', 'Document successfully uploaded!');
+        return redirect()->intended('it-access-request/index');
     }
 }

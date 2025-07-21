@@ -129,9 +129,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/it-access-request/fetchitaccess/{id}', [ItAccessRequestController::class, 'fetchitaccess'])->name('it-access-request.fetchitaccess');
     Route::post('/it-access-request/revision', [ItAccessRequestController::class, 'revision'])->name('it-access-request.revision');
     Route::get('/it-access-request/view/{id}', [ItAccessRequestController::class, 'generatePdf'])->name('it-access-request.view')->middleware(['auth', 'role:Admin']);
+    Route::get('/it-access-request/revision/{id_request_access}', [ItAccessRequestController::class, 'edit'])->name('it-access-request.edit');
+    Route::post('/it-access-request/update', [ItAccessRequestController::class, 'update'])->name('it-access-request.update')->middleware(['auth', 'role:Admin']);
     // Route::get('/leaver/revision/{id}', [ItAccessRequestController::class, 'revision'])->name('leaver.revision')->middleware(['auth', 'role:Admin']);
     // Route::get('/leaver/fetchLeaver/{id}', [ItAccessRequestController::class, 'fetchLeaver'])->name('leaver.fetchLeaver')->middleware(['auth', 'role:Admin']);
-    // Route::post('/leaver/update', [ItAccessRequestController::class, 'update'])->name('leaver.update')->middleware(['auth', 'role:Admin']);
     // Route::post('/leaver/void', [ItAccessRequestController::class, 'void'])->name('leaver.void')->middleware(['auth', 'role:Admin']);
     // Route::post('/leaver/restore', [ItAccessRequestController::class, 'restore'])->name('leaver.restore')->middleware(['auth', 'role:Admin']);
     // Route::get('/leaver/fetchDept/{id_user}', [ItAccessRequestController::class, 'fetchDept'])->name('leaver.fetchDept')->middleware(['auth', 'role:Admin']);
