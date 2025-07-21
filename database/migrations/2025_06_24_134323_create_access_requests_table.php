@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('id_request_access');
             $table->date('date_of_request');
             $table->string('employee_id');
+            $table->string('approval_id');
+            $table->string('approval_level');
+            $table->string('approval_progress');
+            $table->string('token');
             $table->string('document_name');
             $table->string('original_name');
             $table->string('base64');
