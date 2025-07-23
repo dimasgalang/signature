@@ -11,6 +11,8 @@ use App\Models\ResourceAccess;
 use App\Models\User;
 use App\Models\UserAccount;
 use Barryvdh\DomPDF\Facade\Pdf;
+// use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -350,8 +352,8 @@ class ItAccessRequestController extends Controller
             ]);
         }
 
-        Alert::success('Upload Successfully!', 'Document successfully uploaded!');
-        return redirect()->intended('it-access-request/index');
+        Alert::success('Approved Successfully!', 'Document successfully approved!');
+        return redirect()->intended('approval/indexItAccess');
     }
 
     public function fetchitaccess($id)
@@ -376,7 +378,6 @@ class ItAccessRequestController extends Controller
     public function generatePdf($id)
     {
         $accessRequest = AccessRequest::select('access_requests.*', 'users.name', 'users.dept', 'signatures.signature_img')->leftJoin('users', 'users.id', '=', 'access_requests.approval_id')->leftJoin('signatures', 'signatures.user_id', '=', 'access_requests.approval_id')->where('id_request_access', $id)->get();
-        // dd($accessRequest);
         $computerRequests = HardwareRequest::where('id_request_access', $id)->where('hardware_device', 'Komputer')->get();
         $otherDevices = HardwareRequest::where('id_request_access', $id)->where('hardware_device', '!=', 'Komputer')->get();
         $applicationPrograms = ApplicationProgram::where('id_request_access', $id)->get();
@@ -387,13 +388,16 @@ class ItAccessRequestController extends Controller
         $userAccounts = UserAccount::where('id_request_access', $id)->get();
 
         // dd($accessRequest, $computerRequests, $otherDevices, $applicationPrograms, $fileFolderAccesses, $emailAccount, $internetAccess, $otherRequests, $userAccounts);
-        $pdf = Pdf::loadView('template.it-access', compact('accessRequest', 'computerRequests', 'otherDevices', 'applicationPrograms', 'fileFolderAccesses', 'emailAccount', 'internetAccess', 'otherRequests', 'userAccounts'));
+        $pdf = Pdf::loadView('template.it-access', compact('accessRequest', 'computerRequests', 'otherDevices', 'applicationPrograms', 'fileFolderAccesses', 'emailAccount', 'internetAccess', 'otherRequests', 'userAccounts'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('A4');
 
         // I: Show to Browser, D: Download, F: Save to File, S: Return as String
         // return PDF::Output('Signature.pdf', 'I');
         // PDF::Output(storage_path('app/public/document/') . $new_filename, 'F');
 
-        return $pdf->download($id . 'it-request.pdf');
+        $pdf->save(storage_path('app/public/it_access_pdfs/') . $id . '.pdf');
+
+        // Download file
+        return $pdf->download($id . '.pdf');
     }
 
     // edit
