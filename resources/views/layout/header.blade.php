@@ -22,40 +22,6 @@
     <!-- <link rel="stylesheet" type="text/css" href="http://keith-wood.name/css/jquery.signature.css"> -->
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <style>
-        .qrscanner video {
-        max-width: 95%;
-        max-height: 75%;
-        }
-
-        .row-element-set {
-        display: flex;
-        flex-direction: column;
-        }
-        .row-element {
-        padding: .2em 0em;
-        }
-
-        .row-element-set-QRScanner
-        {
-        max-width: 30em; 
-        display: flex;
-        flex-direction: column;
-        }
-
-        body
-        {
-        display: flex;
-        justify-content: center;
-        }
-
-        .form-field-caption {
-        font-weight: bold;
-        }
-
-        .form-field-input
-        {
-        width: 100%; 
-        }
         #canvas-container {
             position: relative;
             width: max-content;

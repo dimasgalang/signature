@@ -56,6 +56,11 @@
                             </div>
                             @endif
                             <div>
+                                <label>NPK :</label>
+                                <input class="form-control" type="text" id="npk" name="npk">
+                            </div>
+                            <br>
+                            <div>
                                 <label>Nama Lengkap :</label>
                                 <input class="form-control" type="text" id="name" name="name">
                             </div>
