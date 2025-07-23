@@ -82,6 +82,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/approval/indexHandover', [ApprovalController::class, 'indexHandover'])->name('approval.indexHandover');
     Route::get('/approval/indexLeaver', [ApprovalController::class, 'indexLeaver'])->name('approval.indexLeaver');
     Route::get('/approval/indexCommitment', [ApprovalController::class, 'indexCommitment'])->name('approval.indexCommitment');
+    Route::get('/approval/indexItAccess', [ApprovalController::class, 'indexItAccess'])->name('approval.indexItAccess');
     Route::get('/approval/create', [ApprovalController::class, 'create'])->name('approval.create');
     Route::get('/approval/approve/{id}', [ApprovalController::class, 'approve'])->name('approval.approve');
     Route::get('/approval/fetchapproval/{id}', [ApprovalController::class, 'fetchapproval'])->name('approval.fetchapproval');
