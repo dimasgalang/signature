@@ -21,8 +21,8 @@
                     <div>
                     <!-- <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Import Approval</a> -->
-                    <a href="{{ route('approval.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-plus fa-sm text-white-50"></i> Create Approval</a>
+                    <a href="{{ route('it-access-request.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                            class="fas fa-plus fa-sm text-white-50"></i> Create IT Request</a>
                     </div>
                 </div>
                 
@@ -59,7 +59,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $approval->name }}</td>
                                         <td>{{ $approval->document_name }}</td>
-                                        <!-- <td>{{ $approval->original_name }}</td> -->
+                                        {{-- <!-- <td>{{ $approval->original_name }}</td> --> --}}
                                         <td>{{ $approval->need_approve }}</td>
                                         <td>{{ $approval->approval_date }}</td>
                                         @if ($approval->status == 'pending')
@@ -86,11 +86,11 @@
     
                                                 @if ($approval->preparer_id == $approval->approval_id)
                                                     @if (request()->get('void') == 'false' || request()->get('void') == '')
-                                                    <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('approval.fetchapproval', $approval->id) }}" data-void-link="{{ route('approval.void') }}" data-void-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#voidModal">
+                                                    <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('it-access-request.fetchitaccess', $approval->id) }}" data-void-link="{{ route('it-access-request.void') }}" data-void-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#voidModal">
                                                         <i class="fas fa-ban"></i>
                                                     </a>
                                                     @elseif (request()->get('void') == 'true')
-                                                    <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore" data-restore-url="{{ route('approval.fetchapproval', $approval->id) }}" data-restore-link="{{ route('approval.restore') }}" data-restore-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#restoreModal">
+                                                    <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore" data-restore-url="{{ route('it-access-request.fetchitaccess', $approval->id) }}" data-restore-link="{{ route('it-access-request.restore') }}" data-restore-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#restoreModal">
                                                         <i class="fas fa-history"></i>
                                                     </a>
                                                     @endif
@@ -241,11 +241,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('approval.void') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('it-access-request.void') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-void"></p>
-                        <input class="form-control" type="hidden" id="modal_preparer_id_void" name="preparer_id" readonly>
+                        <input class="form-control" type="hidden" id="modal_id_request_access_void" name="id_request_access" readonly>
                         <input class="form-control" type="hidden" id="modal_name_void" name="name" readonly>
                         <input class="form-control" type="hidden" id="modal_document_name_void" name="document_name" readonly>
                         <input class="form-control" type="hidden" id="modal_token_void" name="token">
@@ -268,11 +268,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('approval.restore') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('it-access-request.restore') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-restore"></p>
-                        <input class="form-control" type="hidden" id="modal_preparer_id_restore" name="preparer_id" readonly>
+                        <input class="form-control" type="hidden" id="modal_id_request_access_restore" name="id_request_access" readonly>
                         <input class="form-control" type="hidden" id="modal_name_restore" name="name" readonly>
                         <input class="form-control" type="hidden" id="modal_document_name_restore" name="document_name" readonly>
                         <input class="form-control" type="hidden" id="modal_token_restore" name="token">
@@ -471,7 +471,7 @@
         var jsonVoid = $(this).data('void-url'); 
         $.get(jsonVoid, function (data) {
             if (data.length > 0) {
-                $('#modal_preparer_id_void').val(data[0].preparer_id);
+                $('#modal_id_request_access_void').val(data[0].id_request_access);
                 $('#modal_name_void').val(data[0].name);
                 $('#modal_document_name_void').val(data[0].document_name);
                 $('#modal_token_void').val(data[0].token);
@@ -486,7 +486,7 @@
         var jsonRestore = $(this).data('restore-url'); 
         $.get(jsonRestore, function (data) {
             if (data.length > 0) {
-                $('#modal_preparer_id_restore').val(data[0].preparer_id);
+                $('#modal_id_request_access_restore').val(data[0].id_request_access);
                 $('#modal_name_restore').val(data[0].name);
                 $('#modal_document_name_restore').val(data[0].document_name);
                 $('#modal_token_restore').val(data[0].token);

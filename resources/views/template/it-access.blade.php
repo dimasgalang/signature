@@ -471,7 +471,7 @@
       <tr>
           <td class="header" style="margin: 0px;">
               <center>
-                <img src="{{ asset('img/chutex_logo.png') }}" style="width: 70px;">
+                <img src="{{ public_path('img/chutex_logo.png') }}" style="width: 70px;">
                 <h6 style="margin: 0px;">PT. CHUTEX INTERNASIONAL <br> INDONESIA</h6>
             </center>
           </td>

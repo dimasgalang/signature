@@ -22,9 +22,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class ItAccessRequestController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user_id = Auth::user()->id;
+        if ($request->void) {
+            $accessRequests = DB::select("with data1 as ( select access_requests.*, employee.name as employee_name, employee.dept as employee_dept, (select users.name from access_requests t2 left join users on t2.approval_id = users.id where t2.approval_level = access_requests.approval_progress and t2.document_name = access_requests.document_name and t2.token = access_requests.token ) as need_approve, case when employee_id = lag(employee_id) over (order by access_requests.id) and document_name = lag(document_name) over (order by access_requests.id) and token = lag(token) over (order by access_requests.id) then 0 else 1 end as the_same from access_requests left join users as employee on employee.id = access_requests.employee_id where void = '" . $request->void . "' ), data2 as ( select *, sum(the_same) over (order by id) group_num FROM data1 ) select * from data2 where approval_id = '" . $user_id . "' order by id desc");
+        } else {
+            $accessRequests = DB::select("with data1 as ( select access_requests.*, employee.name as employee_name, employee.dept as employee_dept, (select users.name from access_requests t2 left join users on t2.approval_id = users.id where t2.approval_level = access_requests.approval_progress and t2.document_name = access_requests.document_name and t2.token = access_requests.token ) as need_approve, case when employee_id = lag(employee_id) over (order by access_requests.id) and document_name = lag(document_name) over (order by access_requests.id) and token = lag(token) over (order by access_requests.id) then 0 else 1 end as the_same from access_requests left join users as employee on employee.id = access_requests.employee_id where void = 'false' ), data2 as ( select *, sum(the_same) over (order by id) group_num FROM data1 ) select * from data2 where approval_id = '" . $user_id . "' order by id desc");
+        }
+        // dd($accessRequests);
+        return view('it-access-request.index', compact('accessRequests'));
+
         // $accessRequests = AccessRequest::join('users as employee', 'employee.id', '=', 'access_requests.employee_id')
         //     ->join('users as approver', 'approver.id', '=', 'access_requests.approval_id')
         //     ->select([
@@ -35,12 +43,6 @@ class ItAccessRequestController extends Controller
         //     ])
         //     ->orderBy('access_requests.created_at', 'desc')
         //     ->get();
-
-
-        $accessRequests = DB::select("with data1 as ( select access_requests.*, employee.name as employee_name, employee.dept as employee_dept, (select users.name from access_requests t2 left join users on t2.approval_id = users.id where t2.approval_level = access_requests.approval_progress and t2.document_name = access_requests.document_name and t2.token = access_requests.token ) as need_approve, case when employee_id = lag(employee_id) over (order by access_requests.id) and document_name = lag(document_name) over (order by access_requests.id) and token = lag(token) over (order by access_requests.id) then 0 else 1 end as the_same from access_requests left join users as employee on employee.id = access_requests.employee_id where void = 'false' ), data2 as ( select *, sum(the_same) over (order by id) group_num FROM data1 ) select * from data2 where approval_id = " . $user_id . " order by id desc");
-
-        // dd($accessRequests);
-        return view('it-access-request.index', compact('accessRequests'));
     }
 
     public function create()
@@ -185,8 +187,8 @@ class ItAccessRequestController extends Controller
             }
         }
 
-        Alert::success('Upload Successfully!', 'Document successfully uploaded!');
-        return redirect()->intended('it-access-request/index');
+        Alert::success('Created Successfully!', 'Request Access successfully created!');
+        return redirect()->intended('approval/indexItAccess');
     }
 
     public function approve($id_request_access)
@@ -320,8 +322,8 @@ class ItAccessRequestController extends Controller
             }
         }
 
-        Alert::success('Upload Successfully!', 'Document successfully uploaded!');
-        return redirect()->intended('it-access-request/index');
+        Alert::success('Approval Successfully!', 'Document successfully approved!');
+        return redirect()->intended('approval/indexItAccess');
     }
 
     public function approved(Request $request)
@@ -394,7 +396,12 @@ class ItAccessRequestController extends Controller
         // return PDF::Output('Signature.pdf', 'I');
         // PDF::Output(storage_path('app/public/document/') . $new_filename, 'F');
 
-        $pdf->save(storage_path('app/public/it_access_pdfs/') . $id . '.pdf');
+        $directory = storage_path('app/public/it_access_pdfs/');
+        if (!file_exists($directory)) {
+            mkdir($directory, 0777, true);
+        }
+
+        $pdf->save($directory . $id . '.pdf');
 
         // Download file
         return $pdf->download($id . '.pdf');
@@ -478,8 +485,6 @@ class ItAccessRequestController extends Controller
                 }
             }
         }
-
-        // SAMPAIIIIII SINIIII DULUUU GESSSSSSSSSS
 
         if ($request->user_account) {
             foreach ($request->user_account as $key => $value) {
@@ -620,7 +625,27 @@ class ItAccessRequestController extends Controller
             }
         }
 
-        Alert::success('Upload Successfully!', 'Document successfully uploaded!');
-        return redirect()->intended('it-access-request/index');
+        Alert::success('Update Successfully!', 'Access Request successfully updated!');
+        return redirect()->intended('approval/indexItAccess');
+    }
+
+    public function void(Request $request)
+    {
+        $approval = AccessRequest::select('*')->where('id_request_access', '=', $request->id_request_access)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
+            'void' => 'true',
+        ]);
+
+        Alert::success('Void Successfully!', 'Access Request For "' . $request->document_name . '" successfully voided!');
+        return redirect('approval/indexItAccess');
+    }
+
+    public function restore(Request $request)
+    {
+        $approval = AccessRequest::select('*')->where('id_request_access', '=', $request->id_request_access)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
+            'void' => 'false',
+        ]);
+
+        Alert::success('Restore Successfully!', 'Access Request For "' . $request->document_name . '" successfully restored!');
+        return redirect('approval/indexItAccess');
     }
 }
