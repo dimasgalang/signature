@@ -37,7 +37,7 @@ class ItAccessRequestController extends Controller
         //     ->get();
 
 
-        $accessRequests = DB::select('with data1 as ( select access_requests.*, employee.name as employee_name, employee.dept as employee_dept, (select users.name from access_requests t2 left join users on t2.approval_id = users.id where t2.approval_level = access_requests.approval_progress and t2.document_name = access_requests.document_name and t2.token = access_requests.token ) as need_approve, case when employee_id = lag(employee_id) over (order by id) and document_name = lag(document_name) over (order by id) and token = lag(token) over (order by id) then 0 else 1 end as the_same from access_requests left join users as employee on employee.id = access_requests.employee_id where void = "false" ), data2 as ( select *, sum(the_same) over (order by id) group_num FROM data1 ) select * from data2 where approval_id = ' . $user_id . ' order by id desc');
+        $accessRequests = DB::select("with data1 as ( select access_requests.*, employee.name as employee_name, employee.dept as employee_dept, (select users.name from access_requests t2 left join users on t2.approval_id = users.id where t2.approval_level = access_requests.approval_progress and t2.document_name = access_requests.document_name and t2.token = access_requests.token ) as need_approve, case when employee_id = lag(employee_id) over (order by access_requests.id) and document_name = lag(document_name) over (order by access_requests.id) and token = lag(token) over (order by access_requests.id) then 0 else 1 end as the_same from access_requests left join users as employee on employee.id = access_requests.employee_id where void = 'false' ), data2 as ( select *, sum(the_same) over (order by id) group_num FROM data1 ) select * from data2 where approval_id = '" . $user_id . "' order by id desc");
 
         // dd($accessRequests);
         return view('it-access-request.index', compact('accessRequests'));
@@ -186,7 +186,7 @@ class ItAccessRequestController extends Controller
         }
 
         Alert::success('Upload Successfully!', 'Document successfully uploaded!');
-        return redirect()->intended('it-access-request/index');
+        return redirect()->intended('approval/indexItAccess');
     }
 
     public function approve($id_request_access)

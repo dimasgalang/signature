@@ -21,8 +21,8 @@
                     <div>
                     <!-- <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Import Approval</a> -->
-                    <a href="{{ route('approval.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-plus fa-sm text-white-50"></i> Create Approval</a>
+                    <a href="{{ route('it-access-request.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                            class="fas fa-plus fa-sm text-white-50"></i> Create IT Request</a>
                     </div>
                 </div>
                 
@@ -59,7 +59,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $approval->name }}</td>
                                         <td>{{ $approval->document_name }}</td>
-                                        <!-- <td>{{ $approval->original_name }}</td> -->
+                                        {{-- <!-- <td>{{ $approval->original_name }}</td> --> --}}
                                         <td>{{ $approval->need_approve }}</td>
                                         <td>{{ $approval->approval_date }}</td>
                                         @if ($approval->status == 'pending')
