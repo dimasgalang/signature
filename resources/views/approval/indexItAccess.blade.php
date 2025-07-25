@@ -96,7 +96,7 @@
                                                     @endif
                                                 @endif
     
-                                                @if($approval->approval_progress < '2' || $approval->status == 'revision' && $approval->preparer_id == Auth::user()->id)
+                                                @if($approval->preparer_id == Auth::user()->id && ($approval->approval_progress < '2' || $approval->status == 'revision'))
                                                     <a href="{{route('it-access-request.edit', $approval->id_request_access)}}" class="btn btn-warning btn-circle btn-sm">
                                                         <i class="fas fa-pen"></i>
                                                     </a>

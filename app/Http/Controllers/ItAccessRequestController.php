@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ItAccessRequestController extends Controller
@@ -405,6 +406,8 @@ class ItAccessRequestController extends Controller
 
         // Download file
         return $pdf->download($id . '.pdf');
+
+        // Storage::put('public/it_access_pdfs/' . $id . '.pdf', $pdf->output());
     }
 
     // edit
