@@ -5,6 +5,7 @@ use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\CommitmentComputerController;
 use App\Http\Controllers\LeaverController;
 use App\Http\Controllers\ConverterController;
+use App\Http\Controllers\CyberUserAccountController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HandoverController;
 use App\Http\Controllers\HomeController;
@@ -159,6 +160,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/attachment/void', [AttachmentController::class, 'void'])->name('attachment.void');
     Route::post('/attachment/restore', [AttachmentController::class, 'restore'])->name('attachment.restore');
     Route::get('/attachment/fetchattachment/{id}', [AttachmentController::class, 'fetchattachment'])->name('attachment.fetchattachment');
+
+    // Cyber User
+    Route::get('/cyber-user/index', [CyberUserAccountController::class, 'index'])->name('cyber-user.index');
+    Route::get('/cyber-user/create', [CyberUserAccountController::class, 'create'])->name('cyber-user.create');
+    Route::post('/cyber-user/store', [CyberUserAccountController::class, 'store'])->name('cyber-user.store');
+    Route::get('/cyber-user/fetchEmployee/{npk}', [CyberUserAccountController::class, 'fetchEmployee'])->name('cyber-user.fetchEmployee');
+    // Route::get('/cyber-user/revision/{id}', [CyberUserAccountController::class, 'revision'])->name('cyber-user.revision');
+    // Route::post('/cyber-user/update', [CyberUserAccountController::class, 'update'])->name('cyber-user.update');
+    // Route::post('/cyber-user/void', [CyberUserAccountController::class, 'void'])->name('cyber-user.void');
+    // Route::post('/cyber-user/restore', [CyberUserAccountController::class, 'restore'])->name('cyber-user.restore');
 
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
