@@ -53,11 +53,10 @@
       text-align: center;
       width: 45%;
     }
-    /* table #leaver-table {
+    table #leaver-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 5px;
-    } */
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -76,14 +75,12 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        /* margin: 0; */
         padding: 20px;
     }
     
     .form-container {
         flex: row;
         padding: 10px;
-        /* max-width: 800px; */
         margin: 0 auto;
     }
     
@@ -107,10 +104,6 @@
     }
     
     .underline {
-        /* border-bottom: 1px solid #000; */
-        /* flex-grow: 1; */
-        /* height: 20px; */
-        /* display: flex; */
         align-items: flex-start;
         padding-bottom: 2px;
         margin-right: 0;
@@ -128,9 +121,6 @@
     .reason {
         padding-left: 5px;
         padding-bottom: 2px;
-        /* display: inline-block;
-        word-wrap: break-word;
-        word-break: break-word; */
         white-space: normal;
     }
     
@@ -142,7 +132,6 @@
     }
     
     .medium-field {
-        /* margin:0px;  */
         text-align: left;
         width: 90px;
         flex-grow: 0;
@@ -171,13 +160,11 @@
     .hardware-table {
         width: 100%;
         border-bottom: none !important;
-        /* border: 0.5px solid #000; */
         border-collapse: collapse;
         font-size: 12px;
     }
     
     .hardware-table th {
-        /* border: 0.5px solid; */
         padding: 8px;
         font-weight: normal;
         text-align: left;
@@ -185,7 +172,6 @@
     }
     
     .hardware-table td {
-        /* border: 0.5px solid #000; */
         padding: 8px;
         vertical-align: top;
     }
@@ -235,7 +221,6 @@
         border-bottom: 1px solid #000;
         min-width: 90px;
         text-align: center;
-        /* padding: 2px 5px; */
         font-size: 12px;
         vertical-align: end;
     }
@@ -255,8 +240,6 @@
     .approval-options input[type="checkbox"] {
         width: 12px;
         height: 12px;
-        /* gap: 4px; */
-        /* margin-right: 4px; */
     }
     
     .approval-options label {
@@ -272,7 +255,6 @@
     
     .number {
         position: absolute;
-        /* left: 8px; */
         font-size: 12px;
         color: #000;
     }
@@ -400,20 +382,15 @@
         font-size: 10px;
         font-style: italic;
         color: #666;
-        /* margin-bottom: 40px; */
     }
     
     .signature-image {
         width: 200px;
         height: 100px;
-        /* margin: 0 auto 20px; */
-        /* border: 1px dashed #ccc; */
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 11px;
-        /* color: #999; */
-        /* background-color: #fafafa; */
     }
 
     .signature-name {
@@ -432,19 +409,11 @@
         margin: 0 auto;
     }
     
-    /* Hilangkan border pada signature-table */
     .signature-table,
     .signature-table th,
     .signature-table td {
         border: none !important;
     }
-    
-    /* Hilangkan border pada signature-table */
-    /* .signature-table,
-    .signature-table th,
-    .signature-table td {
-        border: none !important;
-    } */
     
     @media print {
         html, body {
@@ -468,100 +437,54 @@
 </head>
 <body>
 
-  <table id="leaver-table">
-      <tr>
-          <td class="header" style="margin: 0px;">
-                @php
-                    $imagePath = public_path('img/chutex_logo.png');
-                    $image = "data:image/png;base64," . base64_encode(file_get_contents($imagePath));
-                @endphp
-              <center>
-                <img src="{{ $image }}" style="width: 70px;">
-                <h6 style="margin: 0px;">PT. CHUTEX INTERNASIONAL <br> INDONESIA</h6>
-            </center>
-          </td>
-          <td class="header">
-              <center>
-                  <h3 style="margin: 0px;">FORMULIR PERMINTAAN <br> AKSES IT</h3>
-                  <h3 style="margin: 0px;"><i>IT Access Request Form</i></h3>
+    <table id="leaver-table">
+        <tr>
+            <td class="header" style="margin: 0px;">
+                  @php
+                      $imagePath = public_path('img/chutex_logo.png');
+                      $image = "data:image/png;base64," . base64_encode(file_get_contents($imagePath));
+                  @endphp
+                <center>
+                  <img src="{{ $image }}" style="width: 70px;">
+                  <h6 style="margin: 0px;">PT. CHUTEX INTERNASIONAL <br> INDONESIA</h6>
               </center>
-          </td>
-          <td class="header" style="text-align: center; vertical-align: middle;">
-                  <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#</p>
-                  <p style="font-size:11px; x-small; margin:0; text-align: left;">Revision: 00</p>
-                  <p style="font-size:11px; x-small; margin:0; text-align: left;">Date: {{\Carbon\Carbon::parse($accessRequest[0]->date_of_request)->format('d/m/Y')}}</p>
-          </td>
-      </tr>
-  </table>
-
-{{-- <div class="form-container" style="display: flex; flex-direction: row;">
-    <!-- Row 1: Tanggal -->
-    <div class="form-row">
-        <span class="label">Tanggal/ Date :</span>
-        <div class="underline short-field">
-            <span class="value"></span> 
-        </div>
-    </div>
-    
-    <!-- Row 2: Nama, ID Karyawan, Dept -->
-    <div class="form-row" style="margin-bottom: -15px;">
-        <span class="label">Nama/ Name :</span>
-        <div class="underline medium-field value" style="max-width: 200px"> {{$accessRequest[0]->name}}
-            <span class="value"></span> 
-        </div>
-        
-        <span class="label" style="justify-content: center;">ID Karyawan/ Employee ID :</span>
-        <div class="underline short-field value" style="margin-right: -20px">EMP001</div>
-            <span class="value"></span> 
-        
-        <span class="label">Dep/ Dept :</span>
-        <div class="underline short-field value">
-            {{$accessRequest[0]->dept}}
-            <span class="value"></span>
-        </div>
-    </div>
-    
-    <!-- Row 3: Permintaan Dep IT -->
-    <div class="form-row request-row">
-        <div style="width: 100%;">
-            <div class="request-text">
-                Permintaan Dep IT untuk/ <i>Request IT Department for :</i>
-                <span class="request-text reason" style="padding-left: 5px;">
-                Instalasi software Microsoft Office
-            </span>
-        </div>
-    </div>
-</div> --}}
+            </td>
+            <td class="header">
+                <center>
+                    <h3 style="margin: 0px;">FORMULIR PERMINTAAN <br> AKSES IT</h3>
+                    <h3 style="margin: 0px;"><i>IT Access Request Form</i></h3>
+                </center>
+            </td>
+            <td class="header" style="text-align: center; vertical-align: middle;">
+                    <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#: 01/FM-PL05</p>
+                    <p style="font-size:11px; x-small; margin:0; text-align: left;">Revision: 00</p>
+                    <p style="font-size:11px; x-small; margin:0; text-align: left;">Effective: {{\Carbon\Carbon::parse($accessRequest[0]->date_of_request)->format('d-F-Y')}}</p>
+            </td>
+        </tr>
+    </table>
 
 <table class="signature-table">
-    <!-- Row 1: Tanggal -->
     <tr style="border: none;">
         <td class="label short-field">Tanggal/ Date :</td>
         <td class="underline value"> {{\Carbon\Carbon::parse($accessRequest[0]->date_of_request)->format('d F Y')}}</td>
-        {{-- <span class="value"></span> --}}
         <td></td>
-        {{-- <td></td> --}}
         <td></td>
         <td></td>
     </tr>
     
-    <!-- Row 2: Nama, ID Karyawan, Dept -->
     <tr>
         <td class="label">Nama/ Name :</td>
         <td class="underline value">
             {{$accessRequest[0]->name}}
-            {{-- <span class="value"></span>  --}}
         </td>
         
         <td class="label medium-field">ID Karyawan/ Employee ID :</td>
-        <td class="underline value">EMP001
-            {{-- <span class="value"></span>  --}}
+        <td class="underline value">{{$accessRequest[0]->npk}}
         </td>
         
         <td class="label" style="width: 50px">Dep/ Dept :</td>
         <td class="underline value">
             {{$accessRequest[0]->dept}}
-            {{-- <span class="value"></span> --}}
         </td>
     </tr>
     
@@ -569,9 +492,6 @@
     <tr>
         <td colspan="6" class="request-text">
             Permintaan Dep IT untuk/ <i>Request IT Department for :</i>
-            <span class="request-text reason">
-                Instalasi software Microsoft Office
-            </span>
         </td>
     </tr>
 </table>
@@ -638,8 +558,6 @@
                         <div class="qty-box">
                             {{$device->qty}}
                         </div>
-                        {{-- <div class="qty-item">
-                        </div> --}}
                     </div>
                     @endforeach
                 </td>
@@ -681,7 +599,6 @@
                     <div class="device-details">
                         <div class="device-detail-item">
                             <div class="detail-underline">
-                                {{-- <span class="number"></span> --}}
                                 <span class="detail-value"> Nama akun/ Account Name : </span>
                                 {{$account->account_name}}
                             </div>
@@ -840,8 +757,6 @@
                                 <label for="monitor-yes">R</label>
                                 <input type="checkbox" id="monitor-no" {{$fileFolder->write == 'true' ? 'checked' : ''}} disabled>
                                 <label for="monitor-no">W</label>
-                                {{-- <div class="approval-options">
-                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -973,8 +888,6 @@
                     @endphp
                     <div class="signature-image">
                         <img src="{{$imageSign3}}" alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                        {{-- @if(isset($requesting_person_signature))
-                        @endif --}}
                     </div>
                     <center>
                         <p class="signature-name">{{$accessRequest[0]->name}}</p>
@@ -995,8 +908,6 @@
                     @endphp
                     <div class="signature-image">
                         <img src="{{$imageSign2}}" alt="Department Head Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                        {{-- @if(isset($department_head_signature))
-                        @endif --}}
                     </div>
                     <center>
                         <p class="signature-name">{{$accessRequest[1]->name}}</p>

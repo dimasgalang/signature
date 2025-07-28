@@ -77,6 +77,7 @@ class UserController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|',
             'dept' => 'required|max:255',
+            'npk' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -90,13 +91,15 @@ class UserController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'dept' => $request->dept,
+                'npk' => $request->npk,
                 'password' => Hash::make($request->password),
             ]);
         } else {
             $user->fill([
                 'name' => $request->name,
                 'email' => $request->email,
-                'dept' => $request->dept
+                'dept' => $request->dept,
+                'npk' => $request->npk
             ]);
         }
 

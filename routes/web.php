@@ -41,6 +41,7 @@ Route::group(['middleware' => 'guest'], function () {
 
     Route::get('/login', [LoginController::class, 'login'])->name('login.guest');
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
+    Route::get('/login/qrauth', [LoginController::class, 'qrauth'])->name('login.qrauth');
 });
 
 

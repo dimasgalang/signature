@@ -61,6 +61,11 @@
                             </div>
                             <br>
                             <div>
+                                <label>NPK :</label>
+                                <input class="form-control" type="text" id="npk" name="npk" value="{{ $users->npk }}">
+                            </div>
+                            <br>
+                            <div>
                                 <label>Nama Lengkap :</label>
                                 <input class="form-control" type="text" id="name" name="name" value="{{ $users->name }}">
                             </div>

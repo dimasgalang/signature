@@ -82,7 +82,8 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Sign In with ID Card</h1>
                             </div>
-                            <div id="reader"></div>
+                            <video id="preview" width="100%"></video>
+
                         </div>
                     </div>
                 </div>
@@ -94,29 +95,20 @@
 @include('layout.footerscript')
 </body>
 <script src="{{ asset('vendor/jquery/html5-qrcode.min.js') }}"></script>
-<script>
-    let html5QRCodeScanner = new Html5QrcodeScanner(
-        "reader", {
-            fps: 10,
-            qrbox: {
-                width: 150,
-                height: 150,
-            },
-            
-            supportedScanTypes: [
-                // Html5QrcodeScanType.SCAN_TYPE_FILE, 
-                Html5QrcodeScanType.SCAN_TYPE_CAMERA
-            ],
+<script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+<script type="text/javascript">
+    let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+        scanner.addListener('scan', function (content) {
+        window.location.href = "/login/qrauth?qrcode=" + content;
+    });
+    Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          console.error('No cameras found.');
         }
-    );
-
-    function onScanSuccess(decodedText, decodedResult) {
-        // redirect ke link hasil scan
-        var decoder = decodedResult.decodedText;
-        window.location.href = "/login/qrauth?qrcode=" + decoder;
-        // window.location.href = decoder;
-        html5QRCodeScanner.clear();
-    }
-    html5QRCodeScanner.render(onScanSuccess);
+    }).catch(function (e) {
+    console.error(e);
+    });
 </script>
 </html>
