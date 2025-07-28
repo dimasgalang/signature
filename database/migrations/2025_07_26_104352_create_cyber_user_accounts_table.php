@@ -13,6 +13,17 @@ return new class extends Migration
     {
         Schema::create('cyber_user_accounts', function (Blueprint $table) {
             $table->id();
+            $table->date('date_of_request');
+            $table->string('approval_id');
+            $table->string('approval_level');
+            $table->string('approval_progress');
+            $table->string('approval_date')->nullable();
+            $table->string('token')->nullable();
+            $table->string('document_name');
+            $table->string('original_name')->nullable();
+            $table->string('base64')->nullable();
+            $table->string('status')->nullable();
+            $table->string('void')->default('false');
             $table->timestamps();
         });
     }
