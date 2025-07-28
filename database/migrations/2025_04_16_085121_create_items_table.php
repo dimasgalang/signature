@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->string('itemNumber')->unique()->nullable();
+            $table->string('itemNumber')->nullable();
             $table->string('productName');
             $table->timestamps();
         });

@@ -83,6 +83,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/approval/indexHandover', [ApprovalController::class, 'indexHandover'])->name('approval.indexHandover');
     Route::get('/approval/indexLeaver', [ApprovalController::class, 'indexLeaver'])->name('approval.indexLeaver');
     Route::get('/approval/indexCommitment', [ApprovalController::class, 'indexCommitment'])->name('approval.indexCommitment');
+    Route::get('/approval/indexItAccess', [ApprovalController::class, 'indexItAccess'])->name('approval.indexItAccess');
     Route::get('/approval/create', [ApprovalController::class, 'create'])->name('approval.create');
     Route::get('/approval/approve/{id}', [ApprovalController::class, 'approve'])->name('approval.approve');
     Route::get('/approval/fetchapproval/{id}', [ApprovalController::class, 'fetchapproval'])->name('approval.fetchapproval');
@@ -132,10 +133,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/it-access-request/view/{id}', [ItAccessRequestController::class, 'generatePdf'])->name('it-access-request.view')->middleware(['auth', 'role:Admin']);
     Route::get('/it-access-request/revision/{id_request_access}', [ItAccessRequestController::class, 'edit'])->name('it-access-request.edit');
     Route::post('/it-access-request/update', [ItAccessRequestController::class, 'update'])->name('it-access-request.update')->middleware(['auth', 'role:Admin']);
+    Route::post('/it-access-request/void', [ItAccessRequestController::class, 'void'])->name('it-access-request.void')->middleware(['auth', 'role:Admin']);
+    Route::post('/it-access-request/restore', [ItAccessRequestController::class, 'restore'])->name('it-access-request.restore')->middleware(['auth', 'role:Admin']);
     // Route::get('/leaver/revision/{id}', [ItAccessRequestController::class, 'revision'])->name('leaver.revision')->middleware(['auth', 'role:Admin']);
     // Route::get('/leaver/fetchLeaver/{id}', [ItAccessRequestController::class, 'fetchLeaver'])->name('leaver.fetchLeaver')->middleware(['auth', 'role:Admin']);
-    // Route::post('/leaver/void', [ItAccessRequestController::class, 'void'])->name('leaver.void')->middleware(['auth', 'role:Admin']);
-    // Route::post('/leaver/restore', [ItAccessRequestController::class, 'restore'])->name('leaver.restore')->middleware(['auth', 'role:Admin']);
     // Route::get('/leaver/fetchDept/{id_user}', [ItAccessRequestController::class, 'fetchDept'])->name('leaver.fetchDept')->middleware(['auth', 'role:Admin']);
     // Route::get('/leaver/create-approval/{id}', [ItAccessRequestController::class, 'createApproval'])->name('leaver.createApproval')->middleware(['auth', 'role:Admin']);
 

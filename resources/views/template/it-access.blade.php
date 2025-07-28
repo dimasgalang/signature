@@ -956,53 +956,60 @@
 
 <div class="signature-container">
     <table class="signature-table">
-        @if($accessRequest[0]->approval_progress == '3')
+        
         <tr>
             <td class="signature-cell">
                 <div class="signature-title">Orang yang Meminta</div>
                 <div class="signature-subtitle">Requesting Person</div>
-                <div class="signature-image">
-                    <img src="{{public_path('storage/signature/'. $accessRequest[0]->signature_img)}}" alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    {{-- @if(isset($requesting_person_signature))
-                    @endif --}}
-                </div>
-                <center>
-                    <p class="signature-name">{{$accessRequest[0]->name}}</p>
-                </center>
+                @if($accessRequest[0]->approval_progress == '3')
+                    <div class="signature-image">
+                        <img src="{{public_path('storage/signature/'. $accessRequest[0]->signature_img)}}" alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                        {{-- @if(isset($requesting_person_signature))
+                        @endif --}}
+                    </div>
+                    <center>
+                        <p class="signature-name">{{$accessRequest[0]->name}}</p>
+                    </center>
+                @else
+                    <div class="signature-image"></div>
+                @endif
                 <div class="signature-line"></div>
             </td>
             
             <td class="signature-cell">
                 <div class="signature-title">Disetujui oleh kepala Departemen</div>
                 <div class="signature-subtitle">Approved by Department Head</div>
-                <div class="signature-image">
-                    <img src="{{public_path('storage/signature/'. $accessRequest[1]->signature_img)}}" alt="Department Head Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                    {{-- @if(isset($department_head_signature))
-                    @endif --}}
-                </div>
-                <center>
-                    <p class="signature-name">{{$accessRequest[1]->name}}</p>
-                </center>
+                @if($accessRequest[0]->approval_progress == '3')
+                    <div class="signature-image">
+                        <img src="{{public_path('storage/signature/'. $accessRequest[1]->signature_img)}}" alt="Department Head Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                        {{-- @if(isset($department_head_signature))
+                        @endif --}}
+                    </div>
+                    <center>
+                        <p class="signature-name">{{$accessRequest[1]->name}}</p>
+                    </center>
+                @else
+                    <div class="signature-image"></div>
+                @endif
                 <div class="signature-line"></div>
             </td>
             
             <td class="signature-cell">
                 <div class="signature-title">Disetujui oleh BOD</div>
                 <div class="signature-subtitle">Approved by BOD</div>
-                <div class="signature-image">
-                    <center>
+                @if($accessRequest[0]->approval_progress == '3')
+                    <div class="signature-image">
                         <img src="{{public_path('storage/signature/'. $accessRequest[2]->signature_img)}}" alt="BOD Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    </div>
+                    <center>
+                        <p class="signature-name">{{$accessRequest[2]->name}}</p>
                     </center>
-                    {{-- @if(isset($bod_signature))
-                    @endif --}}
-                </div>
-                <center>
-                    <p class="signature-name">{{$accessRequest[2]->name}}</p>
-                </center>
+                @else
+                    <div class="signature-image"></div>
+                @endif
                 <div class="signature-line"></div>
             </td>
         </tr>
-        @endif
     </table>
 </div>
 

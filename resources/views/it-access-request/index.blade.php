@@ -49,10 +49,6 @@
                                         <th>Preparer</th>
                                         <th>Department</th>
                                         <th>Document Name</th>
-                                        <th>Need Approve</th>
-                                        <th>Approval Date</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,127 +60,6 @@
                                         <td>{{ $accessRequest->employee_name }}</td>
                                         <td>{{ $accessRequest->employee_dept }}</td>
                                         <td>{{ $accessRequest->document_name }}</td>
-                                        <td>{{ $accessRequest->need_approve }}</td>
-                                        <td>{{ $accessRequest->approval_date }}</td>
-                                        @if ($accessRequest->status == 'pending')
-                                        <td><center><a class="btn btn-danger btn-icon-split btn-sm">
-                                            <span class="text">Pending</span>
-                                            </a></center>
-                                        </td>
-                                        @elseif ($accessRequest->status == 'approved')
-                                        <td><center><a class="btn btn-success btn-icon-split btn-sm">
-                                            <span class="text">Approved</span>
-                                            </a></center>
-                                        </td>
-                                        @elseif ($accessRequest->status == 'revision')
-                                        <td><center><a id="show-comment" class="btn btn-warning btn-icon-split btn-sm show-comment" data-toggle="modal" data-target="#commentModal" data-comment-url="{{ route('it-access-request.fetchitaccess', $accessRequest->id) }}">
-                                            <span class="text">Revision</span>
-                                            </a></center>
-                                        </td>
-                                        @endif
-                                         <td style="width: 8%">
-                                             <center>
-                                                {{-- <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('handover.fetchIT Request', $handover->id) }}" data-void-link="{{ route('handover.void') }}" data-void-name="data-handover" data-toggle="modal" data-target="#voidModal">
-                                                    <i class="fas fa-ban"></i>
-                                                </a> --}}
-                                                {{-- @if (request()->get('void') == 'false' || request()->get('void') == '')
-                                                <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('handover.fetchIT Request', $handover->id) }}" data-void-link="{{ route('handover.void') }}" data-void-name="data-handover" data-toggle="modal" data-target="#voidModal">
-                                                    <i class="fas fa-ban"></i>
-                                                </a>
-                                                @elseif (request()->get('void') == 'true')
-                                                <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore" data-restore-url="{{ route('handover.fetchIT Request', $handover->id) }}" data-restore-link="{{ route('handover.restore') }}" data-restore-name="data-handover" data-toggle="modal" data-target="#restoreModal">
-                                                    <i class="fas fa-history"></i>
-                                                </a>
-                                                @endif --}}
-                                                <div class="row justify-content-center">
-                                                    <a href="{{route('it-access-request.approve', $accessRequest->id_request_access)}}" class="btn btn-success btn-circle btn-sm mr-2">
-                                                        <i class="fas fa-file"></i>
-                                                    </a>
-                                                    @if($accessRequest->approval_progress < '2' || $accessRequest->status == 'revision' && $accessRequest->employee_id == Auth::user()->id)
-                                                        <a href="{{route('it-access-request.edit', $accessRequest->id_request_access)}}" class="btn btn-warning btn-circle btn-sm mr-2">
-                                                            <i class="fas fa-pen"></i>
-                                                        </a>
-                                                    @elseif($accessRequest->approval_progress == '3' && $accessRequest->employee_id == Auth::user()->id)
-                                                        <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-show-document="" data-download-document="{{ route('it-access-request.view', $accessRequest->id_request_access) }}">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                    @endif
-                                                    @if (request()->get('void') == 'false' || request()->get('void') == '')
-                                                        @if ($accessRequest->approval_level == $accessRequest->approval_progress)
-                                                            @if ($accessRequest->approval_progress === '3' && $accessRequest->status == 'pending')
-                                                                    <a id="show-revision" class="btn btn-warning btn-circle btn-sm show-revision mr-2" data-revision-url="{{ route('it-access-request.fetchitaccess', $accessRequest->id) }}" data-revision-link="{{ route('it-access-request.revision') }}" data-revision-name="{{ $accessRequest->document_name }}" data-preparer-name="{{ $accessRequest->employee_id }}" data-date-name="{{ $accessRequest->created_at }}" data-toggle="modal" data-target="#revisionModal">
-                                                                        <i class="fas fa-times"></i>
-                                                                    </a>
-                                                                    <form action="{{ route('it-access-request.approved') }}" method="post">
-                                                                        @csrf
-                                                                        <input type="hidden" name="id" value="{{ $accessRequest->id }}">
-                                                                        <input type="hidden" name="employee_id" value="{{$accessRequest->employee_id}}">
-                                                                        <input type="hidden" name="document_name" value="{{$accessRequest->document_name}}">
-                                                                        <input type="hidden" name="token" value="{{$accessRequest->token}}">
-                                                                        <input type="hidden" name="approval_progress" value="{{$accessRequest->approval_progress}}">
-                                                                        <button type="submit" class="btn btn-success btn-circle btn-sm">
-                                                                            <i class="fas fa-check"></i>
-                                                                        </button>
-                                                                    </form>
-                                                            @else
-                                                                @if ($accessRequest->status == 'pending')
-                                                                <form action="{{ route('it-access-request.approved') }}" method="post">
-                                                                    @csrf
-                                                                    <input type="hidden" name="id" value="{{ $accessRequest->id }}">
-                                                                    <input type="hidden" name="employee_id" value="{{$accessRequest->employee_id}}">
-                                                                    <input type="hidden" name="document_name" value="{{$accessRequest->document_name}}">
-                                                                    <input type="hidden" name="token" value="{{$accessRequest->token}}">
-                                                                    <input type="hidden" name="approval_progress" value="{{$accessRequest->approval_progress}}">
-                                                                    <button type="submit" class="btn btn-success btn-circle btn-sm">
-                                                                        <i class="fas fa-check"></i>
-                                                                    </button>
-                                                                </form>
-                                                                @endif
-                                                            @endif
-                                                        @endif
-                                                    @endif
-                                                </div>
-                                            </center>
-                                        </td>
-                                        {{-- 
-                                        <td class="text-center">
-                                            @if (($approval->value_first == null) && ($approval->value_last == null))
-                                            <a href="{{ asset('/storage/document/' . $approval->original_name) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            @elseif ((!is_null($approval->value_first)) && ($approval->value_last == null))
-                                            <a href="{{ asset('/storage/document/' . $approval->value_first) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            @elseif ((!is_null($approval->value_first)) && (!is_null($approval->value_last)))
-                                            <a href="{{ asset('/storage/document/' . $approval->value_last) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            @endif
-                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
-                                                @if ($approval->approval_level == $approval->approval_progress)
-                                                    @if ($approval->status == 'pending')
-                                                    <a href="{{ route('approval.approve', ['id' => $approval->id]) }}" class="btn btn-success btn-circle btn-sm">
-                                                        <i class="fas fa-check"></i>
-                                                    </a>
-                                                    <a id="show-revision" class="btn btn-warning btn-circle btn-sm show-revision" data-revision-url="{{ route('approval.fetchapproval', $approval->id) }}" data-revision-link="{{ route('approval.revision') }}" data-revision-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#revisionModal">
-                                                        <i class="fas fa-times"></i>
-                                                    </a>
-                                                    @endif
-                                                @endif
-                                            @endif
-                                            @if ($approval->preparer_id == $approval->approval_id)
-                                                @if (request()->get('void') == 'false' || request()->get('void') == '')
-                                                <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('approval.fetchapproval', $approval->id) }}" data-void-link="{{ route('approval.void') }}" data-void-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#voidModal">
-                                                    <i class="fas fa-ban"></i>
-                                                </a>
-                                                @elseif (request()->get('void') == 'true')
-                                                <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore" data-restore-url="{{ route('approval.fetchapproval', $approval->id) }}" data-restore-link="{{ route('approval.restore') }}" data-restore-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#restoreModal">
-                                                    <i class="fas fa-history"></i>
-                                                </a>
-                                                @endif
-                                            @endif
-                                        </td> --}}
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -219,7 +94,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="revisionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade" id="revisionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
@@ -247,7 +122,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="modal fade" id="voidModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
