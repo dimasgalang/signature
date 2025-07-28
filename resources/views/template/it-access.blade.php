@@ -467,27 +467,31 @@
 </head>
 <body>
 
-  <table id="leaver-table">
-      <tr>
-          <td class="header" style="margin: 0px;">
-              <center>
-                <img src="{{ public_path('img/chutex_logo.png') }}" style="width: 70px;">
-                <h6 style="margin: 0px;">PT. CHUTEX INTERNASIONAL <br> INDONESIA</h6>
-            </center>
-          </td>
-          <td class="header">
-              <center>
-                  <h3 style="margin: 0px;">FORMULIR PERMINTAAN <br> AKSES IT</h3>
-                  <h3 style="margin: 0px;"><i>IT Access Request Form</i></h3>
+    <table id="leaver-table">
+        <tr>
+            <td class="header" style="margin: 0px;">
+                  @php
+                      $imagePath = public_path('img/chutex_logo.png');
+                      $image = "data:image/png;base64," . base64_encode(file_get_contents($imagePath));
+                  @endphp
+                <center>
+                  <img src="{{ $image }}" style="width: 70px;">
+                  <h6 style="margin: 0px;">PT. CHUTEX INTERNASIONAL <br> INDONESIA</h6>
               </center>
-          </td>
-          <td class="header" style="text-align: center; vertical-align: middle;">
-                  <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#</p>
-                  <p style="font-size:11px; x-small; margin:0; text-align: left;">Revision: 00</p>
-                  <p style="font-size:11px; x-small; margin:0; text-align: left;">Date: {{\Carbon\Carbon::parse($accessRequest[0]->date_of_request)->format('d/m/Y')}}</p>
-          </td>
-      </tr>
-  </table>
+            </td>
+            <td class="header">
+                <center>
+                    <h3 style="margin: 0px;">FORMULIR PERMINTAAN <br> AKSES IT</h3>
+                    <h3 style="margin: 0px;"><i>IT Access Request Form</i></h3>
+                </center>
+            </td>
+            <td class="header" style="text-align: center; vertical-align: middle;">
+                    <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#</p>
+                    <p style="font-size:11px; x-small; margin:0; text-align: left;">Revision: 00</p>
+                    <p style="font-size:11px; x-small; margin:0; text-align: left;">Date: {{\Carbon\Carbon::parse($accessRequest[0]->date_of_request)->format('d/m/Y')}}</p>
+            </td>
+        </tr>
+    </table>
 
 {{-- <div class="form-container" style="display: flex; flex-direction: row;">
     <!-- Row 1: Tanggal -->
@@ -962,8 +966,12 @@
                 <div class="signature-title">Orang yang Meminta</div>
                 <div class="signature-subtitle">Requesting Person</div>
                 @if($accessRequest[0]->approval_progress == '3')
+                    @php
+                        $imagePathSign3 = public_path('storage/signature/'. $accessRequest[0]->signature_img);
+                        $imageSign3 = "data:image/png;base64," . base64_encode(file_get_contents($imagePathSign3));
+                    @endphp
                     <div class="signature-image">
-                        <img src="{{public_path('storage/signature/'. $accessRequest[0]->signature_img)}}" alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                        <img src="{{$imageSign3}}" alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         {{-- @if(isset($requesting_person_signature))
                         @endif --}}
                     </div>
@@ -980,8 +988,12 @@
                 <div class="signature-title">Disetujui oleh kepala Departemen</div>
                 <div class="signature-subtitle">Approved by Department Head</div>
                 @if($accessRequest[0]->approval_progress == '3')
+                    @php
+                        $imagePathSign2 = public_path('storage/signature/'. $accessRequest[1]->signature_img);
+                        $imageSign2 = "data:image/png;base64," . base64_encode(file_get_contents($imagePathSign2));
+                    @endphp
                     <div class="signature-image">
-                        <img src="{{public_path('storage/signature/'. $accessRequest[1]->signature_img)}}" alt="Department Head Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                        <img src="{{$imageSign2}}" alt="Department Head Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         {{-- @if(isset($department_head_signature))
                         @endif --}}
                     </div>
@@ -998,8 +1010,12 @@
                 <div class="signature-title">Disetujui oleh BOD</div>
                 <div class="signature-subtitle">Approved by BOD</div>
                 @if($accessRequest[0]->approval_progress == '3')
+                    @php
+                        $imagePathSign1 = public_path('storage/signature/'. $accessRequest[2]->signature_img);
+                        $imageSign1 = "data:image/png;base64," . base64_encode(file_get_contents($imagePathSign1));
+                    @endphp
                     <div class="signature-image">
-                        <img src="{{public_path('storage/signature/'. $accessRequest[2]->signature_img)}}" alt="BOD Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                        <img src="{{$imageSign1}}" alt="BOD Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                     </div>
                     <center>
                         <p class="signature-name">{{$accessRequest[2]->name}}</p>
