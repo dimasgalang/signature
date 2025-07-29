@@ -31,7 +31,7 @@
                             <div class="card-header py-3 d-sm-flex align-items-center justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">Deactivate Information Request</h6>
                             </div>
-                            <input class="form-control" type="hidden" id="access_request_id" name="access_request_id">
+                            <input class="form-control" type="hidden" id="deactivation_request_id" name="deactivation_request_id" value="{{ $newIdRequestDeactivate }}">
                             <div class="card-body">
                                 <div id="deactivateRequest">
                                     <div class="row mb-3">
@@ -46,7 +46,7 @@
                                         <div class="col-xl-3">
                                             <label>Name :</label>
                                             <input class="form-control" type="text" id="name" name="name" value="{{ Auth::user()->name }}" readonly>
-                                            {{-- <input class="form-control" type="hidden" id="department" name="department" value="{{ Auth::user()->dept }}"> --}}
+                                            <input class="form-control" type="hidden" id="preparer_id" name="preparer_id" value="{{ Auth::user()->id }}">
                                         </div>
                                         <div class="col-xl-3">
                                             <label>Dept :</label>
@@ -74,7 +74,7 @@
                                         </div>
                                         <div class="col-xl-3">
                                             <label>Dept :</label>
-                                            <input class="form-control" type="text" id="department" name="department" readonly>
+                                            <input class="form-control" type="text" id="department-employee" name="department-employee" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -201,7 +201,7 @@
                         
                         $('#npk').val(data[0].NPK);
                         $('#position').val(data[0].BAG);
-                        $('#department').val(data[0].DEPARTEMENT);
+                        $('#department-employee').val(data[0].DEPARTEMENT);
                     }
                 });
             } else{
@@ -211,8 +211,8 @@
                 $('#position').empty();
                 $('#position').attr('disabled','disabled');
 
-                $('#department').empty();
-                $('#department').attr('disabled','disabled');
+                $('#department-employee').empty();
+                $('#department-employee').attr('disabled','disabled');
             }
         });
     });

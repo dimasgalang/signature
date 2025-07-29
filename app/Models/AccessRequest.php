@@ -20,6 +20,7 @@ class AccessRequest extends Model
         'original_name',
         'token',
         'status',
+        'comment',
         'base64',
         'void',
     ];

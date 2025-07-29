@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('original_name')->nullable();
             $table->string('base64')->nullable();
             $table->string('status')->nullable();
+            $table->string('comment')->nullable();
             $table->string('void')->default('false');
             $table->timestamps();
         });

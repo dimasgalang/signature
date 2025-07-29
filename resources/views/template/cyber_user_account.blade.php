@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Deaktivasi Pengguna Cyber - PT. Teknologi Maju Indonesia</title>
     <style>
-        @page {
+        /* @page {
             size: A4;
             margin: 20mm 15mm 20mm 15mm;
-        }
+        } */
         
         * {
             margin: 0;
@@ -32,8 +32,8 @@
         }
         
         .section {
-            border: 2px solid #000;
-            margin-bottom: 8px;
+            border: 1px solid #000;
+            /* margin-bottom: 8px; */
             page-break-inside: avoid;
         }
         
@@ -50,13 +50,18 @@
             width: 100%;
             border-collapse: collapse;
         }
+        */
 
         table {
             width: 100%;
-            margin-top: 5px;
+            max-width: 210mm;
+            /* margin-top: 5px; */
+            justify-content: center;
+            align-items: center;
+
+            border-collapse: collapse;
         }
 
-        */
         th, td {
             border: 1px solid #000;
             padding: 3px;
@@ -68,7 +73,7 @@
         }
         
         .form-row {
-            margin-bottom: 12px;
+            /* margin-bottom: 12px; */
             display: flex;
             align-items: flex-start;
         }
@@ -84,7 +89,7 @@
         }
         
         .checkbox-group {
-            margin-left: 20px;
+            /* margin-left: 10px; */
             margin-top: 8px;
         }
         
@@ -94,7 +99,7 @@
             align-items: flex-start;
         }
         
-        .checkbox {
+        /* .checkbox {
             width: 12px;
             height: 12px;
             border: 1px solid #000;
@@ -111,18 +116,18 @@
             left: 1px;
             font-size: 10px;
             font-weight: bold;
-        }
+        } */
         
         .date-input-group {
             display: flex;
             align-items: center;
             margin-top: 8px;
-            margin-left: 20px;
+            /* margin-left: 20px; */
         }
         
         .date-input {
             border: none;
-            border-bottom: 1px solid #000;
+            /* border-bottom: 1px solid #000; */
             padding: 2px 4px;
             margin: 0 8px;
             min-width: 100px;
@@ -131,24 +136,24 @@
         }
         
         .employee-info {
-            margin-top: 12px;
-            margin-left: 20px;
+            margin-top: 4px;
+            /* margin-left: 20px; */
         }
         
         .employee-row {
             display: flex;
-            margin-bottom: 8px;
-            align-items: center;
+            /* margin-bottom: 8px; */
+            align-items: flex-start;
         }
         
         .employee-label {
-            min-width: 120px;
+            min-width: 60px;
             font-weight: normal;
         }
         
         .employee-input {
             border: none;
-            border-bottom: 1px solid #000;
+            /* border-bottom: 1px solid #000; */
             padding: 2px 4px;
             margin-left: 8px;
             min-width: 200px;
@@ -159,12 +164,12 @@
         .signature-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            /* margin-top: 20px; */
         }
         
         .signature-table th,
         .signature-table td {
-            border: 1px solid #000;
+            border: none;
             padding: 12px 8px;
             text-align: center;
             vertical-align: top;
@@ -172,7 +177,7 @@
         }
         
         .signature-table th {
-            background-color: #f0f0f0;
+            background-color: white;
             font-weight: bold;
             font-size: 10pt;
         }
@@ -188,32 +193,32 @@
         
         .followup-table th,
         .followup-table td {
-            border: 1px solid #000;
+            border: none;
             padding: 12px;
             vertical-align: top;
         }
         
         .followup-table th {
-            background-color: #f0f0f0;
+            background-color: white;
             font-weight: bold;
-            width: 60%;
+            width: 70%;
         }
         
         .followup-table td {
-            width: 40%;
+            width: 30%;
             text-align: center;
             height: 100px;
         }
         
         .followup-checkbox-item {
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             display: flex;
             align-items: flex-start;
         }
         
         .italic-text {
             font-style: italic;
-            color: #444;
+            color: black;
         }
         
         .bold-text {
@@ -228,7 +233,7 @@
             margin-left: 40px;
         }
         
-        @media print {
+        /* @media print {
             body {
                 -webkit-print-color-adjust: exact;
             }
@@ -236,31 +241,37 @@
             .section {
                 page-break-inside: avoid;
             }
-        }
+        } */
     </style>
 </head>
 <body>
-    <table class="document-container" style="border: #000 2px solid;">
-        <tr>
-            <td class="header" style="margin: 0px;">
-                <center>
-                  <img src="{{ public_path('img/chutex_logo.png') }}" style="width: 70px;">
-                  <h6 style="margin: 0px;">PT. CHUTEX INTERNASIONAL <br> INDONESIA</h6>
-              </center>
-            </td>
-            <td class="header">
-                <center>
-                    <h3 style="margin: 0px;">FORMULIR PERMINTAAN <br> AKSES IT</h3>
-                    <h3 style="margin: 0px;"><i>IT Access Request Form</i></h3>
-                </center>
-            </td>
-            <td class="header" style="text-align: center; vertical-align: middle;">
-                    <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#</p>
-                    <p style="font-size:11px; x-small; margin:0; text-align: left;">Revision: 00</p>
-                    <p style="font-size:11px; x-small; margin:0; text-align: left;">Date: {{\Carbon\Carbon::parse(now())->format('d/m/Y')}}</p>
-            </td>
-        </tr>
-    </table>
+    <center>
+        <table>
+            <tr>
+                <td class="header">
+                      @php
+                          $imagePath = public_path('img/chutex_logo.png');
+                          $image = "data:image/png;base64," . base64_encode(file_get_contents($imagePath));
+                      @endphp
+                    <center>
+                      <img src="{{ $image }}" style="width: 70px;">
+                      <h6 style="margin: 0px;">PT. CHUTEX INTERNASIONAL <br> INDONESIA</h6>
+                  </center>
+                </td>
+                <td class="header">
+                    <center>
+                        <h3 style="margin: 0px;">MENIT PENONAKTIFAN ATAU <br> PENGHAPUSAN AKUN PENGGUNA CYBER</h3>
+                        <h3 style="margin: 0px;"><i>Cyber User Account Deactivation or Removal <br> Minutes</i></h3>
+                    </center>
+                </td>
+                <td class="header" style="text-align: center; vertical-align: middle;">
+                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#: 01/FM-PL05</p>
+                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Revision: 00</p>
+                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Effective: {{\Carbon\Carbon::parse(now())->format('d-F-Y')}}</p>
+                </td>
+            </tr>
+        </table>
+    </center>
 
     <div class="document-container">
         <!-- Section I: Deactivation -->
@@ -274,36 +285,40 @@
                     <div class="form-number">1.</div>
                     <div class="form-content">
                         <div>
-                            Pada tanggal <input type="text" class="date-input" value="25 Juli 2025" readonly>, 
+                            Pada tanggal <span class="bold-text">{{\Carbon\Carbon::parse(now())->format('d F Y')}}</span>, 
                             Departemen IT akan menindaklanjuti permintaan dari <span class="bold-text">Departemen HR/Kepala Departemen</span> 
                             terkait dengan isi sebagai berikut:
                         </div>
-                        <div class="italic-text" style="margin-top: 6px;">
+                        <div class="italic-text">
                             <em>IT Dept proceed to take below outlined action in accordance with the request by <span class="bold-text">HR Dept/ Head of Dept</span>.</em>
                         </div>
                         
                         <div class="checkbox-group">
                             <div class="checkbox-item">
-                                <div class="checkbox"></div>
+                                <div style="margin-right: 6px">
+                                    <input type="checkbox" id="computer" checked>
+                                </div>
                                 <div>
                                     <div>Menghapus atau menghentikan secara permanen seluruh hak akses terkait Cyber dan IT terhadap sistem informasi Perusahaan.</div>
-                                    <div class="italic-text indent-1" style="margin-top: 4px;">
+                                    <div class="italic-text">
                                         <em>Remove or terminate permanently the whole Cyber and IT related access right to Company's information systems.</em>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="checkbox-item">
-                                <div class="checkbox checked"></div>
+                                <div style="margin-right: 6px">
+                                    <input type="checkbox" id="computer" checked>
+                                </div>
                                 <div>
                                     <div>Menonaktifkan sementara seluruh hak akses terkait Cyber dan IT terhadap sistem informasi Perusahaan dalam kurun waktu di bawah ini:</div>
-                                    <div class="italic-text indent-1" style="margin-top: 4px;">
+                                    <div class="italic-text1">
                                         <em>Deactivate temporarily the whole Cyber and IT related access right to Company's information systems within the below period:</em>
                                     </div>
                                     <div class="date-input-group">
-                                        <span>Tanggal mulai/<em>Start date</em>:</span>
+                                        <span style="min-width: 160px;">Tanggal mulai/<em>Start date</em>:</span>
                                         <input type="text" class="date-input" value="26 Juli 2025" readonly>
-                                        <span>Tanggal selesai/<em>End date</em>:</span>
+                                        <span style="min-width: 160px;">Tanggal selesai/<em>End date</em>:</span>
                                         <input type="text" class="date-input" value="30 Agustus 2025" readonly>
                                     </div>
                                 </div>
@@ -319,19 +334,27 @@
                         <div>Karena alasan di bawah ini / <em>Due to below reason</em>:</div>
                         <div class="checkbox-group">
                             <div class="checkbox-item">
-                                <div class="checkbox"></div>
+                                <div style="margin-right: 6px">
+                                    <input type="checkbox" id="computer" checked>
+                                </div>
                                 <div>Pemutusan hubungan kerja, Berhenti dari pekerjaan. / <em>Termination, Quit job.</em></div>
                             </div>
                             <div class="checkbox-item">
-                                <div class="checkbox checked"></div>
+                                <div style="margin-right: 6px">
+                                    <input type="checkbox" id="computer" checked>
+                                </div>
                                 <div>Cuti hamil. / <em>Maternity leave.</em></div>
                             </div>
                             <div class="checkbox-item">
-                                <div class="checkbox"></div>
+                                <div style="margin-right: 6px">
+                                    <input type="checkbox" id="computer" checked>
+                                </div>
                                 <div>Cuti pribadi panjang. / <em>Long personal leave.</em></div>
                             </div>
                             <div class="checkbox-item">
-                                <div class="checkbox"></div>
+                                <div style="margin-right: 6px">
+                                    <input type="checkbox" id="computer" checked>
+                                </div>
                                 <div>Perubahan tuntutan pekerjaan / <em>Change of work demands.</em></div>
                             </div>
                         </div>
@@ -345,15 +368,15 @@
                         <div>Kepada/ <em>toward</em>:</div>
                         <div class="employee-info">
                             <div class="employee-row">
-                                <span class="employee-label">Nama Lengkap/ <em>Full name</em>:</span>
+                                <span style="min-width: 170px;" class="employee-label">Nama Lengkap/ <em>Full name</em>:</span>
                                 <input type="text" class="employee-input" value="Siti Nurhaliza Dewi" readonly>
-                                <span style="margin-left: 20px;">ID Pekerja/<em>Employee No</em>:</span>
+                                <span style="margin-left: 20px; min-width: 150px;">ID Pekerja/<em>Employee No</em>:</span>
                                 <input type="text" class="employee-input" value="EMP2024001" readonly style="min-width: 120px;">
                             </div>
                             <div class="employee-row">
                                 <span class="employee-label">Posisi/ <em>Position</em>:</span>
                                 <input type="text" class="employee-input" value="Senior Marketing Specialist" readonly>
-                                <span style="margin-left: 20px;">Dept. (<em>Dept</em>.):</span>
+                                <span style="margin-left: 85px;">Dept. (<em>Dept</em>.):</span>
                                 <input type="text" class="employee-input" value="Marketing & Sales" readonly style="min-width: 120px;">
                             </div>
                         </div>
@@ -367,20 +390,14 @@
                             <th>
                                 <div class="bold-text">Diminta oleh</div>
                                 <div class="italic-text"><em>Requested by</em></div>
-                                <div style="margin-top: 8px;">Kepala Dept (jika ada)</div>
-                                <div class="italic-text"><em>Head of Department (if any)</em></div>
                             </th>
                             <th>
                                 <div class="bold-text">Diminta Oleh</div>
                                 <div class="italic-text"><em>Requested by</em></div>
-                                <div style="margin-top: 8px;">Dept. HR</div>
-                                <div class="italic-text"><em>HR Department</em></div>
                             </th>
                             <th>
                                 <div class="bold-text">Dilaksanakan oleh</div>
                                 <div class="italic-text"><em>Implemented by</em></div>
-                                <div style="margin-top: 8px;">Dept. IT</div>
-                                <div class="italic-text"><em>IT Department.</em></div>
                             </th>
                         </tr>
                     </thead>
@@ -417,7 +434,7 @@
                                 Cakupan tindak lanjut/ <em>Follow up scopes</em>:
                             </th>
                             <th>
-                                Tanda tangan / <em>Signature</em>
+                                <center>Tanda tangan / <em>Signature</em></center>
                             </th>
                         </tr>
                     </thead>
@@ -425,11 +442,15 @@
                         <tr>
                             <td style="text-align: left;">
                                 <div class="followup-checkbox-item">
-                                    <div class="checkbox checked"></div>
+                                    <div style="margin-right: 6px">
+                                        <input type="checkbox" id="computer" checked>
+                                    </div>
                                     <div>Tidak perlu mengembalikan permintaan di bagian I.1</div>
                                 </div>
                                 <div class="followup-checkbox-item">
-                                    <div class="checkbox"></div>
+                                    <div style="margin-right: 6px">
+                                        <input type="checkbox" id="computer" checked>
+                                    </div>
                                     <div>
                                         <div>Dipulihkan dalam batas waktu yang diperlukan di bagian I.1 pada tanggal:</div>
                                         <input type="text" class="date-input" value="_____________" readonly style="margin-top: 8px;">
@@ -437,8 +458,6 @@
                                 </div>
                             </td>
                             <td>
-                                <div>Dept. IT</div>
-                                <div class="italic-text"><em>IT Department.</em></div>
                                 <div style="margin-top: 40px; font-weight: bold;">Ahmad Rifai, S.Kom</div>
                                 <div style="font-size: 10pt; margin-top: 5px;">IT Manager</div>
                             </td>

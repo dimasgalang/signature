@@ -90,6 +90,20 @@ class ApprovalController extends Controller
         return view('approval.indexItAccess', compact('approvals'));
     }
 
+    public function indexDeactivate(Request $request)
+    {
+        $user_id = Auth::user()->id;
+
+        if ($request->void) {
+            $approvals = DB::select("with data1 as ( select cyber_user_accounts.*, employee.name as name, employee.dept as employee_dept, (select users.name from cyber_user_accounts t2 left join users on t2.approval_id = users.id where t2.approval_level = cyber_user_accounts.approval_progress and t2.document_name = cyber_user_accounts.document_name and t2.token = cyber_user_accounts.token ) as need_approve, case when preparer_id = lag(preparer_id) over (order by cyber_user_accounts.id) and document_name = lag(document_name) over (order by cyber_user_accounts.id) and token = lag(token) over (order by cyber_user_accounts.id) then 0 else 1 end as the_same from cyber_user_accounts left join users as employee on employee.id = cyber_user_accounts.preparer_id where void = '" . $request->void . "' ), data2 as ( select *, sum(the_same) over (order by id) group_num FROM data1 ) select * from data2 where approval_id = '" . $user_id . "' order by id desc");
+        } else {
+            $approvals = DB::select("with data1 as ( select cyber_user_accounts.*, employee.name as name, employee.dept as employee_dept, (select users.name from cyber_user_accounts t2 left join users on t2.approval_id = users.id where t2.approval_level = cyber_user_accounts.approval_progress and t2.document_name = cyber_user_accounts.document_name and t2.token = cyber_user_accounts.token ) as need_approve, case when preparer_id = lag(preparer_id) over (order by cyber_user_accounts.id) and document_name = lag(document_name) over (order by cyber_user_accounts.id) and token = lag(token) over (order by cyber_user_accounts.id) then 0 else 1 end as the_same from cyber_user_accounts left join users as employee on employee.id = cyber_user_accounts.preparer_id where void = 'false' ), data2 as ( select *, sum(the_same) over (order by id) group_num FROM data1 ) select * from data2 where approval_id = '" . $user_id . "' order by id desc");
+        }
+
+        // dd($approvals);
+        return view('approval.indexDeactivate', compact('approvals'));
+    }
+
     public function create()
     {
         $users = User::all();
