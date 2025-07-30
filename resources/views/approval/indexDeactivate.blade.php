@@ -245,7 +245,7 @@
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-void"></p>
-                        <input class="form-control" type="hidden" id="modal_id_request_access_void" name="id_request_access" readonly>
+                        <input class="form-control" type="hidden" id="modal_deactivation_request_id_void" name="deactivation_request_id" readonly>
                         <input class="form-control" type="hidden" id="modal_name_void" name="name" readonly>
                         <input class="form-control" type="hidden" id="modal_document_name_void" name="document_name" readonly>
                         <input class="form-control" type="hidden" id="modal_token_void" name="token">
@@ -272,7 +272,7 @@
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-restore"></p>
-                        <input class="form-control" type="hidden" id="modal_id_request_access_restore" name="id_request_access" readonly>
+                        <input class="form-control" type="hidden" id="modal_deactivation_request_id_restore" name="deactivation_request_id" readonly>
                         <input class="form-control" type="hidden" id="modal_name_restore" name="name" readonly>
                         <input class="form-control" type="hidden" id="modal_document_name_restore" name="document_name" readonly>
                         <input class="form-control" type="hidden" id="modal_token_restore" name="token">
@@ -392,7 +392,7 @@
         var jsonVoid = $(this).data('void-url'); 
         $.get(jsonVoid, function (data) {
             if (data.length > 0) {
-                $('#modal_id_request_access_void').val(data[0].id_request_access);
+                $('#modal_deactivation_request_id_void').val(data[0].deactivation_request_id);
                 $('#modal_name_void').val(data[0].name);
                 $('#modal_document_name_void').val(data[0].document_name);
                 $('#modal_token_void').val(data[0].token);
@@ -407,7 +407,7 @@
         var jsonRestore = $(this).data('restore-url'); 
         $.get(jsonRestore, function (data) {
             if (data.length > 0) {
-                $('#modal_id_request_access_restore').val(data[0].id_request_access);
+                $('#modal_deactivation_request_id_restore').val(data[0].deactivation_request_id);
                 $('#modal_name_restore').val(data[0].name);
                 $('#modal_document_name_restore').val(data[0].document_name);
                 $('#modal_token_restore').val(data[0].token);

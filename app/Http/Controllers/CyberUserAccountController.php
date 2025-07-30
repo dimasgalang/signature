@@ -207,27 +207,21 @@ class CyberUserAccountController extends Controller
     // void
     public function void(Request $request)
     {
-        $deactivateRequest = CyberUserAccount::findOrFail($request->id);
-        $deactivateRequest->fill([
-            'approval_date' => Carbon::now(),
-            'status' => 'void',
+        $approval = CyberUserAccount::select('*')->where('deactivation_request_id', '=', $request->deactivation_request_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
+            'void' => 'true',
         ]);
-        $deactivateRequest->save();
 
-        Alert::success('Void Successfully!', 'Document successfully voided!');
-        return redirect()->intended('approval/indexDeactivate');
+        Alert::success('Void Successfully!', 'Cyber User Request For "' . $request->document_name . '" successfully voided!');
+        return redirect('approval/indexDeactivate');
     }
 
     public function restore(Request $request)
     {
-        $deactivateRequest = CyberUserAccount::findOrFail($request->id);
-        $deactivateRequest->fill([
-            'approval_date' => Carbon::now(),
-            'status' => 'pending',
+        $approval = CyberUserAccount::select('*')->where('deactivation_request_id', '=', $request->deactivation_request_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
+            'void' => 'false',
         ]);
-        $deactivateRequest->save();
 
-        Alert::success('Restore Successfully!', 'Document successfully restored!');
-        return redirect()->intended('approval/indexDeactivate');
+        Alert::success('Restore Successfully!', 'Cyber User Request For "' . $request->document_name . '" successfully restored!');
+        return redirect('approval/indexDeactivate');
     }
 }
