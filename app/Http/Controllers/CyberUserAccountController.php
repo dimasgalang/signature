@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CyberUserAccount;
 use App\Models\ReasonDeactivateCyberUser;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,7 @@ class CyberUserAccountController extends Controller
         $defaultNumber = 1;
         $todayDate = date('ymd');
 
-        if (isset($cyberUserAccount) && preg_match('/^ARF(\d{6})(\d{2})$/', $cyberUserAccount->id, $matches)) {
+        if (isset($cyberUserAccount) && preg_match('/^CUA(\d{6})(\d{2})$/', $cyberUserAccount->deactivation_request_id, $matches)) {
             $lastDate = $matches[1];
             if ($lastDate === $todayDate) {
                 $nextNumber = intval($matches[2]) + 1;
@@ -46,6 +47,7 @@ class CyberUserAccountController extends Controller
         } else {
             $nextNumber = $defaultNumber;
         }
+
         $newIdRequestDeactivate = $prefix . $todayDate . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
 
         return view('user-account-deactivation.create', compact(['users', 'reasons', 'newIdRequestDeactivate']));
@@ -126,7 +128,7 @@ class CyberUserAccountController extends Controller
         ]);
 
         Alert::success('Created Successfully!', 'Deactivate Access successfully created!');
-        return redirect()->intended('approval/indexItAccess');
+        return redirect()->intended('approval/indexDeactivate');
     }
 
     public function approved(Request $request)
@@ -174,6 +176,32 @@ class CyberUserAccountController extends Controller
 
         Alert::success('Comment to Revision Successfully!', 'Approval "' . $request->document_name . '" successfully commented!');
         return redirect('approval/indexDeactivate');
+    }
+
+    public function generatePdf($id)
+    {
+        $userDeactivateRequest = CyberUserAccount::select('cyber_user_accounts.*', 'users.name', 'users.dept', 'users.npk', 'signatures.signature_img')->leftJoin('users', 'users.id', '=', 'cyber_user_accounts.approval_id')->leftJoin('signatures', 'signatures.user_id', '=', 'cyber_user_accounts.approval_id')->where('deactivation_request_id', $id)->get();
+        // dd($accessRequest, $computerRequests, $otherDevices, $applicationPrograms, $fileFolderAccesses, $emailAccount, $internetAccess, $otherRequests, $userAccounts);
+        $pdf = Pdf::loadView('template.cyber-user-account', compact('userDeactivateRequest'))->setOptions(['defaultFont' => 'sans-serif']);
+
+        return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="document.pdf"');
+        // I: Show to Browser, D: Download, F: Save to File, S: Return as String
+        // return PDF::Output('Signature.pdf', 'I');
+        // PDF::Output(storage_path('app/public/document/') . $new_filename, 'F');
+
+        $directory = storage_path('app/public/deactivate_request/');
+        if (!file_exists($directory)) {
+            mkdir($directory, 0777, true);
+        }
+
+        $pdf->save($directory . $id . '.pdf');
+
+        // Open file in new tab
+        // return PDF::Output($id . 'pdf', 'I');
+
+        // Storage::put('public/it_access_pdfs/' . $id . '.pdf', $pdf->output());
     }
 
     // void

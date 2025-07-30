@@ -80,9 +80,9 @@
                                         @endif
                                         <td class="text-center">
                                             <div class="flex-row">
-                                                {{-- <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-download-document="{{ route('it-access-request.view', $approval->deactivation_request_id) }}">
+                                                <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-view-document="{{ route('cyber-user.view', $approval->deactivation_request_id) }}">
                                                     <i class="fas fa-eye"></i>
-                                                </a> --}}
+                                                </a>
     
                                                 @if ($approval->preparer_id == $approval->approval_id)
                                                     @if (request()->get('void') == 'false' || request()->get('void') == '')
@@ -344,26 +344,26 @@
             });
         });
     });
-    $(document).ready(function () {
-        $('body').on('click', '#show-detail-attachment', function() {
-            var jsonAttachmentDetail = $(this).data('url-attachment');
-            $.get(jsonAttachmentDetail, function (data) {
-                $('#attachmentModal').modal('show');
-                var tableAttachmentDetail = $('#table-attachment-detail').DataTable({
-                        destroy: true,
-                        processing: true,
-                        responsive: true,
-                        ajax: jsonAttachmentDetail, 
-                        columns: [
-                            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                            { data: 'document_name', name: 'document_name', orderable: false },
-                            { data: 'created_at', name: 'created_at', orderable: false },
-                            { data: 'viewbadge', name: 'viewbadge', orderable: false },
-                        ],
-                    });
-            })
-        });
-    });
+    // $(document).ready(function () {
+    //     $('body').on('click', '#show-detail-attachment', function() {
+    //         var jsonAttachmentDetail = $(this).data('url-attachment');
+    //         $.get(jsonAttachmentDetail, function (data) {
+    //             $('#attachmentModal').modal('show');
+    //             var tableAttachmentDetail = $('#table-attachment-detail').DataTable({
+    //                     destroy: true,
+    //                     processing: true,
+    //                     responsive: true,
+    //                     ajax: jsonAttachmentDetail, 
+    //                     columns: [
+    //                         { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+    //                         { data: 'document_name', name: 'document_name', orderable: false },
+    //                         { data: 'created_at', name: 'created_at', orderable: false },
+    //                         { data: 'viewbadge', name: 'viewbadge', orderable: false },
+    //                     ],
+    //                 });
+    //         })
+    //     });
+    // });
     $(function () {
         $('body').on('click', '#show-view', function() {
             console.log($(this).data('show-stamped'));
@@ -372,13 +372,13 @@
                 showDenyButton: true,
                 showCancelButton: true,
                 confirmButtonText: "View Document",
-                denyButtonText: `Download Document`
+                denyButtonText: `View New Tab Document`
                 }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     window.open($(this).data('view-document'));
                 } else if (result.isDenied) {
-                    window.open($(this).data('download-document'));
+                    window.open($(this).data('view-document'));
                     // if($(this).data('show-stamped').substr($(this).data('show-stamped').length - 4) == ".pdf") {
                     // } else {
                     //     Swal.fire("This document not stamped", "", "danger");

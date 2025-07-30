@@ -173,6 +173,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/cyber-user/fetchdeactivaterequest/{id}', [CyberUserAccountController::class, 'fetchdeactivaterequest'])->name('cyber-user.fetchdeactivaterequest');
     Route::get('/cyber-user/approve/{deactivation_request_id}', [CyberUserAccountController::class, 'approve'])->name('cyber-user.approve');
     Route::post('/cyber-user/approved', [CyberUserAccountController::class, 'approved'])->name('cyber-user.approved');
+    Route::get('/cyber-user/view/{id}', [CyberUserAccountController::class, 'generatePdf'])->name('cyber-user.view');
     // Route::post('/cyber-user/update', [CyberUserAccountController::class, 'update'])->name('cyber-user.update');
     Route::post('/cyber-user/void', [CyberUserAccountController::class, 'void'])->name('cyber-user.void');
     Route::post('/cyber-user/restore', [CyberUserAccountController::class, 'restore'])->name('cyber-user.restore');
@@ -188,7 +189,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/template/handover', [TemplateController::class, 'handover'])->name('template.handover');
     Route::get('/template/commitment', [TemplateController::class, 'commitment'])->name('template.commitment');
     Route::get('/template/it-access', [TemplateController::class, 'it_access'])->name('template.itaccess');
-    Route::get('/template/cyber_user_account', [TemplateController::class, 'cyber_user_account'])->name('template.cyber_user_account');
+    Route::get('/template/cyber-user-account', [TemplateController::class, 'cyber_user_account'])->name('template.cyber_user_account');
 
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');

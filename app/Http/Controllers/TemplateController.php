@@ -27,6 +27,6 @@ class TemplateController extends Controller
 
     public function cyber_user_account()
     {
-        return view('template.cyber_user_account');
+        return view('template.cyber-user-account');
     }
 }
