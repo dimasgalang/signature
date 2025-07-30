@@ -174,7 +174,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/cyber-user/approve/{deactivation_request_id}', [CyberUserAccountController::class, 'approve'])->name('cyber-user.approve');
     Route::post('/cyber-user/approved', [CyberUserAccountController::class, 'approved'])->name('cyber-user.approved');
     Route::get('/cyber-user/view/{id}', [CyberUserAccountController::class, 'generatePdf'])->name('cyber-user.view');
-    // Route::post('/cyber-user/update', [CyberUserAccountController::class, 'update'])->name('cyber-user.update');
+    Route::post('/cyber-user/update', [CyberUserAccountController::class, 'update'])->name('cyber-user.update');
     Route::post('/cyber-user/void', [CyberUserAccountController::class, 'void'])->name('cyber-user.void');
     Route::post('/cyber-user/restore', [CyberUserAccountController::class, 'restore'])->name('cyber-user.restore');
 

@@ -53,9 +53,41 @@ class CyberUserAccountController extends Controller
         return view('user-account-deactivation.create', compact(['users', 'reasons', 'newIdRequestDeactivate']));
     }
 
-    public function edit()
+    public function edit($deactivation_request_id)
     {
-        return view('user-account-deactivation.edit');
+        $deactivateRequest = DB::table('cyber_user_accounts')
+            ->join('users as employee', 'employee.id', '=', 'cyber_user_accounts.preparer_id')
+            ->join('users as approver', 'approver.id', '=', 'cyber_user_accounts.approval_id')
+            ->select([
+                'cyber_user_accounts.*',
+                DB::raw('employee.name as preparer_name'),
+                DB::raw('employee.dept as preparer_dept'),
+                DB::raw('approver.name as need_approve')
+            ])
+            ->where('deactivation_request_id', $deactivation_request_id)
+            ->first();
+        $userDeactive = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK AS NPK', 'NAMA_KARYAWAN', 'BAG',)->where('NPK', '=', $deactivateRequest->employee_id)->get();
+        // dd($userDeactive);
+        $reasons = ReasonDeactivateCyberUser::all();
+        return view('user-account-deactivation.revision', compact('deactivateRequest', 'userDeactive', 'reasons'));
+    }
+
+    public function update(Request $request)
+    {
+        // dd($request->all());
+        $deactivateRequest = CyberUserAccount::where('deactivation_request_id', $request->deactivation_request_id)->get();
+        // dd($deactivateRequest);
+        foreach ($deactivateRequest as $deactivate) {
+            $deactivate->update([
+                'reason_id' => $request->reason_id,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'deactivate' => $request->deactivate
+            ]);
+        }
+
+        Alert::success('Updated Successfully!', 'Deactivate Access successfully updated!');
+        return redirect()->intended('approval/indexDeactivate');
     }
 
     public function fetchEmployee($npk)
