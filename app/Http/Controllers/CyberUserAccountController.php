@@ -213,8 +213,10 @@ class CyberUserAccountController extends Controller
     public function generatePdf($id)
     {
         $userDeactivateRequest = CyberUserAccount::select('cyber_user_accounts.*', 'users.name', 'users.dept', 'users.npk', 'signatures.signature_img')->leftJoin('users', 'users.id', '=', 'cyber_user_accounts.approval_id')->leftJoin('signatures', 'signatures.user_id', '=', 'cyber_user_accounts.approval_id')->where('deactivation_request_id', $id)->get();
-        // dd($accessRequest, $computerRequests, $otherDevices, $applicationPrograms, $fileFolderAccesses, $emailAccount, $internetAccess, $otherRequests, $userAccounts);
-        $pdf = Pdf::loadView('template.cyber-user-account', compact('userDeactivateRequest'))->setOptions(['defaultFont' => 'sans-serif']);
+        $employee = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')->where('BIODATA.NPK', '=', $userDeactivateRequest[0]->employee_id)->get();
+
+        // dd($employee);
+        $pdf = Pdf::loadView('template.cyber-user-account', compact('userDeactivateRequest', 'employee'))->setOptions(['defaultFont' => 'sans-serif']);
 
         return response($pdf->output(), 200)
             ->header('Content-Type', 'application/pdf')

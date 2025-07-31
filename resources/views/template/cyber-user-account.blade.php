@@ -7,7 +7,7 @@
     <style>
         @page {
             size: A4;
-            margin: 20mm 15mm 20mm 15mm;
+            margin: 10mm 10mm 10mm 10mm;
         }
         
         body {
@@ -49,7 +49,7 @@
         table {
             width: 100%;
             max-width: 210mm;
-            /* margin-top: 5px; */
+            margin-top: 5px;
             justify-content: center;
             align-items: center;
 
@@ -67,18 +67,37 @@
         }
         
         .form-row {
-            /* margin-bottom: 12px; */
+            margin-bottom: 12px;
             display: flex;
             flex-direction: row;
             align-items: flex-start;
         }
         
-        .form-number {
+        /* .form-number {
             font-weight: bold;
             margin-right: 8px;
             min-width: 10px;
             flex-basis: 10px;
             display: inline-block;
+        } */
+
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+            /* margin-bottom: 20px; */
+        }
+        
+        .form-table td {
+            padding: 4px;
+            vertical-align: top;
+            border: none;
+        }
+        
+        .form-number {
+            width: 5px;
+            text-align: center;
+            font-weight: bold;
+            background-color: white;
         }
         
         .form-content {
@@ -91,11 +110,11 @@
         
         .checkbox-group {
             /* margin-left: 10px; */
-            margin-top: 8px;
+            /* margin-top: 8px; */
         }
         
         .checkbox-item {
-            margin-bottom: 8px;
+            /* margin-bottom: 8px; */
             display: flex;
             align-items: flex-start;
         }
@@ -122,16 +141,18 @@
         .date-input-group {
             display: flex;
             align-items: center;
+            vertical-align: bottom;
             margin-top: 8px;
-            /* margin-left: 20px; */
+            margin-bottom: 10px;
         }
         
         .date-input {
             border: none;
             /* border-bottom: 1px solid #000; */
-            padding: 2px 4px;
-            margin: 0 8px;
-            min-width: 100px;
+            /* padding: 2px 4px; */
+            margin: 0; 8px;
+            max-width: 120px;
+            vertical-align: bottom;
             font-family: inherit;
             font-size: inherit;
         }
@@ -145,6 +166,8 @@
             display: flex;
             /* margin-bottom: 8px; */
             align-items: flex-start;
+            vertical-align: bottom;
+
         }
         
         .employee-label {
@@ -156,8 +179,9 @@
             border: none;
             /* border-bottom: 1px solid #000; */
             padding: 2px 4px;
-            margin-left: 8px;
-            min-width: 200px;
+            margin-left: 4px;
+            vertical-align: bottom;
+            max-width: 180px;
             font-family: inherit;
             font-size: inherit;
         }
@@ -171,10 +195,11 @@
         .signature-table th,
         .signature-table td {
             border: none;
-            padding: 12px 8px;
+            /* padding: 12px 8px; */
             text-align: center;
+            margin: 0;
             vertical-align: top;
-            min-height: 80px;
+            /* min-height: 80px; */
         }
         
         .signature-table th {
@@ -184,8 +209,18 @@
         }
         
         .signature-table td {
-            height: 80px;
+            /* height: 80px; */
         }
+
+        .signature-image {
+        width: 200px;
+        margin: 0;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        }   
         
         .followup-table {
             width: 100%;
@@ -195,7 +230,7 @@
         .followup-table th,
         .followup-table td {
             border: none;
-            padding: 12px;
+            /* padding: 12px; */
             vertical-align: top;
         }
         
@@ -207,12 +242,12 @@
         
         .followup-table td {
             width: 30%;
-            text-align: center;
-            height: 100px;
+            text-align: start;
+            /* height: 100px; */
         }
         
         .followup-checkbox-item {
-            margin-bottom: 4px;
+            /* margin-bottom: 4px; */
             display: flex;
             align-items: flex-start;
         }
@@ -232,6 +267,22 @@
         
         .indent-2 {
             margin-left: 40px;
+        }
+
+        .checkbox-cell {
+            /* width: auto; */
+            max-width: 100px;
+            text-align: start;
+            white-space: nowrap;
+        }
+        
+        .content-cell {
+            width: 100%;
+            margin: 0;
+        }
+
+        input[type="checkbox"] {
+            margin: 0;
         }
         
         /* @media print {
@@ -268,7 +319,7 @@
                 <td class="header" style="text-align: center; vertical-align: middle;">
                         <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#: 01/FM-PL05</p>
                         <p style="font-size:11px; x-small; margin:0; text-align: left;">Revision: 00</p>
-                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Effective: {{\Carbon\Carbon::parse(now())->format('d-F-Y')}}</p>
+                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Effective: {{\Carbon\Carbon::parse($userDeactivateRequest[0]->date_of_request)->format('d-F-Y')}}</p>
                 </td>
             </tr>
         </table>
@@ -282,107 +333,172 @@
             </div>
             <div class="section-content">
                 <!-- Item 1 -->
-                <div class="form-row">
-                    <div class="form-number">1.</div>
-                    <div class="form-content">
-                        <div>
-                            Pada tanggal <span class="bold-text">{{\Carbon\Carbon::parse(now())->format('d F Y')}}</span>, 
-                            Departemen IT akan menindaklanjuti permintaan dari <span class="bold-text">Departemen HR/Kepala Departemen</span> 
-                            terkait dengan isi sebagai berikut:
-                        </div>
-                        <div class="italic-text">
-                            <em>IT Dept proceed to take below outlined action in accordance with the request by <span class="bold-text">HR Dept/ Head of Dept</span>.</em>
-                        </div>
-                        
-                        <div class="checkbox-group">
-                            <div class="checkbox-item">
-                                <div style="margin-right: 6px">
-                                    <input type="checkbox" id="computer" checked>
-                                </div>
-                                <div>
-                                    <div>Menghapus atau menghentikan secara permanen seluruh hak akses terkait Cyber dan IT terhadap sistem informasi Perusahaan.</div>
-                                    <div class="italic-text">
-                                        <em>Remove or terminate permanently the whole Cyber and IT related access right to Company's information systems.</em>
-                                    </div>
-                                </div>
+                <table class="form-table">
+                    <!-- Item 1 -->
+                    <tr>
+                        <td class="form-number">1.</td>
+                        <td class="form-content">
+                            <div>
+                                Pada tanggal <span class="bold-text">{{\Carbon\Carbon::parse($userDeactivateRequest[0]->date_of_request)->format('d F Y')}}</span>, 
+                                Departemen IT akan menindaklanjuti permintaan dari <span class="bold-text">Departemen HR/Kepala Departemen</span> 
+                                terkait dengan isi sebagai berikut:
                             </div>
+                            <div class="italic-text">
+                                <em>IT Dept proceed to take below outlined action in accordance with the request by <span class="bold-text">HR Dept/ Head of Dept</span>.</em>
+                            </div>
+
+                            <tr>
+                                <td class="form-number">
+                                    <input type="checkbox" id="permanent" {{$userDeactivateRequest[0]->deactivate == 'permanent' ? 'checked' : ''}}>
+                                </td>
+                                <td class="form-content">
+                                    <div>
+                                        <div>Menghapus atau menghentikan secara permanen seluruh hak akses terkait Cyber dan IT terhadap sistem informasi Perusahaan.</div>
+                                        <div class="italic-text">
+                                            <em>Remove or terminate permanently the whole Cyber and IT related access right to Company's information systems.</em>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="form-number">
+                                    <input type="checkbox" id="temporary" {{$userDeactivateRequest[0]->deactivate == 'temporarily' ? 'checked' : ''}}>
+                                </td>
+                                <td class="form-content">
+                                    <div>
+                                        <div>Menonaktifkan sementara seluruh hak akses terkait Cyber dan IT terhadap sistem informasi Perusahaan dalam kurun waktu di bawah ini:</div>
+                                        <div class="italic-text1">
+                                            <em>Deactivate temporarily the whole Cyber and IT related access right to Company's information systems within the below period:</em>
+                                        </div>
+                                        <div class="date-input-group">
+                                            <span>Tanggal mulai/<em>Start date</em>:</span>
+                                            <input type="text" class="date-input" value="{{$userDeactivateRequest[0]->start_date ? \Carbon\Carbon::parse($userDeactivateRequest[0]->start_date)->format('d F Y') : '-'}}" readonly>
+                                            <span>Tanggal selesai/<em>End date</em>:</span>
+                                            <input type="text" class="date-input" value="{{$userDeactivateRequest[0]->end_date ? \Carbon\Carbon::parse($userDeactivateRequest[0]->end_date)->format('d F Y') : '-'}}" readonly>
+                                        </div>
+                                        {{-- <tr>
+                                            <td style="white-space: nowrap;" class="label-cell">Tanggal mulai/<em>Start date</em>:</td>
+                                            <td style="white-space: nowrap;" class="input-cell"><input type="text" class="date-input" value="26 Juli 2025" readonly></td>
+                                            <td style="white-space: nowrap;" class="label-cell">Tanggal selesai/<em>End date</em>:</td>
+                                            <td style="white-space: nowrap;" class="input-cell"><input type="text" class="date-input" value="30 Agustus 2025" readonly></td>
+                                        </tr> --}}
+                                    </div>
+                                </td>
+                            </tr>
                             
-                            <div class="checkbox-item">
-                                <div style="margin-right: 6px">
-                                    <input type="checkbox" id="computer" checked>
-                                </div>
-                                <div>
-                                    <div>Menonaktifkan sementara seluruh hak akses terkait Cyber dan IT terhadap sistem informasi Perusahaan dalam kurun waktu di bawah ini:</div>
-                                    <div class="italic-text1">
-                                        <em>Deactivate temporarily the whole Cyber and IT related access right to Company's information systems within the below period:</em>
-                                    </div>
-                                    <div class="date-input-group">
-                                        <span style="min-width: 160px;">Tanggal mulai/<em>Start date</em>:</span>
-                                        <input type="text" class="date-input" value="26 Juli 2025" readonly>
-                                        <span style="min-width: 160px;">Tanggal selesai/<em>End date</em>:</span>
-                                        <input type="text" class="date-input" value="30 Agustus 2025" readonly>
+                            {{-- <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="permanent" checked>
+                                    <div>
+                                        <div>Menghapus atau menghentikan secara permanen seluruh hak akses terkait Cyber dan IT terhadap sistem informasi Perusahaan.</div>
+                                        <div class="italic-text">
+                                            <em>Remove or terminate permanently the whole Cyber and IT related access right to Company's information systems.</em>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Item 2 -->
-                <div class="form-row">
-                    <div class="form-number">2.</div>
-                    <div class="form-content">
-                        <div>Karena alasan di bawah ini / <em>Due to below reason</em>:</div>
-                        <div class="checkbox-group">
-                            <div class="checkbox-item">
-                                <div style="margin-right: 6px">
-                                    <input type="checkbox" id="computer" checked>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="temporary" checked>
+                                    <div>
+                                        <div>Menonaktifkan sementara seluruh hak akses terkait Cyber dan IT terhadap sistem informasi Perusahaan dalam kurun waktu di bawah ini:</div>
+                                        <div class="italic-text1">
+                                            <em>Deactivate temporarily the whole Cyber and IT related access right to Company's information systems within the below period:</em>
+                                        </div>
+                                        <div class="date-input-group">
+                                            <span>Tanggal mulai/<em>Start date</em>:</span>
+                                            <input type="text" class="date-input" value="26 Juli 2025" readonly>
+                                            <span>Tanggal selesai/<em>End date</em>:</span>
+                                            <input type="text" class="date-input" value="30 Agustus 2025" readonly>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>Pemutusan hubungan kerja, Berhenti dari pekerjaan. / <em>Termination, Quit job.</em></div>
-                            </div>
-                            <div class="checkbox-item">
-                                <div style="margin-right: 6px">
-                                    <input type="checkbox" id="computer" checked>
+                            </div> --}}
+                        </td>
+                    </tr>
+                    
+                    <!-- Item 2 -->
+                    <tr>
+                        <td class="form-number">2.</td>
+                        <td class="form-content">
+                            <div>Karena alasan di bawah ini / <em>Due to below reason</em>:</div>
+
+                            <tr>
+                                <td class="form-number">
+                                    <input type="checkbox" id="termination" {{$userDeactivateRequest[0]->reason_id == '1' ? 'checked' : ''}}>
+                                </td>
+                                <td class="form-content">
+                                    <div>Pemutusan hubungan kerja, Berhenti dari pekerjaan. / <em>Termination, Quit job.</em></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-number">
+                                    <input type="checkbox" id="maternity" {{$userDeactivateRequest[0]->reason_id == '2' ? 'checked' : ''}}>
+                                </td>
+                                <td class="form-content">
+                                    <div>Cuti hamil. / <em>Maternity leave.</em></div>                                
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-number">
+                                    <input type="checkbox" id="personal-leave" {{$userDeactivateRequest[0]->reason_id == '3' ? 'checked' : ''}}>
+                                </td>
+                                <td class="form-content">
+                                    <div>Cuti pribadi panjang. / <em>Long personal leave.</em></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-number">
+                                    <input type="checkbox" id="work-change" {{$userDeactivateRequest[0]->reason_id == '4' ? 'checked' : ''}}>
+                                </td>
+                                <td class="form-content">
+                                    <div>Perubahan tuntutan pekerjaan / <em>Change of work demands.</em></div>
+                                </td>
+                            </tr>
+
+                            {{-- <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="termination" checked>
+                                    <div>Pemutusan hubungan kerja, Berhenti dari pekerjaan. / <em>Termination, Quit job.</em></div>
                                 </div>
-                                <div>Cuti hamil. / <em>Maternity leave.</em></div>
-                            </div>
-                            <div class="checkbox-item">
-                                <div style="margin-right: 6px">
-                                    <input type="checkbox" id="computer" checked>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="maternity" checked>
+                                    <div>Cuti hamil. / <em>Maternity leave.</em></div>
                                 </div>
-                                <div>Cuti pribadi panjang. / <em>Long personal leave.</em></div>
-                            </div>
-                            <div class="checkbox-item">
-                                <div style="margin-right: 6px">
-                                    <input type="checkbox" id="computer" checked>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="personal-leave" checked>
+                                    <div>Cuti pribadi panjang. / <em>Long personal leave.</em></div>
                                 </div>
-                                <div>Perubahan tuntutan pekerjaan / <em>Change of work demands.</em></div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="work-change" checked>
+                                    <div>Perubahan tuntutan pekerjaan / <em>Change of work demands.</em></div>
+                                </div>
+                            </div> --}}
+                        </td>
+                    </tr>
+                    
+                    <!-- Item 3 -->
+                    <tr>
+                        <td class="form-number">3.</td>
+                        <td class="form-content">
+                            <div>Kepada/ <em>toward</em>:</div>
+                            <div class="employee-info">
+                                <div class="employee-row">
+                                    <span class="employee-label">Nama Lengkap/ <em>Full name</em>:</span>
+                                    <input type="text" class="employee-input" style=" min-width: 100px;" value="{{$employee[0]->NAMA_KARYAWAN}}" readonly>
+                                    <span>NPK/<em>Employee No</em>:</span>
+                                    <input type="text" class="employee-input" value="{{$employee[0]->NPK}}" readonly style=" width: auto; min-width: 80px; max-width: 300px;">
+                                </div>
+                                <div class="employee-row">
+                                    <span class="employee-label">Posisi/ <em>Position</em>:</span>
+                                    <input type="text" class="employee-input" style="min-width: 250px;" value="{{$employee[0]->BAG}}" readonly>
+                                    <span>Dept. (<em>Dept</em>.):</span>
+                                    <input type="text" class="employee-input" value="{{$employee[0]->DEPARTEMENT}}" readonly style="min-width: 80px;">
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Item 3 -->
-                <div class="form-row">
-                    <div class="form-number">3.</div>
-                    <div class="form-content">
-                        <div>Kepada/ <em>toward</em>:</div>
-                        <div class="employee-info">
-                            <div class="employee-row">
-                                <span style="min-width: 170px;" class="employee-label">Nama Lengkap/ <em>Full name</em>:</span>
-                                <input type="text" class="employee-input" value="Siti Nurhaliza Dewi" readonly>
-                                <span style="margin-left: 20px; min-width: 150px;">ID Pekerja/<em>Employee No</em>:</span>
-                                <input type="text" class="employee-input" value="EMP2024001" readonly style="min-width: 120px;">
-                            </div>
-                            <div class="employee-row">
-                                <span class="employee-label">Posisi/ <em>Position</em>:</span>
-                                <input type="text" class="employee-input" value="Senior Marketing Specialist" readonly>
-                                <span style="margin-left: 85px;">Dept. (<em>Dept</em>.):</span>
-                                <input type="text" class="employee-input" value="Marketing & Sales" readonly style="min-width: 120px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        </td>
+                    </tr>
+                </table>
                 
                 <!-- Signature Table -->
                 <table class="signature-table">
@@ -405,16 +521,51 @@
                     <tbody>
                         <tr>
                             <td>
-                                <div style="margin-top: 40px; font-weight: bold;">Budi Santoso, M.M</div>
-                                <div style="font-size: 10pt; margin-top: 5px;">Kepala Dept. Marketing</div>
+                                @if($userDeactivateRequest[0]->approval_progress == '3' && $userDeactivateRequest[0]->status == 'approved')
+                                @php
+                                    $imagePathSign3 = public_path('storage/signature/'. $userDeactivateRequest[0]->signature_img);
+                                    $imageSign3 = "data:image/png;base64," . base64_encode(file_get_contents($imagePathSign3));
+                                @endphp
+                                    <div class="signature-image">
+                                        <img src="{{$imageSign3}}" alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                    </div>
+                                @endif
                             </td>
                             <td>
-                                <div style="margin-top: 40px; font-weight: bold;">Indira Sari, S.Psi</div>
-                                <div style="font-size: 10pt; margin-top: 5px;">HR Manager</div>
+                                @if($userDeactivateRequest[1]->approval_progress == '3' && $userDeactivateRequest[1]->status == 'approved')
+                                @php
+                                    $imagePathSign2 = public_path('storage/signature/'. $userDeactivateRequest[1]->signature_img);
+                                    $imageSign2 = "data:image/png;base64," . base64_encode(file_get_contents($imagePathSign2));
+                                @endphp
+                                    <div class="signature-image">
+                                        <img src="{{$imageSign2}}" alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                    </div>
+                                @endif
                             </td>
                             <td>
-                                <div style="margin-top: 40px; font-weight: bold;">Ahmad Rifai, S.Kom</div>
-                                <div style="font-size: 10pt; margin-top: 5px;">IT Manager</div>
+                                @if($userDeactivateRequest[2]->approval_progress == '3' && $userDeactivateRequest[2]->status == 'approved')
+                                @php
+                                    $imagePathSign1 = public_path('storage/signature/'. $userDeactivateRequest[2]->signature_img);
+                                    $imageSign1 = "data:image/png;base64," . base64_encode(file_get_contents($imagePathSign1));
+                                @endphp
+                                    <div class="signature-image">
+                                        <img src="{{$imageSign1}}" alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                    </div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight: bold;">{{$userDeactivateRequest[0]->name}}</div>
+                                <div style="font-size: 10pt; margin-top: 5px;">{{$userDeactivateRequest[0]->dept}}</div>
+                            </td>
+                            <td>
+                                <div style="font-weight: bold;">{{$userDeactivateRequest[1]->name}}</div>
+                                <div style="font-size: 10pt; margin-top: 5px;">{{$userDeactivateRequest[1]->dept}}</div>
+                            </td>
+                            <td>
+                                <div style="font-weight: bold;">{{$userDeactivateRequest[2]->name}}</div>
+                                <div style="font-size: 10pt; margin-top: 5px;">{{$userDeactivateRequest[2]->dept}}</div>
                             </td>
                         </tr>
                     </tbody>
@@ -441,26 +592,35 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="text-align: left;">
-                                <div class="followup-checkbox-item">
-                                    <div style="margin-right: 6px">
-                                        <input type="checkbox" id="computer" checked>
-                                    </div>
-                                    <div>Tidak perlu mengembalikan permintaan di bagian I.1</div>
-                                </div>
-                                <div class="followup-checkbox-item">
-                                    <div style="margin-right: 6px">
-                                        <input type="checkbox" id="computer" checked>
-                                    </div>
-                                    <div>
-                                        <div>Dipulihkan dalam batas waktu yang diperlukan di bagian I.1 pada tanggal:</div>
-                                        <input type="text" class="date-input" value="_____________" readonly style="margin-top: 8px;">
-                                    </div>
-                                </div>
-                            </td>
                             <td>
-                                <div style="margin-top: 40px; font-weight: bold;">Ahmad Rifai, S.Kom</div>
-                                <div style="font-size: 10pt; margin-top: 5px;">IT Manager</div>
+                                <table class="form-followup-table">
+                                    <tr>
+                                        <td class="content-cell">
+                                            <input type="checkbox" id="computer1" {{$userDeactivateRequest[0]->deactivate == 'permanent' ? 'checked' : ''}} style="margin-right: 5px; vertical-align: bottom;">Tidak perlu mengembalikan permintaan di bagian I.1
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="content-cell">
+                                            <input type="checkbox" id="computer2" {{$userDeactivateRequest[0]->deactivate == 'temporarily' ? 'checked' : ''}} style="margin-right: 5px; vertical-align: bottom;">Dipulihkan dalam batas waktu yang diperlukan di bagian I.1 pada tanggal:
+                                            <input type="text" class="date-input" value="{{$userDeactivateRequest[0]->end_date ? \Carbon\Carbon::parse($userDeactivateRequest[0]->end_date)->addDay()->format('d F Y') : '-'}}" readonly>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="text-align: center;">
+                                @if($userDeactivateRequest[2]->approval_progress == '3' && $userDeactivateRequest[2]->status == 'approved')
+                                @php
+                                    $imagePathSign1 = public_path('storage/signature/'. $userDeactivateRequest[2]->signature_img);
+                                    $imageSign1 = "data:image/png;base64," . base64_encode(file_get_contents($imagePathSign1));
+                                @endphp
+                                <center>
+                                    <div style="width: 200px; margin: 0; padding: 0; height: 100px; margin-left: 70px;">
+                                        <img src="{{$imageSign1}}" alt="Requesting Person Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                    </div>
+                                </center>
+                                @endif
+                                <div style="font-weight: bold;">{{$userDeactivateRequest[2]->name}}</div>
+                                <div style="font-size: 10pt; margin-top: 5px;">{{$userDeactivateRequest[2]->dept}}</div>
                             </td>
                         </tr>
                     </tbody>
