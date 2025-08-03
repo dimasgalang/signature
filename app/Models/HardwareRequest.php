@@ -14,5 +14,7 @@ class HardwareRequest extends Model
         'hardware_device',
         'qty',
         'status_approved',
+        'purpose',
+        'restriction',
     ];
 }
