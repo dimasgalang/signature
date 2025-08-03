@@ -220,7 +220,7 @@ class CyberUserAccountController extends Controller
 
         return response($pdf->output(), 200)
             ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="document.pdf"');
+            ->header('Content-Disposition', 'inline; filename=' . $id . '.pdf');
         // I: Show to Browser, D: Download, F: Save to File, S: Return as String
         // return PDF::Output('Signature.pdf', 'I');
         // PDF::Output(storage_path('app/public/document/') . $new_filename, 'F');
@@ -237,8 +237,6 @@ class CyberUserAccountController extends Controller
 
         // Storage::put('public/it_access_pdfs/' . $id . '.pdf', $pdf->output());
     }
-
-    // void
     public function void(Request $request)
     {
         $approval = CyberUserAccount::select('*')->where('deactivation_request_id', '=', $request->deactivation_request_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
