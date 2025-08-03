@@ -212,11 +212,12 @@
     }
     
     .qty-cell {
-        text-align: start;
+        text-align: center;
+        vertical-align: end;
     }
     
     .qty-box {
-        display: inline-block;
+        /* display: inline-block; */
         border-bottom: 1px solid #000;
         min-width: 90px;
         text-align: center;
@@ -226,25 +227,30 @@
     
     .approval-cell {
         text-align: center;
+        vertical-align: middle;
     }
     
     .approval-options {
         display: flex;
-        justify-content: flex-end;
-        align-items: flex-end;
-        align-content: flex-end;
+        justify-content: flex-start;
+        align-items: flex-start;
+        align-content: flex-start;
         gap: 12px;
     }
     
     .approval-options input[type="checkbox"] {
         width: 12px;
         height: 12px;
+        /* padding: 2px; */
+        vertical-align: top;
     }
     
     .approval-options label {
         font-size: 11px;
         color: #000;
-        cursor: default;
+        vertical-align: bottom;
+        margin-right: 3px;
+        margin-top: 5px;
     }
     
     .device-detail {
@@ -283,8 +289,8 @@
     
     .device-detail-item {
         padding-left: 10px;
-        position: relative;
-        margin-bottom: 8px;
+        /* position: relative;
+        margin-bottom: 8px; */
     }
     
     .device-detail-item:last-child {
@@ -303,12 +309,12 @@
         height: 20px;
         display: flex;
         align-items: flex-start;
-        padding-bottom: 2px;
+        /* padding-bottom: 2px; */
     }
     
     .other-devices-qty {
         vertical-align: top;
-        padding-top: 8px;
+        /* padding-top: 8px; */
     }
 
     .access-right {
@@ -317,41 +323,53 @@
     }
     
     .qty-details {
-        display: flex;
-        flex-direction: column;
+        /* display: flex; */
+        margin-top: 10px;
+        vertical-align: middle;
+        /* flex-direction: column; */
     }
     
     .qty-item {
-        height: 32px;
+        height: 30;
         display: flex;
         align-items: center;
         justify-content: start;
     }
-    
-    .qty-item:first-child {
-        height: 30px;
+    .access-right-item {
+        /* height: 30; */
+        /* margin-top: 10px; */
+        /* display: flex; */
+        align-items: center;
+        justify-content: start;
     }
     
-    .other-devices-approval {
+    /* .qty-item:first-child {
+        height: 40px;
+    } */
+    
+    /* .other-devices-approval {
         vertical-align: top;
         padding-top: 8px;
-    }
+    } */
     
     .approval-details {
-        display: flex;
-        flex-direction: column;
+        /* display: flex; */
+        /* margin-top: 10px; */
+        vertical-align: end;
+        /* flex-direction: column; */
     }
     
     .approval-item {
-        height: 32px;
-        display: flex;
+        height: 30px;
+        /* display: flex; */
+        vertical-align: middle;
         align-items: center;
         justify-content: center;
     }
     
-    .approval-item:first-child {
+    /* .approval-item:first-child {
         height: 30px;
-    }
+    } */
 
     .signature-container {
         width: 100%;
@@ -514,13 +532,23 @@
                         <input type="checkbox" id="computer" checked disabled>
                         <label for="computer">Komputer/ Computer</label>
                     </div>
-                </td>
-                <td class="qty-cell">
-                    <div class="qty-box">
-                        {{$computerRequests[0]->qty}}
+                    <div class="checkbox-item" style="margin-left: 25px">
+                        <label for="computer">Purpose : {{$computerRequests[0]->purpose}}</label>
+                    </div>
+                    <div class="checkbox-item" style="margin-left: 25px">
+                        <label for="computer">Restriction : {{$computerRequests[0]->restriction}}</label>
                     </div>
                 </td>
+                <td class="qty-cell">
+                    <center>
+                        <br>
+                        <div class="qty-box">
+                            {{$computerRequests[0]->qty}}
+                        </div>
+                    </center>
+                </td>
                 <td class="approval-cell">
+                    <br>
                     <div class="approval-options">
                         <input type="checkbox" id="computer-yes" {{$computerRequests[0]->status_approved == 'true' ? 'checked' : ''}} disabled> 
                         <label for="computer-yes">Yes</label>
@@ -529,7 +557,6 @@
                     </div>
                 </td>
             </tr>
-
             @endif
 
             @if(count($otherDevices) > 0)
@@ -547,24 +574,36 @@
                                 {{$device->hardware_device}}
                             </span>
                         </div>
+                        <div class="device-detail-item">
+                            <span class="detail-underline" style="color: #000">
+                                Purpose : {{$device->purpose}}
+                            </span>
+                        </div>
+                        <div class="device-detail-item">
+                            <span class="detail-underline" style="color: #000">
+                                Restriction : {{$device->restriction}}
+                            </span>
+                        </div>
                     </div>
                     @endforeach
                 </td>
                 <td class="qty-cell other-devices-qty">
                     @foreach($otherDevices as $device)
-                    <div class="qty-details">
-                        <div class="qty-item"></div>
-                        <div class="qty-box">
-                            {{$device->qty}}
-                        </div>
+                    <br><br><br>
+                    <div class="">
+                        <center>
+                            <div class="qty-box">
+                                {{$device->qty}}
+                            </div>
+                        </center>
                     </div>
                     @endforeach
                 </td>
                 <td class="approval-cell other-devices-approval">
                     @foreach($otherDevices as $device)
+                    <br><br><br>
                     <div class="approval-details">
-                        <div class="approval-item"></div>
-                        <div class="approval-item">
+                        <div style="vertical-align: middle; align-items: center; justify-content: center;">
                             <div class="approval-options">
                                 <input type="checkbox" id="monitor-yes" {{$device->status_approved == 'true' ? 'checked' : ''}} disabled>
                                 <label for="monitor-yes">Yes</label>
@@ -576,7 +615,6 @@
                     @endforeach
                 </td>
             </tr>
-
             @endif
 
         </tbody>
@@ -607,8 +645,9 @@
                 </td>
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
+                    <br>
                     @foreach($userAccounts as $account)
-                    <div class="approval-item" style="margin-top: 2px;">
+                    <div class="approval-item">
                         <div class="approval-options">
                             <input type="checkbox" id="monitor-yes" {{$account->status_approved == 'true' ? 'checked' : ''}} disabled>
                             <label for="monitor-yes">Yes</label>
@@ -656,17 +695,17 @@
                 </td>
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
+                    <br><br>
                     @foreach($emailAccount as $email)
-                    <br>
-                    <br>
-                    <div class="approval-item">
-                        <div class="approval-options">
+                    <div class="approval-item" style="height: 10px;">
+                        <div class="approval-options" style="gap: 0;">
                             <input type="checkbox" id="monitor-yes" {{$email->status_approved == 'true' ? 'checked' : ''}} disabled>
                             <label for="monitor-yes">Yes</label>
                             <input type="checkbox" id="monitor-no" {{$email->status_approved == 'false' ? 'checked' : ''}} disabled> 
                             <label for="monitor-no">No</label>
                         </div>
                     </div>
+                    <br><br><br><br>
                     @endforeach
                 </td>
             </tr>
@@ -747,10 +786,10 @@
                     @endforeach
                 </td>
                 <td class="qty-cell other-devices-qty">
-                    @foreach($fileFolderAccesses as $fileFolder)
                     <br>
+                    @foreach($fileFolderAccesses as $fileFolder)
                     <div class="qty-details">
-                        <div class="qty-item">
+                        <div class="access-right-item">
                             <div class="qty-box">Hak Akses/Access Right : 
                                 <input type="checkbox" id="monitor-yes" {{$fileFolder->read == 'true' ? 'checked' : ''}} disabled>
                                 <label for="monitor-yes">R</label>
@@ -763,8 +802,9 @@
                 </td>
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
+                    <br>
                     @foreach($fileFolderAccesses as $fileFolder)
-                    <div class="approval-item" style="margin-top: 5px;">
+                    <div class="approval-item">
                         <div class="approval-options">
                             <input type="checkbox" id="monitor-yes" {{$fileFolder->status_approved == 'true' ? 'checked' : ''}} disabled>
                             <label for="monitor-yes">Yes</label>
@@ -804,19 +844,20 @@
                     @endforeach
                 </td>
                 <td class="qty-cell other-devices-qty">
-                    @foreach($applicationPrograms as $application)
                     <br>
+                    @foreach($applicationPrograms as $application)
                     <div class="qty-details">
-                        <div class="qty-item align-items-start">
-                            <div class="">Nama Masuk/Login Name : {{$application->login_name}}</div>
+                        <div class="access-right-item align-items-start" style="margin-top: 8px;">
+                            <div class="" style="border-bottom: 1px solid #000; display: flex; align-items: flex-start;">Nama Masuk/Login Name : {{$application->login_name}}</div>
                         </div>
                     </div>
                     @endforeach
                 </td>
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
+                    <br>
                     @foreach($applicationPrograms as $application)
-                    <div class="approval-item" style="margin-top: 2px;">
+                    <div class="approval-item">
                         <div class="approval-options">
                             <input type="checkbox" id="monitor-yes" {{$application->status_approved == 'true' ? 'checked' : '' }} disabled>
                             <label for="monitor-yes">Yes</label>
@@ -851,20 +892,36 @@
                                 </span>
                             </div>
                         </div>
+                        <div class="device-detail-item">
+                            <div class="detail-underline">
+                                <span class="detail-value">
+                                    Purpose : {{$other->purpose}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="device-detail-item">
+                            <div class="detail-underline">
+                                <span class="detail-value">
+                                    Restriction : {{$other->restriction}}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     @endforeach
                 </td>
                 <td class="approval-column">
                     <div><center>Persetujuan/ Approval</center></div>
+                    <br><br>
                     @foreach($otherRequests as $other)
-                    <div class="approval-item">
-                        <div class="approval-options">
+                    <div class="approval-item" style="height: 10px;">
+                        <div class="approval-options" style="gap: 0;">
                             <input type="checkbox" id="request-yes" {{$other->status_approved == 'true' ? 'checked' : ''}} disabled>
-                            <label for="request-yes">Yes</label>
+                            <label for="request-yes" style="vertical-align: end; margin-top: 0;">Yes</label>
                             <input type="checkbox" id="request-no" {{$other->status_approved == 'false' ? 'checked' : ''}} disabled>
-                            <label for="request-no">No</label>
+                            <label for="request-no" style="vertical-align: end; margin-top: 0;">No</label>
                         </div>
                     </div>
+                    <br><br><br><br>
                     @endforeach
                 </td>
             </tr>

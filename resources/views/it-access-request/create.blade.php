@@ -96,6 +96,16 @@
                                                 <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-hardware-device" onclick="">Add</button>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-xl-6">
+                                                <label>Purpose :</label>
+                                                <textarea class="form-control" id="purpose" name="hardware_device[0][purpose]" placeholder="Enter Purpose" ></textarea>
+                                            </div>
+                                            <div class="col-xl-6">
+                                                <label>Restriction :</label>
+                                                <textarea class="form-control" id="restriction" name="hardware_device[0][restriction]" placeholder="Enter Restriction" ></textarea>
+                                            </div>
+                                        </div>
                                     </div>
                             </div>
                         </div>
@@ -324,7 +334,16 @@
         $('.add-hardware-device').on('click', function() {
             let hardwareDevice = document.getElementById('hardwareDevice');
             let hardwareDeviceIndex = hardwareDevice.children.length;
-            $("#hardwareDevice").append(`<div class="row"><div class="col-xl-6"><label>Hardware Device :</label><select class="form-control hardware_id" id="hardware_id" name="hardware_device[${hardwareDeviceIndex}][hardware_name]"><option></option><option>Komputer</option><option>Router</option><option>Printer</option><option>Smart IT</option></select></div><div class="col-xl-4"><label>Quantity :</label><input class="form-control" type="number" id="qty" name="hardware_device[${hardwareDeviceIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
+            $("#hardwareDevice").append(`<div><div class="row"><div class="col-xl-6"><label>Hardware Device :</label><select class="form-control hardware_id" id="hardware_id" name="hardware_device[${hardwareDeviceIndex}][hardware_name]"><option></option><option>Komputer</option><option>Router</option><option>Printer</option><option>Smart IT</option></select></div><div class="col-xl-4"><label>Quantity :</label><input class="form-control" type="number" id="qty" name="hardware_device[${hardwareDeviceIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div><div class="row">
+                                            <div class="col-xl-6">
+                                                <label>Purpose :</label>
+                                                <textarea class="form-control" id="purpose" name="hardware_device[${hardwareDeviceIndex}][purpose]" placeholder="Enter Purpose" ></textarea>
+                                            </div>
+                                            <div class="col-xl-6">
+                                                <label>Restriction :</label>
+                                                <textarea class="form-control" id="restriction" name="hardware_device[${hardwareDeviceIndex}][restriction]" placeholder="Enter Restriction" ></textarea>
+                                            </div>
+                                        </div></div>`);
             $('.hardware_id').select2({
                 allowClear: true,
                 placeholder: 'Choose Hardware Device',
@@ -376,7 +395,7 @@
         });
 
         $(document).on('click', '.removeThis', function() {
-            $(this).parent().parent().remove();
+            $(this).parent().parent().parent().remove();
         });
 
     });

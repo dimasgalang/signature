@@ -119,6 +119,8 @@ class ItAccessRequestController extends Controller
                     'id_request_access' => $acceessRequestPreparer->id_request_access,
                     'hardware_device' => $value['hardware_name'],
                     'qty' => $value['quantity'],
+                    'purpose' => $value['purpose'],
+                    'restriction' => $value['restriction'],
                 ]);
             }
         }
@@ -476,6 +478,8 @@ class ItAccessRequestController extends Controller
                         $item->id_request_access = $request->access_request_id;
                         $item->hardware_device = $value['hardware_name'];
                         $item->qty = $value['quantity'];
+                        $item->purpose = $value['purpose'];
+                        $item->restriction = $value['restriction'];
                         $item->save();
                     }
                     // If id is null, create a new item
@@ -484,6 +488,8 @@ class ItAccessRequestController extends Controller
                         'id_request_access' => $request->access_request_id,
                         'hardware_device' => $value['hardware_name'],
                         'qty' => $value['quantity'],
+                        'purpose' => $value['purpose'],
+                        'restriction' => $value['restriction'],
                     ]);
                 }
             }
