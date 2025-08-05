@@ -63,6 +63,14 @@ class ApprovalController extends Controller
     public function indexLeaver(Request $request)
     {
         $user_id = Auth::user()->id;
+
+        $roleusers = User::select('users.name', 'users.email', 'users.id', 'model_has_roles.*', 'roles.name as rolename')
+            ->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->leftJoin('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('users.id', '=', Auth::user()->id)
+            ->get();
+
+
         if ($request->void) {
             $approvals = DB::select("with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by approval.id) and document_name = lag(document_name) over (order by approval.id) and token = lag(token) over (order by approval.id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = '" . $request->void . "'), data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = '" . $user_id . "') select * from data3 where approval_id = '" . $user_id . "' and type = 'clearance' order by id desc");
         } else {
@@ -75,14 +83,21 @@ class ApprovalController extends Controller
     public function indexCommitment(Request $request)
     {
         $user_id = Auth::user()->id;
+
+        $roleusers = User::select('users.name', 'users.email', 'users.id', 'model_has_roles.*', 'roles.name as rolename')
+            ->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->leftJoin('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('users.id', '=', Auth::user()->id)
+            ->get();
+
         if ($request->void) {
-            if ($user_id == 1) {
+            if ($roleusers[0]->rolename == 'Admin') {
                 $approvals = DB::select("with data1 as (select approval.*,users.name,model_has_roles.role_id,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by approval.id) and document_name = lag(document_name) over (order by approval.id) and token = lag(token) over (order by approval.id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id left join model_has_roles on model_has_roles.model_id = users.id where void = '" . $request->void . "'), data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2) select * from data3 where the_same = 1 and type = 'commitment' order by id desc");
             } else {
                 $approvals = DB::select("with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by approval.id) and document_name = lag(document_name) over (order by approval.id) and token = lag(token) over (order by approval.id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = '" . $request->void . "'), data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = '" . $user_id . "') select * from data3 where approval_id = '" . $user_id . "' and type = 'commitment' order by id desc");
             }
         } else {
-            if ($user_id == 1) {
+            if ($roleusers[0]->rolename == 'Admin') {
                 $approvals = DB::select("with data1 as (select approval.*,users.name,model_has_roles.role_id,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by approval.id) and document_name = lag(document_name) over (order by approval.id) and token = lag(token) over (order by approval.id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id left join model_has_roles on model_has_roles.model_id = users.id where void = 'false'), data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2) select * from data3 where the_same = 1 and type = 'commitment' order by id desc");
             } else {
                 $approvals = DB::select("with data1 as (select approval.*,users.name,(select users.name from approval t2 left join users on t2.approval_id = users.id where t2.preparer_id = approval.preparer_id and t2.approval_level = approval.approval_progress and t2.document_name = approval.document_name and t2.token = approval.token) as need_approve, case when preparer_id = lag(preparer_id) over (order by approval.id) and document_name = lag(document_name) over (order by approval.id) and token = lag(token) over (order by approval.id) then 0 else 1 end as the_same from approval left join users on users.id = preparer_id where void = 'false'), data2 as (select *, sum(the_same) over (order by id) group_num FROM data1), data3 as (select *,first_value(original_name) over (partition by group_num order by id) value_first,first_value(document_approve) over (partition by group_num order by id) value_last from data2 where approval_id = '" . $user_id . "') select * from data3 where approval_id = '" . $user_id . "' and type = 'commitment' order by id desc");
