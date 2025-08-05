@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'chutex'),
+    'default' => env('DB_CONNECTION', 'sqlsrvsignature'),
 
     /*
     |--------------------------------------------------------------------------
@@ -119,7 +119,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
-            'encrypt' => 'yes',
+            // 'encrypt' => 'yes',
             'trust_server_certificate' => true
         ],
 

@@ -5,23 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AccessRequest extends Model
+class CyberUserAccount extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'id_request_access',
+        'deactivation_request_id',
         'date_of_request',
-        'employee_id',
         'approval_id',
+        'preparer_id',
         'approval_level',
-        'approval_date',
         'approval_progress',
+        'approval_date',
+        'token',
         'document_name',
         'original_name',
-        'token',
-        'status',
+        'deactivate',
+        'start_date',
+        'end_date',
+        'reason_id',
+        'employee_id',
         'comment',
-        'base64',
+        'status',
         'void',
     ];
 }

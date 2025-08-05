@@ -5,16 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HardwareRequest extends Model
+class ReasonDeactivateCyberUser extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'id_request_access',
-        'hardware_device',
-        'qty',
-        'status_approved',
-        'purpose',
-        'restriction',
+        'reason',
     ];
 }

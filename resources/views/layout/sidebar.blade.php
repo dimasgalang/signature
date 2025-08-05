@@ -49,6 +49,7 @@
                 <a class="collapse-item" href="{{ route('approval.indexLeaver') }}">Leaver List</a>
                 <a class="collapse-item" href="{{ route('approval.indexCommitment') }}">Commitment List</a>
                 <a class="collapse-item" href="{{ route('approval.indexItAccess') }}">IT Access List</a>
+                <a class="collapse-item" href="{{ route('approval.indexDeactivate') }}">Deactivate User</a>
             </div>
         </div>
     </li>
@@ -66,6 +67,7 @@
                 <a class="collapse-item" href="{{ route('leaver.index') }}">Leaver List</a>
                 <a class="collapse-item" href="{{ route('commitment.index') }}">Commitment List</a>
                 <a class="collapse-item" href="{{ route('it-access-request.index') }}">It Access List</a>
+                <a class="collapse-item" href="{{ route('cyber-user.index') }}">Deactivate User</a>
             </div>
         </div>
     </li>

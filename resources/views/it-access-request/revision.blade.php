@@ -101,6 +101,16 @@
                                                     </div>
                                                 @endif --}}
                                             </div>
+                                            <div class="row">
+                                                <div class="col-xl-6">
+                                                    <label>Purpose :</label>
+                                                    <textarea class="form-control" id="purpose" name="hardware_device[{{$key}}][purpose]">{{$hardwareRequest->purpose}}</textarea>
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <label>Restriction :</label>
+                                                    <textarea class="form-control" id="restriction" name="hardware_device[{{$key}}][restriction]">{{$hardwareRequest->restriction}}</textarea>
+                                                </div>
+                                            </div>
                                         @endforeach
                                     </div>
                             </div>

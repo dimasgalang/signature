@@ -12,9 +12,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(UsersSeeder::class);
-        $this->call(RolesSeeder::class);
-        $this->call(ModelHasRolesSeeder::class);
-        $this->call(ItemSeeder::class);
+        // $this->call(UsersSeeder::class);
+        // $this->call(RolesSeeder::class);
+        // $this->call(ModelHasRolesSeeder::class);
+        // $this->call(ItemSeeder::class);
+        $this->call(ReasonDeactivateCyberUserSeeder::class);
     }
 }

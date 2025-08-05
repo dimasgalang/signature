@@ -5,6 +5,7 @@ use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\CommitmentComputerController;
 use App\Http\Controllers\LeaverController;
 use App\Http\Controllers\ConverterController;
+use App\Http\Controllers\CyberUserAccountController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HandoverController;
 use App\Http\Controllers\HomeController;
@@ -84,6 +85,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/approval/indexLeaver', [ApprovalController::class, 'indexLeaver'])->name('approval.indexLeaver');
     Route::get('/approval/indexCommitment', [ApprovalController::class, 'indexCommitment'])->name('approval.indexCommitment');
     Route::get('/approval/indexItAccess', [ApprovalController::class, 'indexItAccess'])->name('approval.indexItAccess');
+    Route::get('/approval/indexDeactivate', [ApprovalController::class, 'indexDeactivate'])->name('approval.indexDeactivate');
     Route::get('/approval/create', [ApprovalController::class, 'create'])->name('approval.create');
     Route::get('/approval/approve/{id}', [ApprovalController::class, 'approve'])->name('approval.approve');
     Route::get('/approval/fetchapproval/{id}', [ApprovalController::class, 'fetchapproval'])->name('approval.fetchapproval');
@@ -161,6 +163,21 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/attachment/restore', [AttachmentController::class, 'restore'])->name('attachment.restore');
     Route::get('/attachment/fetchattachment/{id}', [AttachmentController::class, 'fetchattachment'])->name('attachment.fetchattachment');
 
+    // Cyber User
+    Route::get('/cyber-user/index', [CyberUserAccountController::class, 'index'])->name('cyber-user.index');
+    Route::get('/cyber-user/create', [CyberUserAccountController::class, 'create'])->name('cyber-user.create');
+    Route::post('/cyber-user/store', [CyberUserAccountController::class, 'store'])->name('cyber-user.store');
+    Route::get('/cyber-user/fetchEmployee/{npk}', [CyberUserAccountController::class, 'fetchEmployee'])->name('cyber-user.fetchEmployee');
+    Route::get('/cyber-user/revision/{deactivation_request_id}', [CyberUserAccountController::class, 'edit'])->name('cyber-user.edit');
+    Route::post('/cyber-user/revision', [CyberUserAccountController::class, 'revision'])->name('cyber-user.revision')->middleware(['auth', 'role:Admin']);
+    Route::get('/cyber-user/fetchdeactivaterequest/{id}', [CyberUserAccountController::class, 'fetchdeactivaterequest'])->name('cyber-user.fetchdeactivaterequest');
+    Route::get('/cyber-user/approve/{deactivation_request_id}', [CyberUserAccountController::class, 'approve'])->name('cyber-user.approve');
+    Route::post('/cyber-user/approved', [CyberUserAccountController::class, 'approved'])->name('cyber-user.approved');
+    Route::get('/cyber-user/view/{id}', [CyberUserAccountController::class, 'generatePdf'])->name('cyber-user.view');
+    Route::post('/cyber-user/update', [CyberUserAccountController::class, 'update'])->name('cyber-user.update');
+    Route::post('/cyber-user/void', [CyberUserAccountController::class, 'void'])->name('cyber-user.void');
+    Route::post('/cyber-user/restore', [CyberUserAccountController::class, 'restore'])->name('cyber-user.restore');
+
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
 
@@ -172,6 +189,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/template/handover', [TemplateController::class, 'handover'])->name('template.handover');
     Route::get('/template/commitment', [TemplateController::class, 'commitment'])->name('template.commitment');
     Route::get('/template/it-access', [TemplateController::class, 'it_access'])->name('template.itaccess');
+    Route::get('/template/cyber-user-account', [TemplateController::class, 'cyber_user_account'])->name('template.cyber_user_account');
 
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');

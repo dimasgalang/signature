@@ -119,6 +119,8 @@ class ItAccessRequestController extends Controller
                     'id_request_access' => $acceessRequestPreparer->id_request_access,
                     'hardware_device' => $value['hardware_name'],
                     'qty' => $value['quantity'],
+                    'purpose' => $value['purpose'],
+                    'restriction' => $value['restriction'],
                 ]);
             }
         }
@@ -393,6 +395,9 @@ class ItAccessRequestController extends Controller
         // dd($accessRequest, $computerRequests, $otherDevices, $applicationPrograms, $fileFolderAccesses, $emailAccount, $internetAccess, $otherRequests, $userAccounts);
         $pdf = Pdf::loadView('template.it-access', compact('accessRequest', 'computerRequests', 'otherDevices', 'applicationPrograms', 'fileFolderAccesses', 'emailAccount', 'internetAccess', 'otherRequests', 'userAccounts'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('A4');
 
+        return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename=' . $id . '.pdf');
         // I: Show to Browser, D: Download, F: Save to File, S: Return as String
         // return PDF::Output('Signature.pdf', 'I');
         // PDF::Output(storage_path('app/public/document/') . $new_filename, 'F');
@@ -403,11 +408,6 @@ class ItAccessRequestController extends Controller
         }
 
         $pdf->save($directory . $id . '.pdf');
-
-        // Download file
-        return $pdf->download($id . '.pdf');
-
-        // Storage::put('public/it_access_pdfs/' . $id . '.pdf', $pdf->output());
     }
 
     // edit
@@ -476,6 +476,8 @@ class ItAccessRequestController extends Controller
                         $item->id_request_access = $request->access_request_id;
                         $item->hardware_device = $value['hardware_name'];
                         $item->qty = $value['quantity'];
+                        $item->purpose = $value['purpose'];
+                        $item->restriction = $value['restriction'];
                         $item->save();
                     }
                     // If id is null, create a new item
@@ -484,6 +486,8 @@ class ItAccessRequestController extends Controller
                         'id_request_access' => $request->access_request_id,
                         'hardware_device' => $value['hardware_name'],
                         'qty' => $value['quantity'],
+                        'purpose' => $value['purpose'],
+                        'restriction' => $value['restriction'],
                     ]);
                 }
             }

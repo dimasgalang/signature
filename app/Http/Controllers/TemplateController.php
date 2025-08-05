@@ -24,4 +24,9 @@ class TemplateController extends Controller
     {
         return view('template.commitment_comp_user');
     }
+
+    public function cyber_user_account()
+    {
+        return view('template.cyber-user-account');
+    }
 }
