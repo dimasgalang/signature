@@ -18,6 +18,7 @@ use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\SignaturePadController;
 use App\Http\Controllers\SmartITController;
 use App\Http\Controllers\SpeechController;
+use App\Http\Controllers\SurveillanceSystemMaintenanceController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -178,6 +179,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/cyber-user/void', [CyberUserAccountController::class, 'void'])->name('cyber-user.void');
     Route::post('/cyber-user/restore', [CyberUserAccountController::class, 'restore'])->name('cyber-user.restore');
 
+    // CCTV Maintenance
+    Route::get('/surveillance-system-maintenance/index', [SurveillanceSystemMaintenanceController ::class, 'index'])->name('surveillance-system-maintenance.index');
+    Route::get('/surveillance-system-maintenance/create', [SurveillanceSystemMaintenanceController::class, 'create'])->name('surveillance-system-maintenance.create');
+    Route::post('/surveillance-system-maintenance/store', [SurveillanceSystemMaintenanceController::class, 'store'])->name('surveillance-system-maintenance.store');
+    
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
 
