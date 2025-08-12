@@ -6,6 +6,8 @@ use App\Models\AnswerSurveillanceQuestionnaire;
 use App\Models\ItemQuestionnaireSurveillance;
 use App\Models\SurveillanceSystemMaintenance;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +25,7 @@ class SurveillanceSystemMaintenanceController extends Controller
         $checkNetworkInfrastructure = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'c')->get();
         $softwareTesting = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'd')->get();
 
-        $surveillanceSystemMaintenance  = SurveillanceSystemMaintenance::orderBy('id', 'desc')->first();
+        $surveillanceSystemMaintenance = SurveillanceSystemMaintenance::orderBy('id', 'desc')->first();
         $prefix = 'SSM';
         $defaultNumber = 1;
         $todayDate = date('ymd');
@@ -113,5 +115,142 @@ class SurveillanceSystemMaintenanceController extends Controller
 
         Alert::success('Created Successfully!', 'Surveillance System Maintenance successfully created!');
         return redirect()->intended('approval/indexSurveillance');
+    }
+
+    public function generatePdf($id)
+    {
+        $userDeactivateRequest = SurveillanceSystemMaintenance::select('cyber_user_accounts.*', 'users.name', 'users.dept', 'users.npk', 'signatures.signature_img')->leftJoin('users', 'users.id', '=', 'cyber_user_accounts.approval_id')->leftJoin('signatures', 'signatures.user_id', '=', 'cyber_user_accounts.approval_id')->where('deactivation_request_id', $id)->get();
+        $employee = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')->where('BIODATA.NPK', '=', $userDeactivateRequest[0]->employee_id)->get();
+
+        // dd($employee);
+        $pdf = Pdf::loadView('template.cyber-user-account', compact('userDeactivateRequest', 'employee'))->setOptions(['defaultFont' => 'sans-serif']);
+
+        return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename=' . $id . '.pdf');
+
+        $directory = storage_path('app/public/deactivate_request/');
+        if (!file_exists($directory)) {
+            mkdir($directory, 0777, true);
+        }
+
+        $pdf->save($directory . $id . '.pdf');
+    }
+
+    public function fetchsurveillancemaintenance($id)
+    {
+        $fetchsurveillancemaintenance = SurveillanceSystemMaintenance::select('surveillance_system_maintenances.*', 'users.name')->leftJoin('users', 'users.id', '=', 'surveillance_system_maintenances.approval_id')->where('surveillance_system_maintenances.id', '=', $id)->get();
+
+        return response()->json($fetchsurveillancemaintenance);
+    }
+
+    public function approved(Request $request)
+    {
+        $surveillanceSystemMaintenance = SurveillanceSystemMaintenance::findOrFail($request->id);
+        $totalData = SurveillanceSystemMaintenance::select('surveillance_system_maintenances.*', 'users.name', 'users.email')->leftJoin('users', 'surveillance_system_maintenances.approval_id', '=', 'users.id')->where('surveillance_system_maintenances.preparer_id', '=', $request->employee_id)->where('surveillance_system_maintenances.document_name', '=', $request->document_name)->where('surveillance_system_maintenances.token', '=', $request->token)->get();
+
+        $surveillanceSystemMaintenance->fill([
+            'approval_date' => Carbon::now(),
+            'status' => 'approved',
+        ]);
+        $surveillanceSystemMaintenance->save();
+
+        if ($surveillanceSystemMaintenance->approval_level < count($totalData)) {
+            SurveillanceSystemMaintenance::where('preparer_id', '=', $request->employee_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
+                'approval_progress' => $request->approval_progress + 1,
+            ]);
+        } else {
+            SurveillanceSystemMaintenance::where('preparer_id', '=', $request->employee_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
+                'approval_progress' => $request->approval_progress,
+                'status' => 'approved',
+            ]);
+        }
+
+        Alert::success('Approved Successfully!', 'Document successfully approved!');
+        return redirect()->intended('approval/indexSurveillance');
+    }
+
+    public function edit($id)
+    {
+        // $surveillanceSystemMaintenance = SurveillanceSystemMaintenance::findOrFail($id);
+        $ItHeadId = User::where('id', '=', 1)->first();
+        $surveillanceSystemMaintenance = DB::table('surveillance_system_maintenances')
+            ->join('users as employee', 'employee.id', '=', 'surveillance_system_maintenances.preparer_id')
+            ->join('users as approver', 'approver.id', '=', 'surveillance_system_maintenances.approval_id')
+            ->select([
+                'surveillance_system_maintenances.*',
+                DB::raw('employee.name as name_performer'),
+                DB::raw('employee.dept as performer_dept'),
+                DB::raw('approver.name as need_approve')
+            ])
+            ->where('surveillance_system_maintenance_id', $id)
+            ->first();
+        
+        $surveillanceCameraLensItems = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'a')->get();
+        $checkingRecordingServer = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'b')->get();
+        $checkNetworkInfrastructure = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'c')->get();
+        $softwareTesting = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'd')->get();
+
+        $answerSurveillanceQuestionnaires = AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $surveillanceSystemMaintenance->surveillance_system_maintenance_id)->get();
+        // dd($answerSurveillanceQuestionnaires);
+        return view('surveillance-system-maintenance.revision', compact('surveillanceSystemMaintenance', 'answerSurveillanceQuestionnaires', 'ItHeadId', 'surveillanceCameraLensItems', 'checkingRecordingServer', 'checkNetworkInfrastructure', 'softwareTesting'));
+    }
+
+    public function update(Request $request)
+    {
+        foreach ($request->surveillanceCameraLensItems as $questionnaireId => $answer) {
+            AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id)
+                ->where('questionnaire_id', $questionnaireId)
+                ->update(['answer' => $answer]
+            );
+        }
+
+        foreach ($request->checkingRecordingServer as $questionnaireId => $answer) {
+            AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id)
+                ->where('questionnaire_id', $questionnaireId)
+                ->update(['answer' => $answer]
+            );
+        }
+
+        foreach ($request->checkNetworkInfrastructure as $questionnaireId => $answer) {
+            AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id)
+                ->where('questionnaire_id', $questionnaireId)
+                ->update(['answer' => $answer]
+            );
+        }
+
+        foreach ($request->softwareTesting as $questionnaireId => $answer) {
+            AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id)
+                ->where('questionnaire_id', $questionnaireId)
+                ->update(['answer' => $answer]
+            );
+        }
+
+        AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id)
+            ->where('questionnaire_id', 0)
+            ->update(['answer' => $request->recommendation_replacement]);
+
+        Alert::success('Update Successfully!', 'Surveillance System Maintenance successfully updated!');
+        return redirect()->intended('approval/indexSurveillance');
+    }
+    
+    public function void(Request $request)
+    {
+        $approval = SurveillanceSystemMaintenance::select('*')->where('surveillance_system_maintenance_id', '=', $request->surveillance_system_maintenance_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
+            'void' => 'true',
+        ]);
+
+        Alert::success('Void Successfully!', 'Surveillance Maintenance Request For "' . $request->document_name . '" successfully voided!');
+        return redirect('approval/indexSurveillance');
+    }
+
+    public function restore(Request $request)
+    {
+        $approval = SurveillanceSystemMaintenance::select('*')->where('surveillance_system_maintenance_id', '=', $request->surveillance_system_maintenance_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
+            'void' => 'false',
+        ]);
+
+        Alert::success('Restore Successfully!', 'Surveillance Maintenance Request For "' . $request->document_name . '" successfully restored!');
+        return redirect('approval/indexSurveillance');
     }
 }

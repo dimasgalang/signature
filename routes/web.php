@@ -180,11 +180,21 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/cyber-user/void', [CyberUserAccountController::class, 'void'])->name('cyber-user.void');
     Route::post('/cyber-user/restore', [CyberUserAccountController::class, 'restore'])->name('cyber-user.restore');
 
-    // CCTV Maintenance
+    // Surveillance System Maintenance
     Route::get('/surveillance-system-maintenance/index', [SurveillanceSystemMaintenanceController ::class, 'index'])->name('surveillance-system-maintenance.index');
     Route::get('/surveillance-system-maintenance/create', [SurveillanceSystemMaintenanceController::class, 'create'])->name('surveillance-system-maintenance.create');
     Route::post('/surveillance-system-maintenance/store', [SurveillanceSystemMaintenanceController::class, 'store'])->name('surveillance-system-maintenance.store');
-    
+    Route::get('/surveillance-system-maintenance/view/{id}', [SurveillanceSystemMaintenanceController::class, 'generatePdf'])->name('surveillance-system-maintenance.view');
+    Route::get('/surveillance-system-maintenance/revision/{surveillance_maintenance_id}', [SurveillanceSystemMaintenanceController::class, 'edit'])->name('surveillance-system-maintenance.edit');
+    Route::get('/surveillance-system-maintenance/fetchsurveillancemaintenance/{id}', [SurveillanceSystemMaintenanceController::class, 'fetchsurveillancemaintenance'])->name('surveillance-system-maintenance.fetchsurveillancemaintenance');
+    Route::get('/surveillance-system-maintenance/approve/{surveillance_maintenance_id}', [SurveillanceSystemMaintenanceController::class, 'approve'])->name('surveillance-system-maintenance.approve');
+    Route::post('/surveillance-system-maintenance/approved', [SurveillanceSystemMaintenanceController::class, 'approved'])->name('surveillance-system-maintenance.approved');
+    Route::get('/surveillance-system-maintenance/view/{id}', [SurveillanceSystemMaintenanceController::class, 'generatePdf'])->name('surveillance-system-maintenance.view');
+    Route::post('/surveillance-system-maintenance/update', [SurveillanceSystemMaintenanceController::class, 'update'])->name('surveillance-system-maintenance.update');
+    Route::post('/surveillance-system-maintenance/void', [SurveillanceSystemMaintenanceController::class, 'void'])->name('surveillance-system-maintenance.void');
+    Route::post('/surveillance-system-maintenance/restore', [SurveillanceSystemMaintenanceController::class, 'restore'])->name('surveillance-system-maintenance.restore');
+
+
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
 
