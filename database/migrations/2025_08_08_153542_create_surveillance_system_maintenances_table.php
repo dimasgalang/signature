@@ -14,6 +14,16 @@ return new class extends Migration
         Schema::create('surveillance_system_maintenances', function (Blueprint $table) {
             $table->id();
             $table->string('surveillance_system_maintenance_id');
+            $table->date('date_of_maintenance');
+            $table->string('approval_id');
+            $table->string('preparer_id');
+            $table->string('approval_level');
+            $table->string('approval_progress');
+            $table->string('approval_date')->nullable();
+            $table->string('token')->nullable();
+            $table->string('document_name');
+            $table->string('status')->default('pending');
+            $table->string('void')->default('false');
             $table->timestamps();
         });
     }

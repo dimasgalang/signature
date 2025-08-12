@@ -68,16 +68,30 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Lensa Kamera Pengawas / Surveillance Camera Lens </h6>
                             </div>
                             <div class="card-body">
-                                    <div id="hardwareDevice">
+                                    <div id="surveillanceCameraLensItems">
+                                        @foreach($surveillanceCameraLensItems as $itemQuestion)
                                         <div class="col-xl-12">
-                                            <label>Purpose :</label>
-                                            <div class="row">
-                                                <input type="radio" name="hardware_device[0][purpose]" id="purpose1" value="Purpose 1">
-                                                <label for="purpose1">Purpose 1</label>
-                                                <input type="radio" name="hardware_device[0][purpose]" id="purpose2" value="Purpose 2">
-                                                <label for="purpose2">Purpose 2</label>
+                                            <label><b>{!! $loop->iteration .'. '.$itemQuestion->questionnaire_items !!} :</b></label>
+                                            <div class="row mb-3 ml-3 mr-3 justify-content-between">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="surveillanceCameraLensItems[{{ $itemQuestion->id }}]" id="surveillanceCameraLensItems_{{ $itemQuestion->id }}_periksa" value="periksa" required>
+                                                    <label class="form-check-label" for="surveillanceCameraLensItems_{{ $itemQuestion->id }}_periksa">Periksa / <i>Inspect</i></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="surveillanceCameraLensItems[{{ $itemQuestion->id }}]" id="surveillanceCameraLensItems_{{ $itemQuestion->id }}_bersihkan" value="bersihkan">
+                                                    <label class="form-check-label" for="surveillanceCameraLensItems_{{ $itemQuestion->id }}_bersihkan">Bersihkan / <i>Clean</i></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="surveillanceCameraLensItems[{{ $itemQuestion->id }}]" id="surveillanceCameraLensItems_{{ $itemQuestion->id }}_perbaiki" value="perbaiki">
+                                                    <label class="form-check-label" for="surveillanceCameraLensItems_{{ $itemQuestion->id }}_perbaiki">Perbaiki / <i>Repair</i></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="surveillanceCameraLensItems[{{ $itemQuestion->id }}]" id="surveillanceCameraLensItems_{{ $itemQuestion->id }}_mengganti" value="mengganti">
+                                                    <label class="form-check-label" for="surveillanceCameraLensItems_{{ $itemQuestion->id }}_mengganti">Mengganti / <i>Replace</i></label>
+                                                </div>
                                             </div>
                                         </div>
+                                        @endforeach
                                     </div>
                             </div>
                         </div>
@@ -89,23 +103,114 @@
                             </div>
                             <div class="card-body">
                                     <div id="hardwareDevice">
-                                        <div class="row">
-                                            <div class="col-xl-6">
-                                                <label>Purpose :</label>
-                                                <textarea class="form-control" id="purpose" name="hardware_device[0][purpose]" placeholder="Enter Purpose" ></textarea>
-                                            </div>
-                                            <div class="col-xl-6">
-                                                <label>Restriction :</label>
-                                                <textarea class="form-control" id="restriction" name="hardware_device[0][restriction]" placeholder="Enter Restriction" ></textarea>
+                                        @foreach($checkingRecordingServer as $itemQuestion)
+                                        <div class="col-xl-12">
+                                            <label><b>{!! $loop->iteration .'. '.$itemQuestion->questionnaire_items !!} :</b></label>
+                                            <div class="row mb-3 ml-3 mr-3 justify-content-between">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="checkingRecordingServer[{{ $itemQuestion->id }}]" id="checkingRecordingServer_{{ $itemQuestion->id }}_periksa" value="periksa" required>
+                                                    <label class="form-check-label" for="checkingRecordingServer_{{ $itemQuestion->id }}_periksa">Periksa / <i>Inspect</i></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="checkingRecordingServer[{{ $itemQuestion->id }}]" id="checkingRecordingServer_{{ $itemQuestion->id }}_bersihkan" value="bersihkan">
+                                                    <label class="form-check-label" for="checkingRecordingServer_{{ $itemQuestion->id }}_bersihkan">Bersihkan / <i>Clean</i></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="checkingRecordingServer[{{ $itemQuestion->id }}]" id="checkingRecordingServer_{{ $itemQuestion->id }}_perbaiki" value="perbaiki">
+                                                    <label class="form-check-label" for="checkingRecordingServer_{{ $itemQuestion->id }}_perbaiki">Perbaiki / <i>Repair</i></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="checkingRecordingServer[{{ $itemQuestion->id }}]" id="checkingRecordingServer_{{ $itemQuestion->id }}_mengganti" value="mengganti">
+                                                    <label class="form-check-label" for="checkingRecordingServer_{{ $itemQuestion->id }}_mengganti">Mengganti / <i>Replace</i></label>
+                                                </div>
                                             </div>
                                         </div>
+                                        @endforeach
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Periksa infrastruktur jaringan / Check network infrastructure </h6>
+                            </div>
+                            <div class="card-body">
+                                    <div id="hardwareDevice">
+                                        @foreach($checkNetworkInfrastructure as $itemQuestion)
+                                        <div class="col-xl-12">
+                                            <label><b>{!! $loop->iteration .'. '.$itemQuestion->questionnaire_items !!} :</b></label>
+                                            <div class="row mb-3 ml-3 mr-3 justify-content-between">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="checkNetworkInfrastructure[{{ $itemQuestion->id }}]" id="checkNetworkInfrastructure_{{ $itemQuestion->id }}_periksa" value="periksa" required>
+                                                    <label class="form-check-label" for="checkNetworkInfrastructure_{{ $itemQuestion->id }}_periksa">Periksa / <i>Inspect</i></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="checkNetworkInfrastructure[{{ $itemQuestion->id }}]" id="checkNetworkInfrastructure_{{ $itemQuestion->id }}_bersihkan" value="bersihkan">
+                                                    <label class="form-check-label" for="checkNetworkInfrastructure_{{ $itemQuestion->id }}_bersihkan">Bersihkan / <i>Clean</i></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="checkNetworkInfrastructure[{{ $itemQuestion->id }}]" id="checkNetworkInfrastructure_{{ $itemQuestion->id }}_perbaiki" value="perbaiki">
+                                                    <label class="form-check-label" for="checkNetworkInfrastructure_{{ $itemQuestion->id }}_perbaiki">Perbaiki / <i>Repair</i></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="checkNetworkInfrastructure[{{ $itemQuestion->id }}]" id="checkNetworkInfrastructure_{{ $itemQuestion->id }}_mengganti" value="mengganti">
+                                                    <label class="form-check-label" for="checkNetworkInfrastructure_{{ $itemQuestion->id }}_mengganti">Mengganti / <i>Replace</i></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
                                     </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Pengujian Perangkat Lunak / Software Testing </h6>
+                            </div>
+                            <div class="card-body">
+                                    <div id="hardwareDevice">
+                                        @foreach($softwareTesting as $itemQuestion)
+                                        <label><b>{!! $loop->iteration .'. '.$itemQuestion->questionnaire_items !!} :</b></label>
+                                        <div class="row mb-3 ml-3 mr-3 justify-content-between">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="softwareTesting[{{ $itemQuestion->id }}]" id="softwareTesting_{{ $itemQuestion->id }}_periksa" value="periksa" required>
+                                                <label class="form-check-label" for="softwareTesting_{{ $itemQuestion->id }}_periksa">Periksa / <i>Inspect</i></label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="softwareTesting[{{ $itemQuestion->id }}]" id="softwareTesting_{{ $itemQuestion->id }}_bersihkan" value="bersihkan">
+                                                <label class="form-check-label" for="softwareTesting_{{ $itemQuestion->id }}_bersihkan">Bersihkan / <i>Clean</i></label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="softwareTesting[{{ $itemQuestion->id }}]" id="softwareTesting_{{ $itemQuestion->id }}_perbaiki" value="perbaiki">
+                                                <label class="form-check-label" for="softwareTesting_{{ $itemQuestion->id }}_perbaiki">Perbaiki / <i>Repair</i></label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="softwareTesting[{{ $itemQuestion->id }}]" id="softwareTesting_{{ $itemQuestion->id }}_mengganti" value="mengganti">
+                                                <label class="form-check-label" for="softwareTesting_{{ $itemQuestion->id }}_mengganti">Mengganti / <i>Replace</i></label>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">REKOMENDASI PENGGANTIAN BARU / RECOMMENDATION OF NEW REPLACEMENT</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="col-xl-12">
+                                    <textarea name="recommendation_replacement" class="form-control" rows="5" id="" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-12">
                         <button id="submit" type="submit" class="btn btn-primary btn-block">Create</button>

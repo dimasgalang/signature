@@ -29,4 +29,9 @@ class TemplateController extends Controller
     {
         return view('template.cyber-user-account');
     }
+
+    public function surveillance_system_maintenance()
+    {
+        return view('template.cctv-maintenance');
+    }
 }

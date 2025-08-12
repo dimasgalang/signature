@@ -87,6 +87,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/approval/indexCommitment', [ApprovalController::class, 'indexCommitment'])->name('approval.indexCommitment');
     Route::get('/approval/indexItAccess', [ApprovalController::class, 'indexItAccess'])->name('approval.indexItAccess');
     Route::get('/approval/indexDeactivate', [ApprovalController::class, 'indexDeactivate'])->name('approval.indexDeactivate');
+    Route::get('/approval/indexSurveillance', [ApprovalController::class, 'indexSurveillance'])->name('approval.indexSurveillance');
     Route::get('/approval/create', [ApprovalController::class, 'create'])->name('approval.create');
     Route::get('/approval/approve/{id}', [ApprovalController::class, 'approve'])->name('approval.approve');
     Route::get('/approval/fetchapproval/{id}', [ApprovalController::class, 'fetchapproval'])->name('approval.fetchapproval');
@@ -196,6 +197,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/template/commitment', [TemplateController::class, 'commitment'])->name('template.commitment');
     Route::get('/template/it-access', [TemplateController::class, 'it_access'])->name('template.itaccess');
     Route::get('/template/cyber-user-account', [TemplateController::class, 'cyber_user_account'])->name('template.cyber_user_account');
+    Route::get('/template/surveillance-system-maintenance', [TemplateController::class, 'surveillance_system_maintenance'])->name('template.surveillance_system_maintenance');
 
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');
