@@ -11,7 +11,7 @@
         }
 
         body {
-            font-family: 'Times New Roman', serif;
+            font-family: 'Times New Roman', serif, 'DejaVu Sans', Arial, Helvetica, sans-serif;
             font-size: 11pt;
             margin: 8px;
             line-height: 1.15;
@@ -199,9 +199,9 @@
                     </center>
                 </td>
                 <td class="header" style="text-align: center; vertical-align: middle;">
-                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#: 01/FM-PL05</p>
+                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#: {{ $surveillanceSystemMaintenance[0]->document_name }}</p>
                         <p style="font-size:11px; x-small; margin:0; text-align: left;">Revision: 00</p>
-                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Effective: 19-08-2023</p>
+                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Effective: {{ \Carbon\Carbon::parse($surveillanceSystemMaintenance[0]->date_of_maintenance)->format('d-m-Y') }}</p>
                 </td>
             </tr>
         </table>
@@ -210,7 +210,7 @@
     <div class="form-container">
         <!-- Maintenance Info -->
         <div class="maintenance-info">
-            Tanggal Pemeliharaan/ Date of Maintenance: 15-08-2025&nbsp;&nbsp;&nbsp;
+            Tanggal Pemeliharaan/ Date of Maintenance: {{ \Carbon\Carbon::parse($surveillanceSystemMaintenance[0]->date_of_maintenance)->format('d-m-Y') }}&nbsp;&nbsp;&nbsp;
             Frekuensi/Frequency: Setahun 2 kali/ Twice a year
         </div>
         
@@ -239,273 +239,94 @@
                     <td rowspan="10" class="subsection">1.1 </td>
                     <td colspan="5"  class="subsection">Lensa Kamera Pengawas / Surveillance Camera Lens - 12 camera</td>
                 </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        a. Periksa apakah lensa kamera difokuskan dan disesuaikan dengan benar.<br>
-                        <em>Check the camera lens is focused and adjusted properly.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        b. Monitor menampilkan gambar yang jelas, pengaturan kecerahan dan kontras disesuaikan dengan benar.<br>
-                        <em>Monitor are showing a clear picture, brightness and contrast setting are correctly adjusted.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        c. Bersihkan debu atau noda pada lensa kamera.<br>
-                        <em>Clean any dust or marks off the camera lens.</em>
-                    </td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        d. Sesuaikan tampilan kamera yang telah terlempar dari jalur yang dituju.<br>
-                        <em>Adjust the camera view that has been knocked of the aimed path.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        e. Periksa apakah sensor deteksi gerakan berfungsi dengan baik.<br>
-                        <em>Check the motion detection sensors are working well.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        f. Kamera terkena kebocoran air/hujan.<br>
-                        <em>Camera impacted by water/rain leaking</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        g. Pangkas dedaunan, benda-benda yang dapat menghalangi pandangan.<br>
-                        <em>Trim back any foliage, objects that may be obscuring the view.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        h. Gunakan pengontrol untuk memeriksa apakah fungsi kamera, seperti zoom dan pan berfungsi dengan benar.<br>
-                        <em>Use controller to check that the camera's functions, such as zoom and pan are working correctly.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        i. Kamera tidak bisa berfungsi dengan baik dan tidak berfungsi dengan baik<br>
-                        <em>Camera are securely attached to the wall or pillar.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
+
+                @foreach ($surveillanceCameraLensItems as $item)
+                    <tr>
+                        <td class="item-detail">
+                            {!! $item->questionnaire_items !!}
+                        </td>
+                        @foreach($answerSurveillanceQuestionnaires as $answer)
+                            @if($answer->questionnaire_id == $item->id)
+                                <td class="method-columns">{{ $answer->answer == 'periksa' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'bersihkan' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'perbaiki' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'mengganti' ? '✓' : '' }}</td>
+                            @endif
+                        @endforeach
+                    </tr>
+                @endforeach
                 
                 <tr>
                     <td rowspan="6" class="subsection">1.2 </td>
                     <td colspan="5" class="subsection">Memeriksa server rekaman/ Checking recording server – 2 servers.</td>
                 </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        a. Tombol pada perekam, kendali jarak jauh.
-                        <em>Buttons on the recorder, remote controler</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        b. Server rekaman, kipas pendingin.
-                        <em>Recording server, cooling fan.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        c. Steker, UPS, dan catu daya.
-                        <em>Plugs, UPSs, and Power supply</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        d. Waktu dan tanggal yang benar telah ditetapkan.
-                        <em>Correct time and date stamp is set.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        e. Transmisi gambar jernih dan tidak ada distorsi.
-                        <em>The transmission of picture are clear and no distortion.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
+
+                @foreach ($checkingRecordingServer as $item)
+                    <tr>
+                        <td class="item-detail">
+                            {!! $item->questionnaire_items !!}
+                        </td>
+                        @foreach($answerSurveillanceQuestionnaires as $answer)
+                            @if($answer->questionnaire_id == $item->id)
+                                <td class="method-columns">{{ $answer->answer == 'periksa' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'bersihkan' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'perbaiki' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'mengganti' ? '✓' : '' }}</td>
+                            @endif
+                        @endforeach
+                    </tr>
+                @endforeach
                 
                 <tr>
                     <td rowspan="5" class="subsection">1.3 </td>
                     <td colspan="5" class="subsection">Periksa infrastruktur jaringan / Check network infrastructure</td>
                 </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        a. Konektor dan kabel jaringan
-                        <em>Network connectors and cables.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
 
-                <tr>
-                    <td class="item-detail">
-                        b. Saklar Switches
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        c. Catu daya untuk Sakelar (termasuk UPS)
-                        <em>Power supply for the Switches (including UPSs)</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="item-detail">
-                        d. Kabel serat optik, kotak sambungan optik, kabel patch optik, konverter optik.
-                        <em>Fiber optic cables, optical junction boxes, optical patchcords, optical converters</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
+                @foreach ($checkNetworkInfrastructure as $item)
+                    <tr>
+                        <td class="item-detail">
+                            {!! $item->questionnaire_items !!}
+                        </td>
+                        {{-- @foreach($answerSurveillanceQuestionnaires as $answer)
+                            @if($answer->questionnaire_id == $item->id)
+                                <td class="method-columns">{{ $answer->answer == 'periksa' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'bersihkan' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'perbaiki' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'mengganti' ? '✓' : '' }}</td>
+                            @endif
+                        @endforeach --}}
+                    </tr>
+                @endforeach
                 
                 <tr>
                     <td class="no-column section-header">2</td>
                     <td colspan="5" class="section-header">Pengujian Perangkat Lunak / Software Testing</td>    
                 </tr>
-                
-                <tr>
-                    <td class="no-column section-header">2.1 </td>
-                    <td class="item-detail">
-                        Menguji akses gambar kamera melalui browser web dari komputer staf keamanan dan dewan manajemen.<br>
-                        <em>Testing camera image access via web browser from security staff's and management board's computers.</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="no-column section-header">2.2 </td>
-                    <td class="item-detail">
-                        Periksa data rekaman yang disimpan di hard drive.<br>
-                        <em>Check the recording data stored on the hard drive</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="no-column section-header">2.3 </td>
-                    <td class="item-detail">
-                        Uji ekstraksi data rekaman.<br>
-                        <em>Test the extraction of recording data</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
-                <tr>
-                    <td class="no-column section-header">2.4 </td>
-                    <td class="item-detail">
-                        Data rekaman cadangan<br>
-                        <em>Backup recording data</em>
-                    </td>
-                    <td class="method-columns">✓</td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                    <td class="method-columns"></td>
-                </tr>
-                
+
+                @foreach ($softwareTesting as $item)
+                    <tr>
+                        <td class="no-column section-header">2.{{$loop->iteration}} </td>
+                        <td class="item-detail">
+                            {!! $item->questionnaire_items !!}
+                        </td>
+                        @foreach($answerSurveillanceQuestionnaires as $answer)
+                            @if($answer->questionnaire_id == $item->id)
+                                <td class="method-columns">{{ $answer->answer == 'periksa' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'bersihkan' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'perbaiki' ? '✓' : '' }}</td>
+                                <td class="method-columns">{{ $answer->answer == 'mengganti' ? '✓' : '' }}</td>
+                            @endif
+                        @endforeach
+                    </tr>
+                @endforeach
+
                 <tr>
                     <td colspan="6" class="recommendation-section">
                         <div style="font-weight: bold; text-align: start;">
                             REKOMENDASI PENGGANTIAN BARU / RECOMMENDATION OF NEW REPLACEMENT
                         </div>
-                        <div class="recommendation-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure officiis tenetur accusamus, vero ab natus, laborum praesentium tempora dolor minima impedit obcaecati adipisci molestias nemo consectetur atque alias id fugit aut? Tempore accusamus eligendi voluptatibus fugit natus excepturi beatae facere modi velit nam similique corrupti qui inventore, quibusdam, rerum vel repellat eaque fugiat ut ea aspernatur eum aliquam delectus aperiam. Sit, nesciunt aperiam aspernatur rerum obcaecati ad voluptas animi fuga hic voluptatem nobis suscipit exercitationem, iste soluta molestias quibusdam distinctio expedita voluptate numquam! Aliquid ad nobis quasi officiis! Consequuntur impedit tempore dicta numquam ipsum exercitationem consectetur laudantium enim reiciendis earum.
+                        <div class="recommendation-content">
+                            {{$answerSurveillanceQuestionnaires->where('questionnaire_id', '0')->first()->answer ?? ''}}
                         </div>
                     </td>
                 </tr>
@@ -538,30 +359,48 @@
                 <tr>
                     <td>
                         <div class="signature-field">
-                            <i>Para pihak/ Performer:</i> Ahmad Fauzi
+                            <i>Para pihak/ Performer:</i> {{$performer[0]->NAMA_KARYAWAN}}
                         </div>
                         <div class="signature-field">
-                            <i>Nama jabatan/ Job title:</i> IT Support Specialist
+                            <i>Nama jabatan/ Job title:</i> {{$performer[0]->BAG}}
                         </div>
                         <div class="signature-field">
-                            <i>Tanggal/ Date:</i> 15 Agustus 2025
+                            <i>Tanggal/ Date:</i> {{ \Carbon\Carbon::parse($surveillanceSystemMaintenance[0]->approval_date)->format('d-m-Y') }}
                         </div>
-                        <div class="signature-field" style="margin-top: 40px;">
-                            <i>Tanda tangan/ Signature:</i> ___________________
+                        <div class="signature-field">
+                            <i>Tanda tangan/ Signature:</i>
+                            @if($surveillanceSystemMaintenance[0]->approval_progress == '2' && $surveillanceSystemMaintenance[0]->status == 'approved')
+                                @php
+                                    $imagePathSign2 = public_path('storage/signature/'. $surveillanceSystemMaintenance[0]->signature_img);
+                                    $imageSign2 = "data:image/png;base64," . base64_encode(file_get_contents($imagePathSign2));
+                                @endphp
+                                    <div class="signature-image">
+                                        <img src="{{$imageSign2}}" alt="Requesting Person Signature" style="max-width: 50%; max-height: 50%; object-fit: contain;">
+                                    </div>
+                            @endif
                         </div>
                     </td>
                     <td>
                         <div class="signature-field">
-                            <i>Para pihak/ Performer:</i> Dr. Budi Santoso
+                            <i>Para pihak/ Performer:</i> {{$surveillanceSystemMaintenance[1]->name}}
                         </div>
                         <div class="signature-field">
-                            <i>Nama Jabatan/ Job title:</i> Head of IT Department
+                            <i>Nama Jabatan/ Job title:</i> {{$surveillanceSystemMaintenance[1]->dept}}
                         </div>
                         <div class="signature-field">
-                            <i>Tanggal/ Date:</i> 16 Agustus 2025
+                            <i>Tanggal/ Date:</i> {{ \Carbon\Carbon::parse($surveillanceSystemMaintenance[1]->approval_date)->format('d-m-Y') }}
                         </div>
-                        <div class="signature-field" style="margin-top: 40px;">
-                            <i>Tanda tangan/ Signature:</i> ___________________
+                        <div class="signature-field">
+                            <i>Tanda tangan/ Signature:</i>
+                            @if($surveillanceSystemMaintenance[1]->approval_progress == '2' && $surveillanceSystemMaintenance[1]->status == 'approved')
+                                @php
+                                    $imagePathSign1 = public_path('storage/signature/'. $surveillanceSystemMaintenance[1]->signature_img);
+                                    $imageSign1 = "data:image/png;base64," . base64_encode(file_get_contents($imagePathSign1));
+                                @endphp
+                                    <div class="signature-image">
+                                        <img src="{{$imageSign1}}" alt="Requesting Person Signature" style="max-width: 50%; max-height: 50%; object-fit: contain;">
+                                    </div>
+                            @endif
                         </div>
                     </td>
                 </tr>

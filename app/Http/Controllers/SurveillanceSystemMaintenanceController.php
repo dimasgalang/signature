@@ -119,17 +119,24 @@ class SurveillanceSystemMaintenanceController extends Controller
 
     public function generatePdf($id)
     {
-        $userDeactivateRequest = SurveillanceSystemMaintenance::select('cyber_user_accounts.*', 'users.name', 'users.dept', 'users.npk', 'signatures.signature_img')->leftJoin('users', 'users.id', '=', 'cyber_user_accounts.approval_id')->leftJoin('signatures', 'signatures.user_id', '=', 'cyber_user_accounts.approval_id')->where('deactivation_request_id', $id)->get();
-        $employee = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')->where('BIODATA.NPK', '=', $userDeactivateRequest[0]->employee_id)->get();
+        $surveillanceSystemMaintenance = SurveillanceSystemMaintenance::select('surveillance_system_maintenances.*', 'users.name', 'users.dept', 'users.npk', 'signatures.signature_img')->leftJoin('users', 'users.id', '=', 'surveillance_system_maintenances.approval_id')->leftJoin('signatures', 'signatures.user_id', '=', 'surveillance_system_maintenances.approval_id')->where('surveillance_system_maintenance_id', $id)->get();
+        $performer = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')->where('BIODATA.NPK', "C-00983")->get();
 
+        // dd($performer);
+        $surveillanceCameraLensItems = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'a')->get();
+        $checkingRecordingServer = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'b')->get();
+        $checkNetworkInfrastructure = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'c')->get();
+        $softwareTesting = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'd')->get();
+
+        $answerSurveillanceQuestionnaires = AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $id)->get();
         // dd($employee);
-        $pdf = Pdf::loadView('template.cyber-user-account', compact('userDeactivateRequest', 'employee'))->setOptions(['defaultFont' => 'sans-serif']);
+        $pdf = Pdf::loadView('template.cctv-maintenance', compact('surveillanceSystemMaintenance', 'performer', 'surveillanceCameraLensItems', 'checkingRecordingServer', 'checkNetworkInfrastructure', 'softwareTesting', 'answerSurveillanceQuestionnaires'))->setOptions(['defaultFont' => 'sans-serif']);
 
         return response($pdf->output(), 200)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename=' . $id . '.pdf');
 
-        $directory = storage_path('app/public/deactivate_request/');
+        $directory = storage_path('app/public/surveillance_system_maintenance/');
         if (!file_exists($directory)) {
             mkdir($directory, 0777, true);
         }
