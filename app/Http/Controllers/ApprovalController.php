@@ -133,6 +133,20 @@ class ApprovalController extends Controller
         return view('approval.indexDeactivate', compact('approvals'));
     }
 
+    public function indexSurveillance(Request $request)
+    {
+        $user_id = Auth::user()->id;
+
+        if ($request->void) {
+            $approvals = DB::select("with data1 as ( select surveillance_system_maintenances.*, employee.name as name, employee.dept as employee_dept, (select users.name from surveillance_system_maintenances t2 left join users on t2.approval_id = users.id where t2.approval_level = surveillance_system_maintenances.approval_progress and t2.document_name = surveillance_system_maintenances.document_name and t2.token = surveillance_system_maintenances.token ) as need_approve, case when preparer_id = lag(preparer_id) over (order by surveillance_system_maintenances.id) and document_name = lag(document_name) over (order by surveillance_system_maintenances.id) and token = lag(token) over (order by surveillance_system_maintenances.id) then 0 else 1 end as the_same from surveillance_system_maintenances left join users as employee on employee.id = surveillance_system_maintenances.preparer_id where void = '" . $request->void . "' ), data2 as ( select *, sum(the_same) over (order by id) group_num FROM data1 ) select * from data2 where approval_id = '" . $user_id . "' order by id desc");
+        } else {
+            $approvals = DB::select("with data1 as ( select surveillance_system_maintenances.*, employee.name as name, employee.dept as employee_dept, (select users.name from surveillance_system_maintenances t2 left join users on t2.approval_id = users.id where t2.approval_level = surveillance_system_maintenances.approval_progress and t2.document_name = surveillance_system_maintenances.document_name and t2.token = surveillance_system_maintenances.token ) as need_approve, case when preparer_id = lag(preparer_id) over (order by surveillance_system_maintenances.id) and document_name = lag(document_name) over (order by surveillance_system_maintenances.id) and token = lag(token) over (order by surveillance_system_maintenances.id) then 0 else 1 end as the_same from surveillance_system_maintenances left join users as employee on employee.id = surveillance_system_maintenances.preparer_id where void = 'false' ), data2 as ( select *, sum(the_same) over (order by id) group_num FROM data1 ) select * from data2 where approval_id = '" . $user_id . "' order by id desc");
+        }
+
+        // dd($approvals);
+        return view('surveillance-system-maintenance.index', compact('approvals'));
+    }
+
     public function create()
     {
         $users = User::all();

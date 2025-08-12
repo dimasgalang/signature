@@ -18,6 +18,7 @@ use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\SignaturePadController;
 use App\Http\Controllers\SmartITController;
 use App\Http\Controllers\SpeechController;
+use App\Http\Controllers\SurveillanceSystemMaintenanceController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -86,6 +87,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/approval/indexCommitment', [ApprovalController::class, 'indexCommitment'])->name('approval.indexCommitment');
     Route::get('/approval/indexItAccess', [ApprovalController::class, 'indexItAccess'])->name('approval.indexItAccess');
     Route::get('/approval/indexDeactivate', [ApprovalController::class, 'indexDeactivate'])->name('approval.indexDeactivate');
+    Route::get('/approval/indexSurveillance', [ApprovalController::class, 'indexSurveillance'])->name('approval.indexSurveillance');
     Route::get('/approval/create', [ApprovalController::class, 'create'])->name('approval.create');
     Route::get('/approval/approve/{id}', [ApprovalController::class, 'approve'])->name('approval.approve');
     Route::get('/approval/fetchapproval/{id}', [ApprovalController::class, 'fetchapproval'])->name('approval.fetchapproval');
@@ -178,6 +180,21 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/cyber-user/void', [CyberUserAccountController::class, 'void'])->name('cyber-user.void');
     Route::post('/cyber-user/restore', [CyberUserAccountController::class, 'restore'])->name('cyber-user.restore');
 
+    // Surveillance System Maintenance
+    Route::get('/surveillance-system-maintenance/index', [SurveillanceSystemMaintenanceController ::class, 'index'])->name('surveillance-system-maintenance.index');
+    Route::get('/surveillance-system-maintenance/create', [SurveillanceSystemMaintenanceController::class, 'create'])->name('surveillance-system-maintenance.create');
+    Route::post('/surveillance-system-maintenance/store', [SurveillanceSystemMaintenanceController::class, 'store'])->name('surveillance-system-maintenance.store');
+    Route::get('/surveillance-system-maintenance/view/{id}', [SurveillanceSystemMaintenanceController::class, 'generatePdf'])->name('surveillance-system-maintenance.view');
+    Route::get('/surveillance-system-maintenance/revision/{surveillance_maintenance_id}', [SurveillanceSystemMaintenanceController::class, 'edit'])->name('surveillance-system-maintenance.edit');
+    Route::get('/surveillance-system-maintenance/fetchsurveillancemaintenance/{id}', [SurveillanceSystemMaintenanceController::class, 'fetchsurveillancemaintenance'])->name('surveillance-system-maintenance.fetchsurveillancemaintenance');
+    Route::get('/surveillance-system-maintenance/approve/{surveillance_maintenance_id}', [SurveillanceSystemMaintenanceController::class, 'approve'])->name('surveillance-system-maintenance.approve');
+    Route::post('/surveillance-system-maintenance/approved', [SurveillanceSystemMaintenanceController::class, 'approved'])->name('surveillance-system-maintenance.approved');
+    Route::get('/surveillance-system-maintenance/view/{id}', [SurveillanceSystemMaintenanceController::class, 'generatePdf'])->name('surveillance-system-maintenance.view');
+    Route::post('/surveillance-system-maintenance/update', [SurveillanceSystemMaintenanceController::class, 'update'])->name('surveillance-system-maintenance.update');
+    Route::post('/surveillance-system-maintenance/void', [SurveillanceSystemMaintenanceController::class, 'void'])->name('surveillance-system-maintenance.void');
+    Route::post('/surveillance-system-maintenance/restore', [SurveillanceSystemMaintenanceController::class, 'restore'])->name('surveillance-system-maintenance.restore');
+
+
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
 
@@ -190,6 +207,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/template/commitment', [TemplateController::class, 'commitment'])->name('template.commitment');
     Route::get('/template/it-access', [TemplateController::class, 'it_access'])->name('template.itaccess');
     Route::get('/template/cyber-user-account', [TemplateController::class, 'cyber_user_account'])->name('template.cyber_user_account');
+    Route::get('/template/surveillance-system-maintenance', [TemplateController::class, 'surveillance_system_maintenance'])->name('template.surveillance_system_maintenance');
 
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');
