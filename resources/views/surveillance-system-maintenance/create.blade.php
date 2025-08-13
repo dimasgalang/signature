@@ -35,23 +35,31 @@
                             <div class="card-body">
                                 <div id="employmentIdentity">
                                     <div class="row">
-                                        <div class="col-xl-3">
+                                        <div class="col-xl-2">
                                             <label>Date of Maintenance :</label>
                                             <input class="form-control" type="date" id="date_of_maintenance" name="date_of_maintenance" value="{{ date('Y-m-d') }}" readonly>
                                         </div>
-                                        <div class="col-xl-3">
+                                        <div class="col-xl-2">
                                             <label>Document Name :</label>
                                             <input class="form-control" type="text" id="document_name" name="document_name" value="{{ $newIdSurveillanceSystemMaintenance }}" readonly>
                                         </div>
-                                        <div class="col-xl-3">
+                                        <div class="col-xl-2">
                                             <label>Maintenance performer  :</label>
                                             <input class="form-control" type="text" id="name_performer" name="name_performer" value="{{ $performerId->name }}" readonly>
                                             <input class="form-control" type="hidden" id="department_performer" name="department_performer" value="{{ $performerId->dept }}">
                                         </div>
-                                        <div class="col-xl-3">
+                                        <div class="col-xl-2">
                                             <label>Follow-Up person   :</label>
                                             <input class="form-control" type="text" id="name_follow_up" name="name_follow_up" value="{{ $ItHeadId->name }}" readonly>
                                             <input class="form-control" type="hidden" id="department_follow_up" name="department_follow_up" value="{{ $ItHeadId->dept }}">
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <label>Number Of Camera  :</label>
+                                            <input class="form-control" type="number" id="number_of_camera" name="number_of_camera" required>
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <label>Number Of Server  :</label>
+                                            <input class="form-control" type="number" id="number_of_server" name="number_of_server" required>
                                         </div>
                                     </div>
                                 </div>
