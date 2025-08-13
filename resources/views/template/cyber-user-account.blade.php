@@ -317,9 +317,9 @@
                     </center>
                 </td>
                 <td class="header" style="text-align: center; vertical-align: middle;">
-                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#: 01/FM-PL05</p>
-                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Revision: 00</p>
-                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Effective: {{\Carbon\Carbon::parse($userDeactivateRequest[0]->date_of_request)->format('d-F-Y')}}</p>
+                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Doc#: 04/FM-PL05</p>
+                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Revision: 0</p>
+                        <p style="font-size:11px; x-small; margin:0; text-align: left;">Effective: 13/May/25</p>
                 </td>
             </tr>
         </table>
