@@ -78,26 +78,14 @@
                                             </a></center>
                                         </td>
                                         @endif
-                                        <td class="text-center">
-                                            <div class="flex-row">
-                                                <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view" data-view-document="{{ route('cyber-user.view', $approval->deactivation_request_id) }}">
+                                        <td class="d-flex flex-row justify-content-center align-items-center">
+                                            {{-- <div class="flex-row"> --}}
+                                                <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view mx-1" data-view-document="{{ route('cyber-user.view', $approval->deactivation_request_id) }}">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
     
-                                                @if ($approval->preparer_id == $approval->approval_id)
-                                                    @if (request()->get('void') == 'false' || request()->get('void') == '')
-                                                    <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('cyber-user.fetchdeactivaterequest', $approval->id) }}" data-void-link="{{ route('cyber-user.void') }}" data-void-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#voidModal">
-                                                        <i class="fas fa-ban"></i>
-                                                    </a>
-                                                    @elseif (request()->get('void') == 'true')
-                                                    <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore" data-restore-url="{{ route('cyber-user.fetchdeactivaterequest', $approval->id) }}" data-restore-link="{{ route('cyber-user.restore') }}" data-restore-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#restoreModal">
-                                                        <i class="fas fa-history"></i>
-                                                    </a>
-                                                    @endif
-                                                @endif
-    
                                                 @if($approval->preparer_id == Auth::user()->id && ($approval->approval_progress < '2' || $approval->status == 'revision'))
-                                                    <a href="{{route('cyber-user.edit', $approval->deactivation_request_id)}}" class="btn btn-warning btn-circle btn-sm">
+                                                    <a href="{{route('cyber-user.edit', $approval->deactivation_request_id)}}" class="btn btn-warning btn-circle btn-sm mx-1">
                                                         <i class="fas fa-pen"></i>
                                                     </a>
                                                 @endif
@@ -105,7 +93,7 @@
                                                 @if (request()->get('void') == 'false' || request()->get('void') == '')
                                                     @if ($approval->approval_level == $approval->approval_progress)
                                                         @if ($approval->approval_progress === '3' && $approval->status == 'pending')
-                                                                <a id="show-revision" class="btn btn-warning btn-circle btn-sm show-revision" data-revision-url="{{ route('cyber-user.fetchdeactivaterequest', $approval->id) }}" data-revision-link="{{ route('cyber-user.revision') }}" data-revision-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#revisionModal">
+                                                                <a id="show-revision" class="btn btn-warning btn-circle btn-sm show-revision mx-1" data-revision-url="{{ route('cyber-user.fetchdeactivaterequest', $approval->id) }}" data-revision-link="{{ route('cyber-user.revision') }}" data-revision-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#revisionModal">
                                                                     <i class="fas fa-times"></i>
                                                                 </a>
                                                                 <form action="{{ route('cyber-user.approved') }}" method="post">
@@ -115,7 +103,7 @@
                                                                     <input type="hidden" name="document_name" value="{{$approval->document_name}}">
                                                                     <input type="hidden" name="token" value="{{$approval->token}}">
                                                                     <input type="hidden" name="approval_progress" value="{{$approval->approval_progress}}">
-                                                                    <button type="submit" class="btn btn-success btn-circle btn-sm">
+                                                                    <button type="submit" class="btn btn-success btn-circle btn-sm mx-1">
                                                                         <i class="fas fa-check"></i>
                                                                     </button>
                                                                 </form>
@@ -128,7 +116,7 @@
                                                                 <input type="hidden" name="document_name" value="{{$approval->document_name}}">
                                                                 <input type="hidden" name="token" value="{{$approval->token}}">
                                                                 <input type="hidden" name="approval_progress" value="{{$approval->approval_progress}}">
-                                                                <button type="submit" class="btn btn-success btn-circle btn-sm">
+                                                                <button type="submit" class="btn btn-success btn-circle btn-sm mx-1">
                                                                     <i class="fas fa-check"></i>
                                                                 </button>
                                                             </form>
@@ -136,7 +124,19 @@
                                                         @endif
                                                     @endif
                                                 @endif
-                                            </div>
+                                                
+                                                @if ($approval->preparer_id == $approval->approval_id)
+                                                    @if (request()->get('void') == 'false' || request()->get('void') == '')
+                                                    <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void mx-1" data-void-url="{{ route('cyber-user.fetchdeactivaterequest', $approval->id) }}" data-void-link="{{ route('cyber-user.void') }}" data-void-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#voidModal">
+                                                        <i class="fas fa-ban"></i>
+                                                    </a>
+                                                    @elseif (request()->get('void') == 'true')
+                                                    <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore mx-1" data-restore-url="{{ route('cyber-user.fetchdeactivaterequest', $approval->id) }}" data-restore-link="{{ route('cyber-user.restore') }}" data-restore-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#restoreModal">
+                                                        <i class="fas fa-history"></i>
+                                                    </a>
+                                                    @endif
+                                                @endif
+                                            {{-- </div> --}}
                                         </td>
                                     </tr>
                                     @endforeach

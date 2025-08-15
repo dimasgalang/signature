@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('surveillance_system_maintenance_id');
             $table->date('date_of_maintenance');
+            $table->string('number_of_camera');
+            $table->string('number_of_server');
             $table->string('approval_id');
             $table->string('preparer_id');
             $table->string('approval_level');

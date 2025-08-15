@@ -56,6 +56,8 @@ class SurveillanceSystemMaintenanceController extends Controller
         SurveillanceSystemMaintenance::create([
             'surveillance_system_maintenance_id' => $request->surveillance_system_maintenance_id,
             'date_of_maintenance' => $request->date_of_maintenance,
+            'number_of_camera' => $request->number_of_camera,
+            'number_of_server' => $request->number_of_server,
             'approval_id' => $performerId->id,
             'preparer_id' => $performerId->id,
             'approval_level' => '1',
@@ -67,6 +69,8 @@ class SurveillanceSystemMaintenanceController extends Controller
         SurveillanceSystemMaintenance::create([
             'surveillance_system_maintenance_id' => $request->surveillance_system_maintenance_id,
             'date_of_maintenance' => $request->date_of_maintenance,
+            'number_of_camera' => $request->number_of_camera,
+            'number_of_server' => $request->number_of_server,
             'approval_id' => $ITHeadId->id,
             'preparer_id' => $performerId->id,
             'approval_level' => '2',
@@ -205,6 +209,11 @@ class SurveillanceSystemMaintenanceController extends Controller
 
     public function update(Request $request)
     {
+        $surveillanceSystemMaintenance = SurveillanceSystemMaintenance::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id);
+        $surveillanceSystemMaintenance->update([
+            'number_of_camera' => $request->number_of_camera,
+            'number_of_server' => $request->number_of_server,
+        ]);
         foreach ($request->surveillanceCameraLensItems as $questionnaireId => $answer) {
             AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id)
                 ->where('questionnaire_id', $questionnaireId)

@@ -50,7 +50,9 @@
                 <a class="collapse-item" href="{{ route('approval.indexCommitment') }}">Commitment List</a>
                 <a class="collapse-item" href="{{ route('approval.indexItAccess') }}">IT Access List</a>
                 <a class="collapse-item" href="{{ route('approval.indexDeactivate') }}">Deactivate User</a>
+                @if(Auth::user()->dept === 'IT')
                 <a class="collapse-item" href="{{ route('approval.indexSurveillance') }}">Surveillance System</a>
+                @endif
             </div>
         </div>
     </li>
