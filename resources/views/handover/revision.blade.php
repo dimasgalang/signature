@@ -118,6 +118,16 @@
                                                 </div>
                                             @endif
                                         </div>
+                                        <div class="row">
+                                            <div class="col-xl-6">
+                                                <label>Items Detail :</label>
+                                                <input class="form-control" type="text" id="item_details" name="product_id[{{$key}}][item_details]" value="{{$itemsHdv->item_details}}">
+                                            </div>
+                                            <div class="col-xl-6">
+                                                <label>Serial Number :</label>
+                                                <input class="form-control" type="text" id="serial_number" name="product_id[{{$key}}][serial_number]" value="{{$itemsHdv->serial_number}}">
+                                            </div>
+                                        </div>
                                     @endforeach
                                 </div>
                                 <input type="hidden" id="itemsToDelete" name="items_to_delete" value="">

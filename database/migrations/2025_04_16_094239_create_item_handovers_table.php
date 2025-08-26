@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('item_handovers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('handover_id')->constrained('handovers')->onDelete('cascade');
-            $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
+            $table->string('item_id')->nullable();
+            $table->string('item_details')->nullable();
+            $table->string('serial_number')->nullable();
             $table->integer('quantity');
             $table->timestamps();
         });

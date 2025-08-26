@@ -56,6 +56,8 @@ class HandoverController extends Controller
             $item = new ItemHandover();
             $item->handover_id = $handover->id;
             $item->item_id = $value['barang_code'];
+            $item->item_details = $value['item_details'] ?? '';
+            $item->serial_number = $value['serial_number'];
             $item->quantity = $value['quantity'];
             $item->save();
         }
@@ -127,6 +129,8 @@ class HandoverController extends Controller
                 foreach ($items as $item) {
                     $item->handover_id = $request->handover_id;
                     $item->item_id = $value['item_id'];
+                    $item->item_details = $value['item_details'];
+                    $item->serial_number = $value['serial_number'];
                     $item->quantity = $value['quantity'];
                     $item->save();
                 }
@@ -135,6 +139,8 @@ class HandoverController extends Controller
                 $item = new ItemHandover();
                 $item->handover_id = $request->handover_id;
                 $item->item_id = $value['item_id'];
+                $item->item_details = $value['item_details'];
+                $item->serial_number = $value['serial_number'];
                 $item->quantity = $value['quantity'];
                 $item->save();
             }
@@ -186,22 +192,20 @@ class HandoverController extends Controller
         $itemHandover = DB::select("SELECT ih.* FROM item_handovers ih WHERE ih.handover_id = ?", [$id]);
         // dd($handover);
         $itemData = [];
+
         foreach ($itemHandover as $item) {
             $itemsSmartIT = DB::connection('smartit')->table('ms_barang')->select('barang_code', 'barang_name', 'satuan_code')->where('barang_status', '=', 'Active')->where('barang_code', '=', $item->item_id)->get();
             $data = array(
                 'item_id' => $itemsSmartIT[0]->barang_code,
                 'item_name' => $itemsSmartIT[0]->barang_name,
+                'item_details' => $item->item_details,
                 'quantity' => $item->quantity,
+                'serial_number' => $item->serial_number,
                 'item_unit' => $itemsSmartIT[0]->satuan_code,
             );
             $itemData[] = $data;
         }
 
-        // foreach($itemData as $list) {
-        //     dd($list['item_name']);
-        // }
-        // dd($itemData);
-        // $pdf = PDF::loadView('template.handover', compact(['handover', 'itemHandover']));
         $pdf = PDF::loadView('template.handover', compact(['handover', 'itemData']));
 
         return $pdf;

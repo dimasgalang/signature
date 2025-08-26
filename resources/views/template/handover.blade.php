@@ -129,7 +129,7 @@
         @foreach($itemData as $item)
         <tr>
           <td>{{ $loop->iteration }}</td>
-          <td>{{ $item['item_name'] }}</td>
+          <td>{{ $item['item_name'] . ' ' . $item['item_details'] . ' ' . $item['serial_number'] }}</td>
           <td>{{ $item['quantity'] }}</td>
           <td>{{ $item['item_unit'] }}</td>
         </tr>
