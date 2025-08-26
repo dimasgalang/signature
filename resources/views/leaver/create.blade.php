@@ -117,6 +117,16 @@
                                             <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-leaver" onclick="">Add</button>
                                         </div>
                                     </div>
+                                    <div class="row mb-3">
+                                        <div class="col-xl-6">
+                                            <label>Items Detail :</label>
+                                            <input class="form-control" type="text" id="item_details" name="product_id[0][item_details]" required>
+                                        </div>
+                                        <div class="col-xl-6">
+                                            <label>Serial Number :</label>
+                                            <input class="form-control" type="text" id="serial_number" name="product_id[0][serial_number]" required>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -219,7 +229,7 @@
         $('.add-leaver').on('click', function() {
             let itemInput = document.getElementById('itemInput');
             let itemIndex = itemInput.children.length;
-            $("#itemInput").append(`<div class="row"><div class="col-xl-6"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][barang_code]" ><option></option>@foreach ($items as $item )<option value="{{ $item->barang_code }}">{{ $item->barang_code }} - {{ $item->barang_name }}</option>@endforeach</select></div><div class="col-xl-4"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" required></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
+            $("#itemInput").append(`<div><div class="row"><div class="col-xl-6"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][barang_code]" ><option></option>@foreach ($items as $item )<option value="{{ $item->barang_code }}">{{ $item->barang_code }} - {{ $item->barang_name }}</option>@endforeach</select></div><div class="col-xl-4"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" required></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div><div class="row mb-3"><div class="col-xl-6"><label>Items Detail :</label><input class="form-control" type="text" id="item_details" name="product_id[${itemIndex}][item_details]" required></div><div class="col-xl-6"><label>Serial Number :</label><input class="form-control" type="text" id="serial_number" name="product_id[${itemIndex}][serial_number]" required></div></div></div>`);
             // console.log(itemIndex);
             $('.product_id').select2({
                 placeholder: 'Choose Product Item',
@@ -231,7 +241,7 @@
         });
 
         $(document).on('click', '.removeThis', function() {
-            $(this).parent().parent().remove();
+            $(this).parent().parent().parent().remove();
             // Perbarui opsi setelah menambahkan dropdown baru
             updateDropdownOptions();
         });

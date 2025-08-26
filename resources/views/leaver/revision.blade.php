@@ -118,6 +118,16 @@
                                                 </div>
                                             @endif
                                         </div>
+                                        <div class="row mb-3">
+                                            <div class="col-xl-6">
+                                                <label>Items Detail :</label>
+                                                <input class="form-control" type="text" id="item_details" name="product_id[{{$key}}][item_details]" required>
+                                            </div>
+                                            <div class="col-xl-6">
+                                                <label>Serial Number :</label>
+                                                <input class="form-control" type="text" id="serial_number" name="product_id[{{$key}}][serial_number]" required>
+                                            </div>
+                                        </div>
                                     @endforeach
                                 </div>
                                 <input type="hidden" id="itemsToDelete" name="items_to_delete" value="">
@@ -179,52 +189,6 @@
 <script type="module" src="{{asset('vendor/module/pdf.worker.min.mjs')}}"></script>
 <script src="{{asset('vendor/jquery/interact.min.js')}}"></script>
 
-{{-- <script>
-    $("#submit").click(function() {
-        $(this).hide();
-    });
-    document.getElementById('file').onchange = function () {
-        var name = document.getElementById('file')
-        document.getElementById('document_name').value = name.files.item(0).name.split('.')[0];
-    };
-</script> --}}
-
-{{-- <script>
-    document.querySelector("#file").addEventListener("change", async function(e){
-        var file = e.target.files[0]
-        const toBase64 = file => new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-        });
-        console.log(await toBase64(file));
-
-        document.getElementById('base64').value = await toBase64(file);
-        if (file.type === "application/pdf") {
-            const fileURL = URL.createObjectURL(file);
-            document.getElementById('pdfPreview').src = fileURL;
-        } else {
-            alert("Please upload a valid PDF file.");
-        }
-    })
-</script> --}}
-{{-- <script type="text/javascript">
-    function addRecords() {
-        let itemInput = document.getElementById('itemInput');
-        let itemIndex = itemInput.children.length;
-        $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" >@foreach ($items as $item )<option value="{{ $item->barang_code }}">{{ $item->barang_name }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
-        $('.product_id').select2({
-            allowClear: true,
-            placeholder: 'Choose Approval',
-        });
-    }
-
-    $(document).on('click', '.removeThis', function() {
-        $(this).parent().parent().remove();
-    })
-</script> --}}
-
 <script type="text/javascript">
 
     $(document).ready(function() {
@@ -279,7 +243,7 @@
         $('.add-leaver').on('click', function() {
             let itemInput = document.getElementById('itemInput');
             let itemIndex = itemInput.children.length;
-            $("#itemInput").append(`<div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" ><option></option>@foreach ($items as $item )<option value="{{ $item->barang_code }}">{{ $item->barang_code }} - {{ $item->barang_name }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div>`);
+            $("#itemInput").append(`<div><div class="row"><div class="col-xl-5"><label>Product Name :</label><select class="form-control product_id" id="product_id" name="product_id[${itemIndex}][item_id]" ><option></option>@foreach ($items as $item )<option value="{{ $item->barang_code }}">{{ $item->barang_code }} - {{ $item->barang_name }}</option>@endforeach</select></div><div class="col-xl-5"><label>Quantity :</label><input class="form-control" type="number" id="number" name="product_id[${itemIndex}][quantity]" ></div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis">Remove</button></div></div><div class="row mb-3"><div class="col-xl-6"><label>Items Detail :</label><input class="form-control" type="text" id="item_details" name="product_id[${itemIndex}][item_details]" required></div><div class="col-xl-6"><label>Serial Number :</label><input class="form-control" type="text" id="serial_number" name="product_id${itemIndex}][serial_number]" required></div></div></div>`);
             // console.log(itemIndex);
             $('.product_id').select2({
                 placeholder: 'Choose Product Item',
@@ -291,7 +255,7 @@
         });
 
         $(document).on('click', '.removeThis', function() {
-            $(this).parent().parent().remove();
+            $(this).parent().parent().parent().remove();
             // Perbarui opsi setelah menambahkan dropdown baru
             updateDropdownOptions();
         });

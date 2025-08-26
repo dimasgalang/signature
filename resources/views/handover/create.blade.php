@@ -120,7 +120,7 @@
                                     <div class="row mb-3">
                                         <div class="col-xl-6">
                                             <label>Items Detail :</label>
-                                            <input class="form-control" type="text" id="item_details" name="product_id[0][items_name]" required>
+                                            <input class="form-control" type="text" id="item_details" name="product_id[0][item_details]" required>
                                         </div>
                                         <div class="col-xl-6">
                                             <label>Serial Number :</label>

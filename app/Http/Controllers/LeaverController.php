@@ -58,6 +58,8 @@ class LeaverController extends Controller
             $item = new ItemLeaver();
             $item->leaver_id = $leaver->id;
             $item->item_id = $value['barang_code'];
+            $item->item_details = $value['item_details'];
+            $item->serial_number = $value['serial_number'];
             $item->quantity = $value['quantity'];
             $item->save();
         }
@@ -102,6 +104,8 @@ class LeaverController extends Controller
             $data = array(
                 'item_id' => $itemsSmartIT[0]->barang_code,
                 'item_name' => $itemsSmartIT[0]->barang_name,
+                'item_details' => $item->item_details,
+                'serial_number' => $item->serial_number,
                 'quantity' => $item->quantity,
                 'item_unit' => $itemsSmartIT[0]->satuan_code,
             );
@@ -194,6 +198,8 @@ class LeaverController extends Controller
                 foreach ($items as $item) {
                     $item->leaver_id = $request->leaver_id;
                     $item->item_id = $value['item_id'];
+                    $item->item_details = $value['item_details'];
+                    $item->serial_number = $value['serial_number'];
                     $item->quantity = $value['quantity'];
                     $item->save();
                 }
@@ -202,6 +208,8 @@ class LeaverController extends Controller
                 $item = new ItemLeaver();
                 $item->leaver_id = $request->leaver_id;
                 $item->item_id = $value['item_id'];
+                $item->item_details = $value['item_details'];
+                $item->serial_number = $value['serial_number'];
                 $item->quantity = $value['quantity'];
                 $item->save();
             }
