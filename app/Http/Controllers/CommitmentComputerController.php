@@ -84,4 +84,28 @@ class CommitmentComputerController extends Controller
         $users = User::all();
         return view('commitment.createApprove', compact(['users', 'commitment']));
     }
+
+    public function void(Request $request)
+    {
+        $commitment = Commitment::find($request->commitment_id);
+        $commitment->void = 'true';
+        $commitment->save();
+        Alert::success('Void Successfully!', 'Document successfully void!');
+        return redirect()->intended('commitment/index');
+    }
+    public function restore(Request $request)
+    {
+        $commitment = Commitment::find($request->commitment_id);
+        $commitment->void = 'false';
+        $commitment->save();
+        Alert::success('Restore Successfully!', 'Document successfully restore!');
+        return redirect()->intended('commitment/index');
+    }
+
+    public function fetchCommitment($id)
+    {
+        $fetchCommitment = Commitment::select('commitments.*', 'users.name')->leftJoin('users', 'users.npk', 'commitments.npk')->where('commitments.id', '=', $id)->get();
+        // dd($fetchCommitment);
+        return response()->json($fetchCommitment);
+    }
 }

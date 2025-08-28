@@ -82,60 +82,7 @@
                                             </center>
                                             @endif
                                         </td>
-                                        {{-- @if ($approval->status == 'pending')
-                                        <td><center><a class="btn btn-danger btn-icon-split btn-sm">
-                                            <span class="text">Pending</span>
-                                            </a></center>
-                                        </td>
-                                        @elseif ($approval->status == 'approved')
-                                        <td><center><a class="btn btn-success btn-icon-split btn-sm">
-                                            <span class="text">Approved</span>
-                                            </a></center>
-                                        </td>
-                                        @elseif ($approval->status == 'revision')
-                                        <td><center><a id="show-comment" class="btn btn-warning btn-icon-split btn-sm show-comment" data-toggle="modal" data-target="#commentModal" data-comment-url="{{ route('approval.fetchapproval', $approval->id) }}">
-                                            <span class="text">Revision</span>
-                                            </a></center>
-                                        </td>
-                                        @endif
-                                        <td class="text-center">
-                                            @if (($approval->value_first == null) && ($approval->value_last == null))
-                                            <a href="{{ asset('/storage/document/' . $approval->original_name) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            @elseif ((!is_null($approval->value_first)) && ($approval->value_last == null))
-                                            <a href="{{ asset('/storage/document/' . $approval->value_first) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            @elseif ((!is_null($approval->value_first)) && (!is_null($approval->value_last)))
-                                            <a href="{{ asset('/storage/document/' . $approval->value_last) }}" class="btn btn-primary btn-circle btn-sm" target="_blank">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            @endif
-                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
-                                                @if ($approval->approval_level == $approval->approval_progress)
-                                                    @if ($approval->status == 'pending')
-                                                    <a href="{{ route('approval.approve', ['id' => $approval->id]) }}" class="btn btn-success btn-circle btn-sm">
-                                                        <i class="fas fa-check"></i>
-                                                    </a>
-                                                    <a id="show-revision" class="btn btn-warning btn-circle btn-sm show-revision" data-revision-url="{{ route('approval.fetchapproval', $approval->id) }}" data-revision-link="{{ route('approval.revision') }}" data-revision-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#revisionModal">
-                                                        <i class="fas fa-times"></i>
-                                                    </a>
-                                                    @endif
-                                                @endif
-                                            @endif
-                                            @if ($approval->preparer_id == $approval->approval_id)
-                                                @if (request()->get('void') == 'false' || request()->get('void') == '')
-                                                <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void" data-void-url="{{ route('approval.fetchapproval', $approval->id) }}" data-void-link="{{ route('approval.void') }}" data-void-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#voidModal">
-                                                    <i class="fas fa-ban"></i>
-                                                </a>
-                                                @elseif (request()->get('void') == 'true')
-                                                <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore" data-restore-url="{{ route('approval.fetchapproval', $approval->id) }}" data-restore-link="{{ route('approval.restore') }}" data-restore-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#restoreModal">
-                                                    <i class="fas fa-history"></i>
-                                                </a>
-                                                @endif
-                                            @endif
-                                        </td> --}}
+                                        
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -170,35 +117,6 @@
             </div>
         </div>
 
-        {{-- <div class="modal fade" id="revisionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md" role="document" >
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 id="revision-title" class="modal-title" id="exampleModalLabel">Revision Record</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">x</span>
-                        </button>
-                    </div>
-                    <form action="{{ route('approval.revision') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                    <div class="modal-body">
-                            <input class="form-control" type="hidden" id="modal_preparer_id" name="preparer_id" readonly>
-                            <input class="form-control" type="hidden" id="modal_name" name="name" readonly>
-                            <label>Document Name :</label>
-                            <input class="form-control" type="text" id="modal_document_name" name="document_name" readonly>
-                            <br>
-                            <input class="form-control" type="hidden" id="modal_token" name="token" readonly>
-                            <label>Revision Comment : </label>
-                            <textarea class="form-control" type="hidden" id="modal_comment" name="comment"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
-                        <a id="btn-confirm-revision" href=""><button class="btn btn-primary" type="submit">Confirm</button></a>
-                    </div>
-                    </form>
-                </div>
-            </div>
-        </div> --}}
 
         <div class="modal fade" id="voidModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
@@ -248,51 +166,6 @@
             </div>
         </div>
 
-        {{-- <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md" role="document" >
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 id="comment-title" class="modal-title" id="exampleModalLabel">Comment Record</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">x</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <label>Revision Comment : </label>
-                        <textarea class="form-control" type="text" id="modal_comment_detail" name="comment" readonly></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-
-        {{-- <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md" role="document" >
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Import Approval</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">x</span>
-                        </button>
-                    </div>
-                    <form action="" method="POST" enctype="multipart/form-data">
-                        @csrf
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label>PILIH FILE</label>
-                                    <input type="file" name="file" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                <button type="submit" class="btn btn-success">Import</button>
-                            </div>
-                    </form>
-                </div>
-            </div>
-        </div> --}}
 
 
 @include('layout.footer')
@@ -337,6 +210,7 @@
         $('body').on('click', '#show-void', function() {
         var jsonVoid = $(this).data('void-url'); 
         $.get(jsonVoid, function (data) {
+            console.log(jsonVoid);
             if (data.length > 0) {
                 $('#modal_commitment_id_void').val(data[0].id);
                 } else {
