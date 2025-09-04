@@ -12,6 +12,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItAccessRequestController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PurchaseRequestionController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SendEmailController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\SpeechController;
 use App\Http\Controllers\SurveillanceSystemMaintenanceController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
+use App\Models\PurchaseRequestOrder;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -193,6 +195,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/surveillance-system-maintenance/update', [SurveillanceSystemMaintenanceController::class, 'update'])->name('surveillance-system-maintenance.update');
     Route::post('/surveillance-system-maintenance/void', [SurveillanceSystemMaintenanceController::class, 'void'])->name('surveillance-system-maintenance.void');
     Route::post('/surveillance-system-maintenance/restore', [SurveillanceSystemMaintenanceController::class, 'restore'])->name('surveillance-system-maintenance.restore');
+
+
+    // Purchase Request Order
+    Route::get('/purchase-requestion/index', [PurchaseRequestionController ::class, 'index'])->name('purchase-requestion.index');
+    Route::get('/purchase-requestion/create', [PurchaseRequestionController::class, 'create'])->name('purchase-requestion.create');
+    Route::post('/purchase-requestion/store', [PurchaseRequestionController::class, 'store'])->name('purchase-requestion.store');
+    Route::get('/purchase-requestion/fetchPurchaseRequest/{purchaseRequestionNumber}', [PurchaseRequestionController::class, 'fetchPurchaseRequest'])->name('purchase-requestion.fetchPurchaseRequest');
+    Route::post('/purchase-requestion/processPurchaseRequest', [PurchaseRequestionController::class, 'processPurchaseRequest'])->name('purchase-requestion.processPurchaseRequest');
+    Route::post('/purchase-requestion/canceledPurchaseRequest', [PurchaseRequestionController::class, 'canceledPurchaseRequest'])->name('purchase-requestion.canceledPurchaseRequest');
+    Route::get('/purchase-requestion/arrival/{id}', [PurchaseRequestionController::class, 'createArrival'])->name('purchase-requestion.arrival');
+    Route::post('/purchase-requestion/storeArrival', [PurchaseRequestionController::class, 'storeArrival'])->name('purchase-requestion.storeArrival');
 
 
     //Text To Speech
