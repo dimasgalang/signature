@@ -14,7 +14,8 @@ class PurchaseRequestionController extends Controller
     {
         // $purchaseRequests = PurchaseRequestOrder::select('purchase_requestions.*')->count('nm_barang')->groupBy('purchase_requestions.purchase_requestion_number')->get();
         // $purchaseRequests = DB::select('select purchase_requestions.*, count(nm_barang) AS total_items from purchase_requestions group by purchase_requestion_number');
-        $purchaseRequests = DB::select(" SELECT t.*, x.total_items FROM purchase_requestions t INNER JOIN ( SELECT purchase_requestion_number, MIN(id) AS min_id, COUNT(nm_barang) AS total_items FROM purchase_requestions GROUP BY purchase_requestion_number ) x ON t.purchase_requestion_number = x.purchase_requestion_number AND t.id = x.min_id");
+
+        $purchaseRequests = DB::select(" SELECT * FROM ( SELECT pr.*, COUNT(pr.nm_barang) OVER (PARTITION BY pr.purchase_requestion_number) AS total_items, ROW_NUMBER() OVER (PARTITION BY pr.purchase_requestion_number ORDER BY pr.status_code ASC) AS rn FROM purchase_requestions pr ) t WHERE t.rn = 1 ORDER BY t.status_code ASC ");
                 return view('purchase-requestion.index', compact('purchaseRequests'));
     }
 
@@ -59,7 +60,8 @@ class PurchaseRequestionController extends Controller
                 'date_of_request' => now(),
                 'nm_barang' => $item['item_name'],
                 'qty' => $item['quantity'],
-                'status' => 'waiting', // Default status
+                'status' => 'waiting',
+                'status_code' => '01',
             ]);
         }
 
@@ -76,11 +78,23 @@ class PurchaseRequestionController extends Controller
         return response()->json(['data' => $purchaseRequests]);
     }
 
+    public function fetchArrivalHistory($purchaseRequestionNumber)
+    {
+        $arrivalHistory = DB::table('arrival_purchase_items as api')
+            ->join('purchase_requestions as pr', 'api.id_barang', 'pr.id')
+            ->select('api.*', 'pr.nm_barang')
+            ->where('api.purchase_requestion_number', $purchaseRequestionNumber)
+            ->orderBy('api.created_at', 'desc')
+            ->get();
+        return response()->json(['data' => $arrivalHistory]);
+    }
+
     public function processPurchaseRequest(Request $request)
     {
         PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number)
             ->update([
-                'status' => 'process'
+                'status' => 'process', 
+                'status_code' => '02'
             ]);
         Alert::success('Processed Successfully!', 'Purchase Request successfully processed!');
         return redirect()->intended('purchase-requestion/index');
@@ -89,36 +103,59 @@ class PurchaseRequestionController extends Controller
     public function canceledPurchaseRequest(Request $request)
     {
         PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number)
-            ->update(['status' => 'canceled']);
+            ->update(['status' => 'canceled', 'status_code' => '04']);
         Alert::success('Canceled Successfully!', 'Purchase Request successfully canceled!');
         return redirect()->intended('purchase-requestion/index');
     }
 
-    public function createArrival($id)
+    public function finishedPurchaseRequest(Request $request)
     {
-        $purchaseRequests = PurchaseRequestion::where('id', $id)->get();
-        return view('purchase-requestion.arrival', compact('purchaseRequests'));
+        // PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number)
+        //     ->update(['status' => 'canceled']);
+        // Alert::success('Canceled Successfully!', 'Purchase Request successfully canceled!');
+        // return redirect()->intended('purchase-requestion/index');
+    }
+
+    public function createArrival($purchaseRequestionNumber)
+    {
+        // $purchaseRequests = PurchaseRequestion::where('purchase_requestion_number', $purchaseRequestionNumber)->get();
+        $purchaseRequests = DB::table('purchase_requestions as pr')
+            ->select('pr.*', DB::raw('ISNULL(a.incoming_qty, 0) as incoming_qty'))
+            ->leftJoin(DB::raw('(SELECT id_barang, SUM(CAST(qty AS INT)) as incoming_qty FROM arrival_purchase_items GROUP BY id_barang) a'), 'pr.id', '=', 'a.id_barang')
+            ->where('pr.purchase_requestion_number', $purchaseRequestionNumber)
+            ->get();
+
+        $created_by = DB::table('users')->where('id', $purchaseRequests[0]->employee_id)->first()->name;
+
+            // dd($purchaseRequests);
+        return view('purchase-requestion.arrival', compact('purchaseRequests', 'created_by'));
     }
 
     public function storeArrival(Request $request)
     {
-        // $validatedData = $request->validate([
-        //     'purchase_request_number' => 'required|string|max:255',
-        //     'item_request.*.item_name' => 'required|string|max:255',
-        //     'item_request.*.quantity_receiver' => 'required|min:1',
-        //     'item_request.*.remark' => 'nullable|string|max:255',
-        // ]);
-        // dd($request->all());
+        foreach ($request['itemRequest'] as $item) {
+           if($item['qty_receiver'] != null && $item['qty_receiver'] > 0) {
+                ArrivalPurchaseItem::create([
+                    'arrival_number' => ArrivalPurchaseItem::max('id') + 1,
+                    'purchase_requestion_number' => $request['purchase_request_number'],
+                    'date_of_arrival' => now(),
+                    'id_barang' => $item['id_barang'],
+                    'qty' => $item['qty_receiver'],
+                    'remarks' => $item['remark'] ?? null,
+                ]);
 
-        $arrivalNumber = ArrivalPurchaseItem::max('id') + 1;
-        ArrivalPurchaseItem::create([
-            'arrival_number' => $arrivalNumber,
-            'purchase_requestion_number' => $request['purchase_request_number'],
-            'date_of_arrival' => $request['date_of_arrival'],
-            'id_barang' => $request['id_barang'],
-            'qty' => $request['quantity_receiver'],
-            'remarks' => $request['remark'],
-        ]);
+                $totalArrival = DB::table('arrival_purchase_items')
+                    ->where('purchase_requestion_number', $request['purchase_request_number'])
+                    ->where('id_barang', $item['id_barang'])
+                    ->sum(DB::raw('CAST(qty AS INT)'));
+
+                if ($totalArrival >= $item['total_quantity']) {
+                    PurchaseRequestion::where('purchase_requestion_number', $request['purchase_request_number'])
+                        ->where('id', $item['id_barang'])
+                        ->update(['status' => 'finished', 'status_code' => '05']);
+                }
+           }
+        }
 
         Alert::success('Created Successfully!', 'Arrival items successfully created!');
         return redirect()->intended('purchase-requestion/index');

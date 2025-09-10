@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('nm_barang');
             $table->string('qty');
             $table->string('supplier')->nullable();
+            $table->string('status_code'); // Status Code waiting: 01, process: 02, partially: 03, canceled: 04, finished: 05
             $table->enum('status', ['waiting', 'process', 'partially', 'canceled', 'finished']);
             $table->timestamps();
         });

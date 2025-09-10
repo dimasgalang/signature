@@ -18,5 +18,6 @@ class PurchaseRequestion extends Model
         'qty',
         'supplier',
         'status',
+        'status_code'
     ];
 }

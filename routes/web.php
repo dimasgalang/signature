@@ -204,9 +204,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/purchase-requestion/fetchPurchaseRequest/{purchaseRequestionNumber}', [PurchaseRequestionController::class, 'fetchPurchaseRequest'])->name('purchase-requestion.fetchPurchaseRequest');
     Route::post('/purchase-requestion/processPurchaseRequest', [PurchaseRequestionController::class, 'processPurchaseRequest'])->name('purchase-requestion.processPurchaseRequest');
     Route::post('/purchase-requestion/canceledPurchaseRequest', [PurchaseRequestionController::class, 'canceledPurchaseRequest'])->name('purchase-requestion.canceledPurchaseRequest');
-    Route::get('/purchase-requestion/arrival/{id}', [PurchaseRequestionController::class, 'createArrival'])->name('purchase-requestion.arrival');
+    Route::post('/purchase-requestion/finishedPurchaseRequest', [PurchaseRequestionController::class, 'finishedPurchaseRequest'])->name('purchase-requestion.finishedPurchaseRequest');
+    Route::get('/purchase-requestion/arrival/{purchaseRequestionNumber}', [PurchaseRequestionController::class, 'createArrival'])->name('purchase-requestion.arrival');
     Route::post('/purchase-requestion/storeArrival', [PurchaseRequestionController::class, 'storeArrival'])->name('purchase-requestion.storeArrival');
-
+    Route::get('/purchase-requestion/fetchArrivalHistory/{purchaseRequestionNumber}', [PurchaseRequestionController::class, 'fetchArrivalHistory'])->name('purchase-requestion.fetchArrivalHistory');
 
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');

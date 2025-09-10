@@ -73,7 +73,7 @@
                                         </td>
                                         <td class="row justify-content-center">
                                             {{-- <a href="" class="btn btn-sm btn-circle btn-warning"><i class="fas fa-edit"></i></a> --}}
-                                            <a href="" class="btn btn-sm btn-circle btn-primary btn-show-detail show-detail mx-1" id="show-detail" data-detail-url="{{ route('purchase-requestion.fetchPurchaseRequest', $purchaseRequest->purchase_requestion_number) }}" data-toggle="modal" data-target="#detailModal"><i class="fas fa-eye"></i></a>
+                                            <a href="" class="btn btn-sm btn-circle btn-primary btn-show-detail show-detail mx-1" id="show-detail" data-detail-url="{{ route('purchase-requestion.fetchPurchaseRequest', $purchaseRequest->purchase_requestion_number) }}" data-history-url="{{ route('purchase-requestion.fetchArrivalHistory', $purchaseRequest->purchase_requestion_number) }}" data-toggle="modal" data-target="#detailModal"><i class="fas fa-eye"></i></a>
                                             @if($purchaseRequest->status == 'waiting')
                                                 <form action="{{ route('purchase-requestion.processPurchaseRequest') }}" method="POST">
                                                     @csrf
@@ -81,6 +81,11 @@
                                                     <button type="submit" class="btn btn-sm btn-circle btn-info mx-1"><i class="fas fa-sync"></i></button>
                                                 </form>
                                             @endif
+
+                                            @if($purchaseRequest->status == 'process' || $purchaseRequest->status == 'partially')
+                                                <a href="{{ route('purchase-requestion.arrival', $purchaseRequest->purchase_requestion_number) }}" class="btn btn-sm btn-circle btn-success mx-1"><i class="fas fa-share"></i></a>
+                                            @endif
+
                                             @if($purchaseRequest->status == 'waiting' || $purchaseRequest->status == 'process')
                                                 <form action="{{ route('purchase-requestion.canceledPurchaseRequest') }}" method="POST">
                                                     @csrf
@@ -88,6 +93,7 @@
                                                     <button type="submit" class="btn btn-sm btn-circle btn-warning mx-1"><i class="fas fa-times"></i></button>
                                                 </form>
                                             @endif
+
                                             <a href="" class="btn btn-sm btn-circle btn-danger mx-1"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
@@ -115,47 +121,64 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('purchase-requestion.processPurchaseRequest') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
                     <div class="modal-body">
-                        <div class="row mb-2">
-                            <div class="col-md-4">
-                                <label for="detail-request-number"><strong>Request Number:</strong></label>
-                                <input type="text" id="detail-request-number" name="purchase_requestion_number" class="form-control form-control-sm" readonly>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="detail-request-date"><strong>Date of Request:</strong></label>
-                                <input type="text" id="detail-request-date" name="date_of_request" class="form-control form-control-sm" readonly>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="detail-request-status"><strong>Status:</strong></label>
-                                <input type="text" id="detail-request-status" class="form-control form-control-sm" readonly>
-                            </div>
+                        <div class="tab">
+                            <button class="tablinks" onclick="openModal(event, 'Recap')">Recap Request Item</button>
+                            <button class="tablinks" onclick="openModal(event, 'History')">History Arrival Item</button>
                         </div>
-                        <table class="table table-bordered table-sm" id="table-purchase-detail" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nama Barang</th>
-                                    <th>Quantity</th>
-                                    <th>Incomming Quantity</th>
-                                    <th>Date of Arrival</th>
-                                    <th>Supplier</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                            </tbody>
-                        </table>
+                        <div id="Recap" class="tabcontent">
+                                <div class="row mb-2">
+                                    <div class="col-md-4">
+                                        <label for="detail-request-number"><strong>Request Number:</strong></label>
+                                        <input type="text" id="detail-request-number" name="purchase_requestion_number" class="form-control form-control-sm" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="detail-request-date"><strong>Date of Request:</strong></label>
+                                        <input type="text" id="detail-request-date" name="date_of_request" class="form-control form-control-sm" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="detail-request-status"><strong>Status:</strong></label>
+                                        <input type="text" id="detail-request-status" class="form-control form-control-sm" readonly>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered table-sm" id="table-purchase-detail" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nama Barang</th>
+                                            <th>Quantity</th>
+                                            <th>Incomming Quantity</th>
+                                            <th>Date of Arrival</th>
+                                            <th>Supplier</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                    </tbody>
+                                </table>
+                        </div>
+
+                        <div id="History" class="tabcontent">
+                            <br>
+                            <table class="table table-bordered table-sm" id="table-arrival-history" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nama Barang</th>
+                                        <th>Arrival Quantity</th>
+                                        <th>Date of Arrival</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
                     </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-
-        
 
         <div class="modal fade" id="voidModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
@@ -228,19 +251,37 @@
     $('.btn-revision-record').on('click', function () {
             $("#modal-text-record-revision").text('Apakah anda yakin ingin mengubah status Approval menjadi Revision ' + $(this).data('revision-name') + '?');
     });
+
+    function openModal(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
     
     $(function () {
         $('body').on('click', '#show-detail', function() {
-        var jsonDetails = $(this).data('detail-url'); 
+        var jsonDetails = $(this).data('detail-url');
+        var jsonHistory = $(this).data('history-url');
+
         $.get(jsonDetails, function (data) {
             var requestionStatus = data.data[0].status;
             $('#detailModal').modal('show');
             if (data.data.length > 0) {
-                $('#detail-request-number').val(data.data[0].purchase_requestion_number);
+                $('#detail-request-number').val(data.data[0].purchase_requestion_number + '_' + data.data[0].requestion);
                 $('#detail-request-date').val(data.data[0].date_of_request);
                 $('#detail-request-status').val(data.data[0].status);
             }
-            var arrivalBaseUrl = "{{ url('purchase-requestion/arrival') }}";
+
             var tablePurchaseDetail = $('#table-purchase-detail').DataTable({
                 destroy: true,
                 processing: true,
@@ -255,10 +296,13 @@
                     { data: 'supplier', name: 'supplier', orderable: false },
                     { data: 'status', name: 'status', 
                         render: function(data, type, row) {
+                            const qty = Number(row.qty) || 0;
+                            const incomingQty = Number(row.incoming_qty) || 0;
+
                             if (data === 'waiting') {
                                 return '<span class="badge badge-secondary">' + data + '</span>';
-                            } else if (data === 'process') {
-                                return '<span class="badge badge-primary">' + data + '</span>';
+                            } else if (qty > incomingQty && data === 'process') {
+                                return '<span class="badge badge-primary"> partially </span>';
                             } else if (data === 'canceled') {
                                 return '<span class="badge badge-danger">' + data + '</span>';
                             } else {
@@ -266,21 +310,28 @@
                             }
                         },
                     orderable: false },
-                    { data: 'id', name: 'id', render: function (data, type, row) {
-                            if(requestionStatus != 'waiting' && requestionStatus != 'canceled') {
-                                return `<a href="${arrivalBaseUrl}/${data}" class="btn btn-sm btn-circle btn-success"><i class="fas fa-share"></i></a>`;
-                            } else {
-                                return ''
-                            }
-                        },
-                        orderable: false, searchable: false 
-                    },
                 ],
+            });
+        });
+        // });
+
+        $.get(jsonHistory, function (data) {
+                
+                var tableArrivalHistory = $('#table-arrival-history').DataTable({
+                    destroy: true,
+                    processing: true,
+                    responsive: true,
+                    ajax: jsonHistory, 
+                    columns: [
+                        { data: 'id', name: 'id', orderable: false, searchable: false},
+                        { data: 'nm_barang', name: 'nm_barang', orderable: false },
+                        { data: 'qty', name: 'qty', orderable: false },
+                        { data: 'date_of_arrival', name: 'date_of_arrival', orderable: true },
+                    ],
                 });
             });
         });
     });
-
 
     $(function () {
         $('body').on('click', '#show-revision', function() {
@@ -321,5 +372,6 @@
             });
         });
     });
+
 </script>
 </html>

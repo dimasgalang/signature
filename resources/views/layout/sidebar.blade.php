@@ -57,6 +57,21 @@
         </div>
     </li>
 
+    @if($roleusers[0]->rolename == 'Admin' || Auth::user()->dept === 'PURCHASE' || Auth::user()->dept === 'PURCHASE HOD')
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePurchase"
+            aria-expanded="true" aria-controls="collapsePurchase">
+            <i class="fas fa-fw fa-check-square"></i>
+            <span>Purchase</span>
+        </a>
+        <div id="collapsePurchase" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('purchase-requestion.index') }}">Purchase Request List</a>
+            </div>
+        </div>
+    </li>
+    @endif
+
     @if($roleusers[0]->rolename == 'Admin')
      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCommitment"

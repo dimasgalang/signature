@@ -40,7 +40,7 @@
                                             <input class="form-control" type="text" id="purchase_request_number" name="purchase_request_number" value="{{ $newIdPurchaseRequest }}" readonly>
                                         </div>
                                         <div class="col-xl-3">
-                                            <label><b>Requestion :</b></label>
+                                            <label><b>Purpose Requestion :</b></label>
                                             <input class="form-control" type="text" id="requestion" name="requestion">
                                         </div>
                                         <div class="col-xl-3">
