@@ -58,17 +58,18 @@
                                         <td>{{ $purchaseRequest->purchase_requestion_number . '_' . $purchaseRequest->requestion }}</td>
                                         <td>{{ $purchaseRequest->date_of_request }}</td>
                                         <td>{{ $purchaseRequest->total_items }}</td>
-                                        <td class="justify-content-center">
+                                        <td class="justify-content-center text-center">
+                                            {{-- <span class="badge badge-primary" style="text-transform:capitalize;">{{ $purchaseRequest->status }}</span> --}}
                                             @if($purchaseRequest->status == 'process')
-                                                <span class="badge badge-primary">{{ $purchaseRequest->status }}</span>
+                                                <span class="badge badge-primary" style="text-transform:capitalize;">{{ $purchaseRequest->status }}</span>
                                             @elseif($purchaseRequest->status == 'finished')
-                                                <span class="badge badge-success">{{ $purchaseRequest->status }}</span>
+                                                <span class="badge badge-success" style="text-transform:capitalize;">{{ $purchaseRequest->status }}</span>
                                             @elseif($purchaseRequest->status == 'partially')
-                                                <span class="badge badge-info">{{ $purchaseRequest->status }}</span>
+                                                <span class="badge badge-info" style="text-transform:capitalize;">{{ $purchaseRequest->status }}</span>
                                             @elseif($purchaseRequest->status == 'canceled')
-                                                <span class="badge badge-danger">{{ $purchaseRequest->status }}</span>
+                                                <span class="badge badge-danger" style="text-transform:capitalize;">{{ $purchaseRequest->status }}</span>
                                             @else
-                                                <span class="badge badge-secondary">{{ $purchaseRequest->status }}</span>
+                                                <span class="badge badge-secondary" style="text-transform:capitalize;">{{ $purchaseRequest->status }}</span>
                                             @endif
                                         </td>
                                         <td class="row justify-content-center">
@@ -138,7 +139,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="detail-request-status"><strong>Status:</strong></label>
-                                        <input type="text" id="detail-request-status" class="form-control form-control-sm" readonly>
+                                        <input type="text" id="detail-request-status" class="form-control form-control-sm" style="text-transform:capitalize;" readonly>
                                     </div>
                                 </div>
                                 <table class="table table-bordered table-sm" id="table-purchase-detail" width="100%" cellspacing="0">
@@ -148,6 +149,7 @@
                                             <th>Nama Barang</th>
                                             <th>Quantity</th>
                                             <th>Incomming Quantity</th>
+                                            <th>Balance</th>
                                             <th>Date of Arrival</th>
                                             <th>Supplier</th>
                                             <th>Status</th>
@@ -292,6 +294,16 @@
                     { data: 'nm_barang', name: 'nm_barang', orderable: false },
                     { data: 'qty', name: 'qty', orderable: false },
                     { data: 'incoming_qty', name: 'incoming_qty', orderable: false },
+                    { data: null, 
+                        render: function(data, type, row) {
+                            const qty = Number(row.qty) || 0;
+                            const incomingQty = Number(row.incoming_qty) || 0;
+                            const balance = qty - incomingQty;
+                            return balance;
+                        }, 
+                        name: 'balance', 
+                        orderable: false 
+                    },
                     { data: 'date_of_request', name: 'date_of_request', orderable: false },
                     { data: 'supplier', name: 'supplier', orderable: false },
                     { data: 'status', name: 'status', 
@@ -300,13 +312,13 @@
                             const incomingQty = Number(row.incoming_qty) || 0;
 
                             if (data === 'waiting') {
-                                return '<span class="badge badge-secondary">' + data + '</span>';
+                                return '<span class="badge badge-secondary" style="text-transform:capitalize;">' + data + '</span>';
                             } else if (qty > incomingQty && data === 'process') {
-                                return '<span class="badge badge-primary"> partially </span>';
+                                return '<span class="badge badge-primary" style="text-transform:capitalize;">partially</span>';
                             } else if (data === 'canceled') {
-                                return '<span class="badge badge-danger">' + data + '</span>';
+                                return '<span class="badge badge-danger" style="text-transform:capitalize;">' + data + '</span>';
                             } else {
-                                return '<span class="badge badge-success">' + data + '</span>';
+                                return '<span class="badge badge-success" style="text-transform:capitalize;">' + data + '</span>';
                             }
                         },
                     orderable: false },

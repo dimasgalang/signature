@@ -45,7 +45,7 @@
                                         </div>
                                         <div class="col-xl-3">
                                             <label><b>Date of Request :</b></label>
-                                            <input class="form-control" type="date" id="date_of_request" name="date_of_request" value="{{ date('Y-m-d') }}" readonly>
+                                            <input class="form-control" type="date" id="date_of_request" name="date_of_request" value="{{ date('Y-m-d') }}">
                                         </div>
                                         <div class="col-xl-3">
                                             <label><b>Name :</b></label>
