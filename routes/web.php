@@ -208,6 +208,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/purchase-requestion/arrival/{purchaseRequestionNumber}', [PurchaseRequestionController::class, 'createArrival'])->name('purchase-requestion.arrival');
     Route::post('/purchase-requestion/storeArrival', [PurchaseRequestionController::class, 'storeArrival'])->name('purchase-requestion.storeArrival');
     Route::get('/purchase-requestion/fetchArrivalHistory/{purchaseRequestionNumber}', [PurchaseRequestionController::class, 'fetchArrivalHistory'])->name('purchase-requestion.fetchArrivalHistory');
+    Route::post('/purchase-requestion/void', [PurchaseRequestionController::class, 'void'])->name('purchase-requestion.void');
+    Route::post('/purchase-requestion/restore', [PurchaseRequestionController::class, 'restore'])->name('purchase-requestion.restore');
+
 
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');

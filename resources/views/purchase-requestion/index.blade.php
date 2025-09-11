@@ -95,7 +95,11 @@
                                                 </form>
                                             @endif
 
-                                            <a href="" class="btn btn-sm btn-circle btn-danger mx-1"><i class="fas fa-trash"></i></a>
+                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
+                                            <a href="" class="btn btn-sm btn-circle btn-danger btn-void-record mx-1" id="show-void" data-void-url="{{ route('purchase-requestion.fetchPurchaseRequest', $purchaseRequest->purchase_requestion_number) }}" data-void-name="{{ $purchaseRequest->purchase_requestion_number . '_' . $purchaseRequest->requestion }}" data-toggle="modal" data-target="#voidModal"><i class="fas fa-trash"></i></a>
+                                            @else
+                                            <a href="" class="btn btn-sm btn-circle btn-success btn-restore-record mx-1" id="show-restore" data-restore-url="{{ route('purchase-requestion.fetchPurchaseRequest', $purchaseRequest->purchase_requestion_number) }}" data-restore-name="{{ $purchaseRequest->purchase_requestion_number . '_' . $purchaseRequest->requestion }}" data-toggle="modal" data-target="#restoreModal"><i class="fas fa-trash-restore"></i></a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach
@@ -191,11 +195,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('handover.void') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('purchase-requestion.void') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-void"></p>
-                        <input class="form-control" type="hidden" id="modal_handover_id_void" name="handover_id" readonly>
+                        <input class="form-control" type="hidden" id="modal_purchase_requestion_number_void" name="purchase_requestion_number" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -215,11 +219,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('handover.restore') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('purchase-requestion.restore') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-restore"></p>
-                        <input class="form-control" type="hidden" id="modal_handover_id_restore" name="handover_id" readonly>
+                        <input class="form-control" type="hidden" id="modal_purchase_requestion_number_restore" name="purchase_requestion_number" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -245,10 +249,10 @@
             $("#modal-text-record").text('Apakah anda yakin ingin menghapus Approval ' + $(this).data('delete-name') + '?');
     });
     $('.btn-void-record').on('click', function () {
-            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus IT Request ' + $(this).data('void-name') + '?');
+            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Purchase Request ' + $(this).data('void-name') + '?');
     });
     $('.btn-restore-record').on('click', function () {
-            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan IT Request ' + $(this).data('restore-name') + '?');
+            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Purchase Request ' + $(this).data('restore-name') + '?');
     });
     $('.btn-revision-record').on('click', function () {
             $("#modal-text-record-revision").text('Apakah anda yakin ingin mengubah status Approval menjadi Revision ' + $(this).data('revision-name') + '?');
@@ -346,26 +350,12 @@
     });
 
     $(function () {
-        $('body').on('click', '#show-revision', function() {
-        var jsonRevision = $(this).data('revision-url'); 
-        $.get(jsonRevision, function (data) {
-            if (data.length > 0) {
-                $('#modal_employee_id').val(data[0].employee_id);
-                $('#modal_name').val(data[0].name);
-                $('#modal_document_name').val(data[0].document_name);
-                $('#modal_token').val(data[0].token);
-                } else {
-
-                }
-            });
-        });
-    });
-    $(function () {
         $('body').on('click', '#show-void', function() {
         var jsonVoid = $(this).data('void-url'); 
         $.get(jsonVoid, function (data) {
-            if (data.length > 0) {
-                $('#modal_handover_id_void').val(data[0].id);
+            console.log(data);
+            if (data.data.length > 0) {
+                $('#modal_purchase_requestion_number_void').val(data.data[0].purchase_requestion_number);
                 } else {
 
                 }
@@ -376,8 +366,8 @@
         $('body').on('click', '#show-restore', function() {
         var jsonRestore = $(this).data('restore-url'); 
         $.get(jsonRestore, function (data) {
-            if (data.length > 0) {
-                $('#modal_handover_id_restore').val(data[0].id);
+            if (data.data.length > 0) {
+                $('#modal_purchase_requestion_number_restore').val(data.data[0].purchase_requestion_number);
                 } else {
 
                 }
