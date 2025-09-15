@@ -7,7 +7,7 @@
     <style>
         @page {
             size: A4;
-            margin: 10mm 10mm 10mm 10mm;
+            margin: 5mm 5mm 5mm 5mm;
         }
 
         body {
@@ -176,6 +176,9 @@
             font-size: 8px;
             padding: 5px;
         }
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 </head>
 <body>
@@ -287,17 +290,34 @@
                         <td class="item-detail">
                             {!! $item->questionnaire_items !!}
                         </td>
-                        {{-- @foreach($answerSurveillanceQuestionnaires as $answer)
+                        @foreach($answerSurveillanceQuestionnaires as $answer)
                             @if($answer->questionnaire_id == $item->id)
                                 <td class="method-columns">{{ $answer->answer == 'periksa' ? '✓' : '' }}</td>
                                 <td class="method-columns">{{ $answer->answer == 'bersihkan' ? '✓' : '' }}</td>
                                 <td class="method-columns">{{ $answer->answer == 'perbaiki' ? '✓' : '' }}</td>
                                 <td class="method-columns">{{ $answer->answer == 'mengganti' ? '✓' : '' }}</td>
                             @endif
-                        @endforeach --}}
+                        @endforeach
                     </tr>
                 @endforeach
-                
+            </tbody>
+        </table>
+        <div class='page-break'></div>
+        <table class="main-table">
+            <thead>
+                <tr>
+                    <th rowspan="2" class="no-column" style="vertical-align: middle;">No.</th>
+                    <th rowspan="2" class="items-column" style="vertical-align: middle;">BARANG / ITEMS</th>
+                    <th colspan="4">Metode/ Method</th>
+                </tr>
+                <tr>
+                    <th class="method-columns">Periksa<br>Inspect</th>
+                    <th class="method-columns">Bersihkan<br>Clean</th>
+                    <th class="method-columns">Perbaiki<br>Repair</th>
+                    <th class="method-columns">Mengganti<br>Replace</th>
+                </tr>
+            </thead>
+            <tbody>
                 <tr>
                     <td class="no-column section-header">2</td>
                     <td colspan="5" class="section-header">Pengujian Perangkat Lunak / Software Testing</td>    
