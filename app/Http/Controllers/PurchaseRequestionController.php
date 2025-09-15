@@ -10,13 +10,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class PurchaseRequestionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // $purchaseRequests = PurchaseRequestOrder::select('purchase_requestions.*')->count('nm_barang')->groupBy('purchase_requestions.purchase_requestion_number')->get();
         // $purchaseRequests = DB::select('select purchase_requestions.*, count(nm_barang) AS total_items from purchase_requestions group by purchase_requestion_number');
+        if ($request->void) {
+            $purchaseRequests = DB::select("SELECT * FROM ( SELECT pr.*, COUNT(pr.nm_barang) OVER (PARTITION BY pr.purchase_requestion_number) AS total_items, ROW_NUMBER() OVER (PARTITION BY pr.purchase_requestion_number ORDER BY pr.status_code ASC) AS rn FROM purchase_requestions pr WHERE pr.void = '" . $request->void . "' ) t WHERE t.rn = 1 ORDER BY t.status_code ASC");
+        } else {
+            $purchaseRequests = DB::select("SELECT * FROM ( SELECT pr.*, COUNT(pr.nm_barang) OVER (PARTITION BY pr.purchase_requestion_number) AS total_items, ROW_NUMBER() OVER (PARTITION BY pr.purchase_requestion_number ORDER BY pr.status_code ASC) AS rn FROM purchase_requestions pr WHERE pr.void = 'false' ) t WHERE t.rn = 1 ORDER BY t.status_code ASC");
+        }
 
-        $purchaseRequests = DB::select(" SELECT * FROM ( SELECT pr.*, COUNT(pr.nm_barang) OVER (PARTITION BY pr.purchase_requestion_number) AS total_items, ROW_NUMBER() OVER (PARTITION BY pr.purchase_requestion_number ORDER BY pr.status_code ASC) AS rn FROM purchase_requestions pr ) t WHERE t.rn = 1 ORDER BY t.status_code ASC ");
-                return view('purchase-requestion.index', compact('purchaseRequests'));
+        return view('purchase-requestion.index', compact('purchaseRequests'));
     }
 
     public function create()
@@ -158,6 +162,23 @@ class PurchaseRequestionController extends Controller
         }
 
         Alert::success('Created Successfully!', 'Arrival items successfully created!');
+        return redirect()->intended('purchase-requestion/index');
+    }
+
+    public function void(Request $request)
+    {
+        // dd($request->all());
+        $purchaseRequestion = PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number);
+        $purchaseRequestion->update(['void' => 'true']);
+
+        Alert::success('Void Successfully!', 'Document successfully void!');
+        return redirect()->intended('purchase-requestion/index');
+    }
+    public function restore(Request $request)
+    {
+        $purchaseRequestion = PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number);
+        $purchaseRequestion->update(['void' => 'false']);
+        Alert::success('Restore Successfully!', 'Document successfully restore!');
         return redirect()->intended('purchase-requestion/index');
     }
 }
