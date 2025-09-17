@@ -57,7 +57,7 @@
         </div>
     </li>
 
-    @if($roleusers[0]->rolename == 'Admin' || Auth::user()->dept === 'PURCHASE' || Auth::user()->dept === 'PURCHASE HOD')
+    {{-- @if($roleusers[0]->rolename == 'Admin' || Auth::user()->dept === 'PURCHASE' || Auth::user()->dept === 'PURCHASE HOD') --}}
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePurchase"
             aria-expanded="true" aria-controls="collapsePurchase">
@@ -70,10 +70,10 @@
             </div>
         </div>
     </li>
-    @endif
+    {{-- @endif --}}
 
-    @if($roleusers[0]->rolename == 'Admin')
-     <li class="nav-item">
+    
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCommitment"
             aria-expanded="true" aria-controls="collapseCommitment">
             <i class="fas fa-fw fa-check-square"></i>
@@ -81,15 +81,16 @@
         </a>
         <div id="collapseCommitment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('handover.index') }}">Handover List</a>
+                @if($roleusers[0]->rolename == 'Admin')
+                    <a class="collapse-item" href="{{ route('handover.index') }}">Handover List</a>
+                    <a class="collapse-item" href="{{ route('commitment.index') }}">Commitment List</a>
+                @endif
                 <a class="collapse-item" href="{{ route('leaver.index') }}">Leaver List</a>
-                <a class="collapse-item" href="{{ route('commitment.index') }}">Commitment List</a>
                 <a class="collapse-item" href="{{ route('it-access-request.index') }}">It Access List</a>
                 <a class="collapse-item" href="{{ route('cyber-user.index') }}">Deactivate User</a>
             </div>
         </div>
     </li>
-    @endif
 
     @if($roleusers[0]->rolename == 'Admin')
     <!-- <li class="nav-item">

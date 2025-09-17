@@ -21,11 +21,14 @@ class LeaverController extends Controller
         $user_id = Auth::user()->id;
         if ($request->void) {
             $leavers = Leaver::with(['item_leaver', 'leaverName', 'receiverName'])
-                ->where('void', $request->void)->orderBy('date', 'desc')
+                ->where('void', $request->void)
+                ->where('leaver_name_id', $user_id)
+                ->orderBy('date', 'desc')
                 ->get();
         } else {
             $leavers = Leaver::with(['item_leaver', 'leaverName', 'receiverName'])
-                ->where('void', 'false')->orderBy('date', 'desc')
+                ->where('void', 'false')->where('leaver_name_id', $user_id)
+                ->orderBy('date', 'desc')
                 ->get();
         }
         return view('leaver.index', compact('leavers'));

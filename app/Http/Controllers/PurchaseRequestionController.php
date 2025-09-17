@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendEmail;
 use App\Models\ArrivalPurchaseItem;
 use App\Models\PurchaseRequestion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PurchaseRequestionController extends Controller
@@ -14,10 +18,21 @@ class PurchaseRequestionController extends Controller
     {
         // $purchaseRequests = PurchaseRequestOrder::select('purchase_requestions.*')->count('nm_barang')->groupBy('purchase_requestions.purchase_requestion_number')->get();
         // $purchaseRequests = DB::select('select purchase_requestions.*, count(nm_barang) AS total_items from purchase_requestions group by purchase_requestion_number');
-        if ($request->void) {
-            $purchaseRequests = DB::select("SELECT * FROM ( SELECT pr.*, COUNT(pr.nm_barang) OVER (PARTITION BY pr.purchase_requestion_number) AS total_items, ROW_NUMBER() OVER (PARTITION BY pr.purchase_requestion_number ORDER BY pr.status_code ASC) AS rn FROM purchase_requestions pr WHERE pr.void = '" . $request->void . "' ) t WHERE t.rn = 1 ORDER BY t.status_code ASC");
+
+        $user = Auth::user()->getRoleNames()->first();
+        if ( $user == 'Purchase' || $user == 'Admin') {
+            if ($request->void) {
+                $purchaseRequests = DB::select("SELECT * FROM ( SELECT pr.*, COUNT(pr.nm_barang) OVER (PARTITION BY pr.purchase_requestion_number) AS total_items, ROW_NUMBER() OVER (PARTITION BY pr.purchase_requestion_number ORDER BY pr.status_code ASC) AS rn FROM purchase_requestions pr WHERE pr.void = '" . $request->void . "' ) t WHERE t.rn = 1 ORDER BY t.status_code ASC");
+            } else {
+                $purchaseRequests = DB::select("SELECT * FROM ( SELECT pr.*, COUNT(pr.nm_barang) OVER (PARTITION BY pr.purchase_requestion_number) AS total_items, ROW_NUMBER() OVER (PARTITION BY pr.purchase_requestion_number ORDER BY pr.status_code ASC) AS rn FROM purchase_requestions pr WHERE pr.void = 'false' ) t WHERE t.rn = 1 ORDER BY t.status_code ASC");
+            }
         } else {
-            $purchaseRequests = DB::select("SELECT * FROM ( SELECT pr.*, COUNT(pr.nm_barang) OVER (PARTITION BY pr.purchase_requestion_number) AS total_items, ROW_NUMBER() OVER (PARTITION BY pr.purchase_requestion_number ORDER BY pr.status_code ASC) AS rn FROM purchase_requestions pr WHERE pr.void = 'false' ) t WHERE t.rn = 1 ORDER BY t.status_code ASC");
+            $id_user = Auth::user()->id;
+            if ($request->void) {
+                $purchaseRequests = DB::select("SELECT * FROM ( SELECT pr.*, COUNT(pr.nm_barang) OVER (PARTITION BY pr.purchase_requestion_number) AS total_items, ROW_NUMBER() OVER (PARTITION BY pr.purchase_requestion_number ORDER BY pr.status_code ASC) AS rn FROM purchase_requestions pr WHERE pr.void = '" . $request->void . "' AND pr.employee_id = '" . $id_user . "' ) t WHERE t.rn = 1 ORDER BY t.status_code ASC");
+            } else {
+                $purchaseRequests = DB::select("SELECT * FROM ( SELECT pr.*, COUNT(pr.nm_barang) OVER (PARTITION BY pr.purchase_requestion_number) AS total_items, ROW_NUMBER() OVER (PARTITION BY pr.purchase_requestion_number ORDER BY pr.status_code ASC) AS rn FROM purchase_requestions pr WHERE pr.void = 'false' AND pr.employee_id = '" . $id_user . "' ) t WHERE t.rn = 1 ORDER BY t.status_code ASC");
+            }
         }
 
         return view('purchase-requestion.index', compact('purchaseRequests'));
@@ -56,7 +71,7 @@ class PurchaseRequestionController extends Controller
         // dd($request->all());
         // Create the purchase request order
         foreach ($request['item_request'] as $item) {
-            PurchaseRequestion::create([
+            $purchaseReq = PurchaseRequestion::create([
                 'purchase_requestion_number' => $request['purchase_request_number'],
                 'requestion' => $request['requestion'],
                 'employee_id' => auth()->id(),
@@ -66,7 +81,19 @@ class PurchaseRequestionController extends Controller
                 'qty' => $item['quantity'],
                 'status' => 'waiting',
                 'status_code' => '01',
+                'void' => 'false',
             ]);
+        }
+
+        $purchaseEmail = DB::table('users')->where('dept', 'Purchase')->pluck('email')->toArray();
+
+        foreach ($purchaseEmail as $email) {
+            $emailBody = [
+                'name' => 'Chutex E-Signature',
+                'body' => 'You have a new purchase requestion "' . $request['purchase_request_number'] . '"_"' . $request['requestion'] . '"  from "' . $request->name . '". You can check the purchase requestion by opening the link below.',
+                'url' => URL::to("/purchase-requestion/index/")
+            ];
+            // Mail::to($email)->send(new SendEmail($emailBody));
         }
 
         Alert::success('Created Successfully!', 'Purchase Request successfully created!');
@@ -79,7 +106,8 @@ class PurchaseRequestionController extends Controller
             ->select('pr.*', DB::raw('ISNULL(a.incoming_qty, 0) as incoming_qty'))
             ->leftJoin(DB::raw('(SELECT id_barang, SUM(CAST(qty AS INT)) as incoming_qty FROM arrival_purchase_items GROUP BY id_barang) a'), 'pr.id', '=', 'a.id_barang')->where('pr.purchase_requestion_number', $purchaseRequestionNumber)
             ->get();
-        return response()->json(['data' => $purchaseRequests]);
+        $requestBy = DB::table('users')->where('id', $purchaseRequests[0]->employee_id)->first()->name;
+        return response()->json(['data' => $purchaseRequests, 'requestBy' => $requestBy]);
     }
 
     public function fetchArrivalHistory($purchaseRequestionNumber)
@@ -97,8 +125,10 @@ class PurchaseRequestionController extends Controller
     {
         PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number)
             ->update([
-                'status' => 'process', 
-                'status_code' => '02'
+                'status' => 'process',
+                'status_code' => '02',
+                'approval_id' => auth()->id(),
+                'process_date' => now(),
             ]);
         Alert::success('Processed Successfully!', 'Purchase Request successfully processed!');
         return redirect()->intended('purchase-requestion/index');

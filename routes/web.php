@@ -116,16 +116,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/handover/generatePDF/{id}', [HandoverController::class, 'generatePDF'])->name('handover.generatePDF')->middleware(['auth', 'role:Admin']);
 
     // Leaver
-    Route::get('/leaver/index', [LeaverController::class, 'index'])->name('leaver.index')->middleware(['auth', 'role:Admin']);
-    Route::get('/leaver/create', [LeaverController::class, 'create'])->name('leaver.create')->middleware(['auth', 'role:Admin']);
-    Route::post('/leaver/store', [LeaverController::class, 'store'])->name('leaver.store')->middleware(['auth', 'role:Admin']);
+    Route::get('/leaver/index', [LeaverController::class, 'index'])->name('leaver.index');
+    Route::get('/leaver/create', [LeaverController::class, 'create'])->name('leaver.create');
+    Route::post('/leaver/store', [LeaverController::class, 'store'])->name('leaver.store');
     Route::get('/leaver/revision/{id}', [LeaverController::class, 'revision'])->name('leaver.revision')->middleware(['auth', 'role:Admin']);
-    Route::get('/leaver/fetchLeaver/{id}', [LeaverController::class, 'fetchLeaver'])->name('leaver.fetchLeaver')->middleware(['auth', 'role:Admin']);
+    Route::get('/leaver/fetchLeaver/{id}', [LeaverController::class, 'fetchLeaver'])->name('leaver.fetchLeaver');
     Route::post('/leaver/update', [LeaverController::class, 'update'])->name('leaver.update')->middleware(['auth', 'role:Admin']);
     Route::post('/leaver/void', [LeaverController::class, 'void'])->name('leaver.void')->middleware(['auth', 'role:Admin']);
     Route::post('/leaver/restore', [LeaverController::class, 'restore'])->name('leaver.restore')->middleware(['auth', 'role:Admin']);
-    Route::get('/leaver/fetchDept/{id_user}', [LeaverController::class, 'fetchDept'])->name('leaver.fetchDept')->middleware(['auth', 'role:Admin']);
-    Route::get('/leaver/create-approval/{id}', [LeaverController::class, 'createApproval'])->name('leaver.createApproval')->middleware(['auth', 'role:Admin']);
+    Route::get('/leaver/fetchDept/{id_user}', [LeaverController::class, 'fetchDept'])->name('leaver.fetchDept');
+    Route::get('/leaver/create-approval/{id}', [LeaverController::class, 'createApproval'])->name('leaver.createApproval');
 
     // IT Access Request
     Route::get('/it-access-request/index', [ItAccessRequestController::class, 'index'])->name('it-access-request.index');

@@ -20,5 +20,7 @@ class PurchaseRequestion extends Model
         'status',
         'status_code',
         'void',
+        'approval_id',
+        'process_date',
     ];
 }

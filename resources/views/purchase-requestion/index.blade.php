@@ -75,24 +75,26 @@
                                         <td class="row justify-content-center">
                                             {{-- <a href="" class="btn btn-sm btn-circle btn-warning"><i class="fas fa-edit"></i></a> --}}
                                             <a href="" class="btn btn-sm btn-circle btn-primary btn-show-detail show-detail mx-1" id="show-detail" data-detail-url="{{ route('purchase-requestion.fetchPurchaseRequest', $purchaseRequest->purchase_requestion_number) }}" data-history-url="{{ route('purchase-requestion.fetchArrivalHistory', $purchaseRequest->purchase_requestion_number) }}" data-toggle="modal" data-target="#detailModal"><i class="fas fa-eye"></i></a>
-                                            @if($purchaseRequest->status == 'waiting')
-                                                <form action="{{ route('purchase-requestion.processPurchaseRequest') }}" method="POST">
+                                            @if($purchaseRequest->status == 'waiting' && Auth::user()->getRoleNames()->first() == 'Purchase')
+                                                {{-- <form action="{{ route('purchase-requestion.processPurchaseRequest') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="purchase_requestion_number" value="{{ $purchaseRequest->purchase_requestion_number }}">
                                                     <button type="submit" class="btn btn-sm btn-circle btn-info mx-1"><i class="fas fa-sync"></i></button>
-                                                </form>
+                                                </form> --}}
+                                                <a href="" class="btn btn-sm btn-circle btn-info btn-process-record mx-1" id="show-process" data-process-url="{{ route('purchase-requestion.fetchPurchaseRequest', $purchaseRequest->purchase_requestion_number) }}" data-process-name="{{ $purchaseRequest->purchase_requestion_number . '_' . $purchaseRequest->requestion }}" data-toggle="modal" data-target="#processModal"><i class="fas fa-sync"></i></a>
                                             @endif
 
-                                            @if($purchaseRequest->status == 'process' || $purchaseRequest->status == 'partially')
+                                            @if(($purchaseRequest->status == 'process' || $purchaseRequest->status == 'partially') && Auth::user()->getRoleNames()->first() == 'Purchase')
                                                 <a href="{{ route('purchase-requestion.arrival', $purchaseRequest->purchase_requestion_number) }}" class="btn btn-sm btn-circle btn-success mx-1"><i class="fas fa-share"></i></a>
                                             @endif
 
-                                            @if($purchaseRequest->status == 'waiting' || $purchaseRequest->status == 'process')
-                                                <form action="{{ route('purchase-requestion.canceledPurchaseRequest') }}" method="POST">
+                                            @if(($purchaseRequest->status == 'waiting' || $purchaseRequest->status == 'process') && Auth::user()->getRoleNames()->first() == 'Purchase')
+                                                {{-- <form action="{{ route('purchase-requestion.canceledPurchaseRequest') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="purchase_requestion_number" value="{{ $purchaseRequest->purchase_requestion_number }}">
                                                     <button type="submit" class="btn btn-sm btn-circle btn-warning mx-1"><i class="fas fa-times"></i></button>
-                                                </form>
+                                                </form> --}}
+                                                <a href="" class="btn btn-sm btn-circle btn-warning btn-canceled-record mx-1" id="show-canceled" data-canceled-url="{{ route('purchase-requestion.fetchPurchaseRequest', $purchaseRequest->purchase_requestion_number) }}" data-canceled-name="{{ $purchaseRequest->purchase_requestion_number . '_' . $purchaseRequest->requestion }}" data-toggle="modal" data-target="#canceledModal"><i class="fas fa-times"></i></a>
                                             @endif
 
                                             @if (request()->get('void') == 'false' || request()->get('void') == '')
@@ -133,15 +135,19 @@
                         </div>
                         <div id="Recap" class="tabcontent">
                                 <div class="row mb-2">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="detail-request-number"><strong>Request Number:</strong></label>
                                         <input type="text" id="detail-request-number" name="purchase_requestion_number" class="form-control form-control-sm" readonly>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="detail-request-date"><strong>Date of Request:</strong></label>
                                         <input type="text" id="detail-request-date" name="date_of_request" class="form-control form-control-sm" readonly>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <label for="detail-request-req-by"><strong>Requestion By:</strong></label>
+                                        <input type="text" id="detail-request-req-by" class="form-control form-control-sm" style="text-transform:capitalize;" readonly>
+                                    </div>
+                                    <div class="col-md-3">
                                         <label for="detail-request-status"><strong>Status:</strong></label>
                                         <input type="text" id="detail-request-status" class="form-control form-control-sm" style="text-transform:capitalize;" readonly>
                                     </div>
@@ -182,6 +188,54 @@
                             </table>
                     </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="processModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="process-title" class="modal-title" id="exampleModalLabel">Process Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('purchase-requestion.processPurchaseRequest') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                    <div class="modal-body">
+                        <p id="modal-text-record-process"></p>
+                        <input class="form-control" type="hidden" id="modal_purchase_requestion_number_process" name="purchase_requestion_number" readonly>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                        <a id="btn-confirm-process"><button class="btn btn-success" type="submit">Confirm</button></a>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="canceledModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="canceled-title" class="modal-title" id="exampleModalLabel">Canceled Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('purchase-requestion.canceledPurchaseRequest') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                    <div class="modal-body">
+                        <p id="modal-text-record-canceled"></p>
+                        <input class="form-control" type="hidden" id="modal_purchase_requestion_number_canceled" name="purchase_requestion_number" readonly>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                        <a id="btn-confirm-canceled"><button class="btn btn-warning" type="submit">Confirm</button></a>
+                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -251,6 +305,12 @@
     $('.btn-void-record').on('click', function () {
             $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Purchase Request ' + $(this).data('void-name') + '?');
     });
+    $('.btn-process-record').on('click', function () {
+            $("#modal-text-record-process").text('Apakah anda yakin ingin memproses Purchase Request ' + $(this).data('process-name') + '?');
+    });
+    $('.btn-canceled-record').on('click', function () {
+            $("#modal-text-record-canceled").text('Apakah anda yakin ingin membatalkan Purchase Request ' + $(this).data('canceled-name') + '?');
+    });
     $('.btn-restore-record').on('click', function () {
             $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Purchase Request ' + $(this).data('restore-name') + '?');
     });
@@ -285,6 +345,7 @@
             if (data.data.length > 0) {
                 $('#detail-request-number').val(data.data[0].purchase_requestion_number + '_' + data.data[0].requestion);
                 $('#detail-request-date').val(data.data[0].date_of_request);
+                $('#detail-request-req-by').val(data.requestBy);
                 $('#detail-request-status').val(data.data[0].status);
             }
 
@@ -368,6 +429,30 @@
         $.get(jsonRestore, function (data) {
             if (data.data.length > 0) {
                 $('#modal_purchase_requestion_number_restore').val(data.data[0].purchase_requestion_number);
+                } else {
+
+                }
+            });
+        });
+    });
+    $(function () {
+        $('body').on('click', '#show-process', function() {
+        var jsonProcess = $(this).data('process-url'); 
+        $.get(jsonProcess, function (data) {
+            if (data.data.length > 0) {
+                $('#modal_purchase_requestion_number_process').val(data.data[0].purchase_requestion_number);
+                } else {
+
+                }
+            });
+        });
+    });
+    $(function () {
+        $('body').on('click', '#show-canceled', function() {
+        var jsonCanceled = $(this).data('canceled-url'); 
+        $.get(jsonCanceled, function (data) {
+            if (data.data.length > 0) {
+                $('#modal_purchase_requestion_number_canceled').val(data.data[0].purchase_requestion_number);
                 } else {
 
                 }
