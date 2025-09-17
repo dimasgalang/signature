@@ -75,25 +75,15 @@
                                         <td class="row justify-content-center">
                                             {{-- <a href="" class="btn btn-sm btn-circle btn-warning"><i class="fas fa-edit"></i></a> --}}
                                             <a href="" class="btn btn-sm btn-circle btn-primary btn-show-detail show-detail mx-1" id="show-detail" data-detail-url="{{ route('purchase-requestion.fetchPurchaseRequest', $purchaseRequest->purchase_requestion_number) }}" data-history-url="{{ route('purchase-requestion.fetchArrivalHistory', $purchaseRequest->purchase_requestion_number) }}" data-toggle="modal" data-target="#detailModal"><i class="fas fa-eye"></i></a>
-                                            @if($purchaseRequest->status == 'waiting' && Auth::user()->getRoleNames()->first() == 'Purchase')
-                                                {{-- <form action="{{ route('purchase-requestion.processPurchaseRequest') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="purchase_requestion_number" value="{{ $purchaseRequest->purchase_requestion_number }}">
-                                                    <button type="submit" class="btn btn-sm btn-circle btn-info mx-1"><i class="fas fa-sync"></i></button>
-                                                </form> --}}
+                                            @if($purchaseRequest->status == 'waiting' && (Auth::user()->getRoleNames()->first() == 'Purchase' || Auth::user()->getRoleNames()->first() == 'Admin'))
                                                 <a href="" class="btn btn-sm btn-circle btn-info btn-process-record mx-1" id="show-process" data-process-url="{{ route('purchase-requestion.fetchPurchaseRequest', $purchaseRequest->purchase_requestion_number) }}" data-process-name="{{ $purchaseRequest->purchase_requestion_number . '_' . $purchaseRequest->requestion }}" data-toggle="modal" data-target="#processModal"><i class="fas fa-sync"></i></a>
                                             @endif
 
-                                            @if(($purchaseRequest->status == 'process' || $purchaseRequest->status == 'partially') && Auth::user()->getRoleNames()->first() == 'Purchase')
+                                            @if(($purchaseRequest->status == 'process' || $purchaseRequest->status == 'partially') && (Auth::user()->getRoleNames()->first() == 'Purchase' || Auth::user()->getRoleNames()->first() == 'Admin'))
                                                 <a href="{{ route('purchase-requestion.arrival', $purchaseRequest->purchase_requestion_number) }}" class="btn btn-sm btn-circle btn-success mx-1"><i class="fas fa-share"></i></a>
                                             @endif
 
-                                            @if(($purchaseRequest->status == 'waiting' || $purchaseRequest->status == 'process') && Auth::user()->getRoleNames()->first() == 'Purchase')
-                                                {{-- <form action="{{ route('purchase-requestion.canceledPurchaseRequest') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="purchase_requestion_number" value="{{ $purchaseRequest->purchase_requestion_number }}">
-                                                    <button type="submit" class="btn btn-sm btn-circle btn-warning mx-1"><i class="fas fa-times"></i></button>
-                                                </form> --}}
+                                            @if(($purchaseRequest->status == 'waiting' || $purchaseRequest->status == 'process') && (Auth::user()->getRoleNames()->first() == 'Purchase' || Auth::user()->getRoleNames()->first() == 'Admin'))
                                                 <a href="" class="btn btn-sm btn-circle btn-warning btn-canceled-record mx-1" id="show-canceled" data-canceled-url="{{ route('purchase-requestion.fetchPurchaseRequest', $purchaseRequest->purchase_requestion_number) }}" data-canceled-name="{{ $purchaseRequest->purchase_requestion_number . '_' . $purchaseRequest->requestion }}" data-toggle="modal" data-target="#canceledModal"><i class="fas fa-times"></i></a>
                                             @endif
 
