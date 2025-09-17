@@ -134,7 +134,7 @@
                             <button class="tablinks" onclick="openModal(event, 'History')">History Arrival Item</button>
                         </div>
                         <div id="Recap" class="tabcontent">
-                                <div class="row mb-2">
+                                <div class="row mb-2 mt-2">
                                     <div class="col-md-3">
                                         <label for="detail-request-number"><strong>Request Number:</strong></label>
                                         <input type="text" id="detail-request-number" name="purchase_requestion_number" class="form-control form-control-sm" readonly>
@@ -151,6 +151,27 @@
                                         <label for="detail-request-status"><strong>Status:</strong></label>
                                         <input type="text" id="detail-request-status" class="form-control form-control-sm" style="text-transform:capitalize;" readonly>
                                     </div>
+                                </div>
+                                <div class="row mb-4">
+                                    {{-- @if($purchaseRequest->status === 'process' || $purchaseRequest->status === 'partially') --}}
+                                    <div class="col-md-3">
+                                        <label for="detail-processed-by"><strong>Processed By:</strong></label>
+                                        <input type="text" id="detail-processed-by" class="form-control form-control-sm" style="text-transform:capitalize;" readonly>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="detail-processed-date"><strong>Date of Process:</strong></label>
+                                        <input type="text" id="detail-processed-date" name="date_of_processed" class="form-control form-control-sm" readonly>
+                                    </div>
+                                    {{-- @elseif($purchaseRequest->status === 'canceled')  --}}
+                                    <div class="col-md-3">
+                                        <label for="detail-canceled-by"><strong>Canceled By:</strong></label>
+                                        <input type="text" id="detail-canceled-by" class="form-control form-control-sm" style="text-transform:capitalize;" readonly>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="detail-canceled-date"><strong>Date of Canceled:</strong></label>
+                                        <input type="text" id="detail-canceled-date" name="date_of_canceled" class="form-control form-control-sm" readonly>
+                                    </div>
+                                    {{-- @endif --}}
                                 </div>
                                 <table class="table table-bordered table-sm" id="table-purchase-detail" width="100%" cellspacing="0">
                                     <thead>
@@ -186,7 +207,7 @@
                                     
                                 </tbody>
                             </table>
-                    </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -346,6 +367,10 @@
                 $('#detail-request-number').val(data.data[0].purchase_requestion_number + '_' + data.data[0].requestion);
                 $('#detail-request-date').val(data.data[0].date_of_request);
                 $('#detail-request-req-by').val(data.requestBy);
+                $('#detail-processed-by').val(data.processedBy);
+                $('#detail-processed-date').val(data.data[0].process_date);
+                $('#detail-canceled-by').val(data.canceledBy);
+                $('#detail-canceled-date').val(data.data[0].canceled_date);
                 $('#detail-request-status').val(data.data[0].status);
             }
 

@@ -76,7 +76,7 @@ class PurchaseRequestionController extends Controller
                 'requestion' => $request['requestion'],
                 'employee_id' => auth()->id(),
                 'supplier' => $request['supplier_id'],
-                'date_of_request' => now(),
+                'date_of_request' => $request['date_of_request'],
                 'nm_barang' => $item['item_name'],
                 'qty' => $item['quantity'],
                 'status' => 'waiting',
@@ -107,7 +107,9 @@ class PurchaseRequestionController extends Controller
             ->leftJoin(DB::raw('(SELECT id_barang, SUM(CAST(qty AS INT)) as incoming_qty FROM arrival_purchase_items GROUP BY id_barang) a'), 'pr.id', '=', 'a.id_barang')->where('pr.purchase_requestion_number', $purchaseRequestionNumber)
             ->get();
         $requestBy = DB::table('users')->where('id', $purchaseRequests[0]->employee_id)->first()->name;
-        return response()->json(['data' => $purchaseRequests, 'requestBy' => $requestBy]);
+        $processedBy = $purchaseRequests[0]->process_date ? DB::table('users')->where('id', $purchaseRequests[0]->approval_id)->first()->name : null;
+        $canceledBy = $purchaseRequests[0]->canceled_date ? DB::table('users')->where('id', $purchaseRequests[0]->canceled_id)->first()->name : null;
+        return response()->json(['data' => $purchaseRequests, 'requestBy' => $requestBy, 'processedBy' => $processedBy, 'canceledBy' => $canceledBy]);
     }
 
     public function fetchArrivalHistory($purchaseRequestionNumber)
@@ -130,6 +132,13 @@ class PurchaseRequestionController extends Controller
                 'approval_id' => auth()->id(),
                 'process_date' => now(),
             ]);
+        $requestEmail = DB::table('users')->where('id', $request->employee_id)->first()->email;
+        $emailBody = [
+            'name' => 'Chutex E-Signature',
+            'body' => 'Your purchase requestion with number "' . $request['purchase_request_number'] . '"_"' . $request['requestion'] . '" is now being processed. You can check the purchase requestion by opening the link below.',
+            'url' => URL::to("/purchase-requestion/index/")
+        ];
+        // Mail::to($requestEmail)->send(new SendEmail($emailBody));
         Alert::success('Processed Successfully!', 'Purchase Request successfully processed!');
         return redirect()->intended('purchase-requestion/index');
     }
@@ -137,17 +146,17 @@ class PurchaseRequestionController extends Controller
     public function canceledPurchaseRequest(Request $request)
     {
         PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number)
-            ->update(['status' => 'canceled', 'status_code' => '04']);
+            ->update(['status' => 'canceled', 'status_code' => '04', 'canceled_id' => auth()->id(), 'canceled_date' => now()]);
+        
+        $requestEmail = DB::table('users')->where('id', $request->employee_id)->first()->email;
+        $emailBody = [
+            'name' => 'Chutex E-Signature',
+            'body' => 'Your purchase requestion with number "' . $request['purchase_request_number'] . '"_"' . $request['requestion'] . '" has been canceled. You can check the purchase requestion by opening the link below.',
+            'url' => URL::to("/purchase-requestion/index/")
+        ];
+        // Mail::to($requestEmail)->send(new SendEmail($emailBody));
         Alert::success('Canceled Successfully!', 'Purchase Request successfully canceled!');
         return redirect()->intended('purchase-requestion/index');
-    }
-
-    public function finishedPurchaseRequest(Request $request)
-    {
-        // PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number)
-        //     ->update(['status' => 'canceled']);
-        // Alert::success('Canceled Successfully!', 'Purchase Request successfully canceled!');
-        // return redirect()->intended('purchase-requestion/index');
     }
 
     public function createArrival($purchaseRequestionNumber)
