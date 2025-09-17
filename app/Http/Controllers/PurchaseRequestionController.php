@@ -149,7 +149,6 @@ class PurchaseRequestionController extends Controller
             ->update(['status' => 'canceled', 'status_code' => '04', 'canceled_id' => auth()->id(), 'canceled_date' => now()]);
         
         $requestEmail = DB::table('users')->where('id', $request->employee_id)->first()->email;
-        dd($requestEmail);
         $emailBody = [
             'name' => 'Chutex E-Signature',
             'body' => 'Your purchase requestion with number "' . $request['purchase_request_number'] . '"_"' . $request['requestion'] . '" has been canceled. You can check the purchase requestion by opening the link below.',
