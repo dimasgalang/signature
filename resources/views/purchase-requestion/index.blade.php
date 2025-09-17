@@ -217,6 +217,7 @@
                     <div class="modal-body">
                         <p id="modal-text-record-process"></p>
                         <input class="form-control" type="hidden" id="modal_purchase_requestion_number_process" name="purchase_requestion_number" readonly>
+                        <input class="form-control" type="hidden" id="modal_employee_id_process" name="employee_id" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -241,6 +242,7 @@
                     <div class="modal-body">
                         <p id="modal-text-record-canceled"></p>
                         <input class="form-control" type="hidden" id="modal_purchase_requestion_number_canceled" name="purchase_requestion_number" readonly>
+                        <input class="form-control" type="hidden" id="modal_employee_id_canceled" name="employee_id" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -456,6 +458,7 @@
         $.get(jsonProcess, function (data) {
             if (data.data.length > 0) {
                 $('#modal_purchase_requestion_number_process').val(data.data[0].purchase_requestion_number);
+                $('#modal_employee_id_process').val(data.data[0].employee_id);
                 } else {
 
                 }
@@ -468,6 +471,7 @@
         $.get(jsonCanceled, function (data) {
             if (data.data.length > 0) {
                 $('#modal_purchase_requestion_number_canceled').val(data.data[0].purchase_requestion_number);
+                $('#modal_employee_id_canceled').val(data.data[0].employee_id);
                 } else {
 
                 }
