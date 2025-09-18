@@ -359,10 +359,10 @@
                 $('#detail-request-number').val(data.data[0].purchase_requestion_number + '_' + data.data[0].requestion);
                 $('#detail-request-date').val(data.data[0].date_of_request);
                 $('#detail-request-req-by').val(data.requestBy);
-                $('#detail-processed-by').val(data.processedBy);
-                $('#detail-processed-date').val(data.data[0].process_date);
-                $('#detail-canceled-by').val(data.canceledBy);
-                $('#detail-canceled-date').val(data.data[0].canceled_date);
+                $('#detail-processed-by').val(data.processedBy ?? '-');
+                $('#detail-processed-date').val(data.data[0].process_date ?? '-');
+                $('#detail-canceled-by').val(data.canceledBy ?? '-');
+                $('#detail-canceled-date').val(data.data[0].canceled_date ?? '-');
                 $('#detail-request-status').val(data.data[0].status);
             }
 
@@ -372,7 +372,14 @@
                 responsive: true,
                 ajax: jsonDetails, 
                 columns: [
-                    { data: 'id', name: 'id', orderable: false, searchable: false},
+                    { data: null, 
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }, 
+                        name: 'id', 
+                        orderable: false, 
+                        searchable: false
+                    },
                     { data: 'nm_barang', name: 'nm_barang', orderable: false },
                     { data: 'qty', name: 'qty', orderable: false },
                     { data: 'incoming_qty', name: 'incoming_qty', orderable: false },
