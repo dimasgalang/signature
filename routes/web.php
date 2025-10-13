@@ -202,6 +202,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/purchase-requestion/create', [PurchaseRequestionController::class, 'create'])->name('purchase-requestion.create');
     Route::post('/purchase-requestion/store', [PurchaseRequestionController::class, 'store'])->name('purchase-requestion.store');
     Route::get('/purchase-requestion/fetchPurchaseRequest/{purchaseRequestionNumber}', [PurchaseRequestionController::class, 'fetchPurchaseRequest'])->name('purchase-requestion.fetchPurchaseRequest');
+    Route::get('/purchase-requestion/assignSupplier/{purchaseRequestionNumber}', [PurchaseRequestionController::class, 'assignSupplier'])->name('purchase-requestion.assignSupplier');
     Route::post('/purchase-requestion/processPurchaseRequest', [PurchaseRequestionController::class, 'processPurchaseRequest'])->name('purchase-requestion.processPurchaseRequest');
     Route::post('/purchase-requestion/canceledPurchaseRequest', [PurchaseRequestionController::class, 'canceledPurchaseRequest'])->name('purchase-requestion.canceledPurchaseRequest');
     Route::post('/purchase-requestion/finishedPurchaseRequest', [PurchaseRequestionController::class, 'finishedPurchaseRequest'])->name('purchase-requestion.finishedPurchaseRequest');

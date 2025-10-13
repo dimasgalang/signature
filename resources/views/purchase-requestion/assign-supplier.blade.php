@@ -22,7 +22,7 @@
                 
 
                 <!-- Approach -->
-                <form method="post" action="{{ route('purchase-requestion.store') }}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('purchase-requestion.processPurchaseRequest') }}" enctype="multipart/form-data">
                 @csrf
                 {{-- Other Request --}}
                 <div class="row">
@@ -31,41 +31,28 @@
                             <div class="card-header py-3 d-sm-flex align-items-center justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">Purchase Requestion Information</h6>
                             </div>
-                            <input class="form-control" type="hidden" id="purchase_request_number" name="purchase_request_number" value="{{ $newIdPurchaseRequest }}">
+                            <input class="form-control" type="hidden" id="purchase_request_number" name="purchase_request_number" value="{{ $purchaseRequests[0]->purchase_requestion_number }}">
                             <div class="card-body">
                                 <div id="employmentIdentity">
                                     <div class="row mb-4">
                                         <div class="col-xl-3">
                                             <label><b>Purchase Request Number :</b></label>
-                                            <input class="form-control" type="text" id="purchase_request_number" name="purchase_request_number" value="{{ $newIdPurchaseRequest }}" readonly>
+                                            <input class="form-control" type="text" id="purchase_request_number" name="purchase_request_number" value="{{ $purchaseRequests[0]->purchase_requestion_number }}" readonly>
                                         </div>
                                         <div class="col-xl-3">
                                             <label><b>Purpose Requestion :</b></label>
-                                            <input class="form-control" type="text" id="requestion" name="requestion">
+                                            <input class="form-control" type="text" id="requestion" name="requestion" value="{{ $purchaseRequests[0]->requestion }}" readonly>
                                         </div>
                                         <div class="col-xl-3">
                                             <label><b>Date of Request :</b></label>
-                                            <input class="form-control" type="date" id="date_of_request" name="date_of_request" value="{{ date('Y-m-d') }}">
+                                            <input class="form-control" type="date" id="date_of_request" name="date_of_request" value="{{ $purchaseRequests[0]->date_of_request }}" readonly>
                                         </div>
                                         <div class="col-xl-3">
                                             <label><b>Name :</b></label>
-                                            <input class="form-control" type="hidden" id="employee_id" name="employee_id" value="{{ Auth::user()->id }}" readonly>
-                                            <input class="form-control" type="text" id="name" name="name" value="{{ Auth::user()->name }}" readonly>
+                                            <input class="form-control" type="hidden" id="employee_id" name="employee_id" value="{{ $purchaseRequests[0]->employee_id }}" readonly>
+                                            <input class="form-control" type="text" id="name" name="name" value="{{ $created_by }}" readonly>
                                         </div>
                                     </div>
-                                    {{-- <div class="row">
-                                        <div class="col-auto">
-                                            <label for="supplier_id"><strong>Supplier:</strong></label>
-                                        </div>
-                                        <div class="col">
-                                            <select name="supplier_id" id="supplier_id" class="form-control">
-                                                <option value=""></option>
-                                                @foreach($suppliers as $supplier)
-                                                    <option value="{{ $supplier->supplier_code }}">{{ $supplier->supplier_name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div> --}}
                                 </div>
                             </div>
                         </div>
@@ -81,10 +68,12 @@
                             </div>
                             <div class="card-body">
                                 <div id="itemRequest">
-                                    <div class="row">
-                                        <div class="col-xl-6">
+                                    @foreach($purchaseRequests as $index => $purchaseRequest)
+                                    <div class="row mb-2">
+                                        <div class="col-xl-4">
                                             <label><b>Item Name :</b></label>
-                                            <input class="form-control" type="text" id="item_name" name="item_request[0][item_name]" >
+                                            <input class="form-control" type="text" id="item_name" name="item_request[{{ $index }}][item_name]" value="{{ $purchaseRequest->nm_barang }}" readonly>
+                                            <input type="hidden" name="item_request[{{ $index }}][id]" value="{{ $purchaseRequest->id }}">
                                             @error('item_request.0.item_name')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -93,18 +82,30 @@
                                         </div>
                                         <div class="col-xl-4">
                                             <label><b>Quantity :</b></label>
-                                            <input class="form-control" type="number" id="qty" name="item_request[0][quantity]" >
+                                            <input class="form-control" type="number" id="qty" name="item_request[{{ $index }}][quantity]" value="{{ $purchaseRequest->qty }}" readonly>
                                             @error('item_request.0.quantity')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
                                         </div>
-                                        <div class="col-xl-2">
-                                            <label></label>
-                                            <button type="button" class="btn btn-sm btn-primary btn-block mt-3 add-item_request"><i class="fas fa-plus"></i></button>
+                                        <div class="col-xl-4">
+                                            <label for="supplier_select"><strong>Supplier:</strong></label>
+                                            <select name="item_request[{{ $index }}][supplier_id]" id="supplier_select{{ $index }}" class="form-control mb-1 supplier-select">
+                                                <option value=""></option>
+                                                @foreach($suppliers as $supplier)
+                                                    <option value="{{ $supplier->supplier_code }}">{{ $supplier->supplier_name }}</option>
+                                                @endforeach
+                                            </select>
+
+                                            @error('item_request.0.supplier_select')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
                                     </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -113,7 +114,7 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <button id="submit" type="submit" class="btn btn-primary btn-block"><b>Create</b></button>
+                        <button id="submit" type="submit" class="btn btn-primary btn-block"><b>Proses</b></button>
                     </div>
                 </div>
             </form>
@@ -138,35 +139,46 @@
 
     $(document).ready(function() {
         // Inisialisasi Select2
-        $('.hardware_id').select2({
-            allowClear: true,
-            placeholder: 'Choose Hardware Device',
-        });
+        let itemRequest = document.getElementById('itemRequest');
+        let itemRequestIndex = itemRequest.children.length;
 
-        $('.approval_hod_id').select2({
-            allowClear: true,
-            placeholder: 'Choose Your HOD',
-        });
-
-        $('.add-item_request').on('click', function() {
-            let itemRequest = document.getElementById('itemRequest');
-            let itemRequestIndex = itemRequest.children.length;
-            $("#itemRequest").append(`<div class="row"><div class="col-xl-6"><label>Item Name :</label><input class="form-control" type="text" id="item_name" name="item_request[${itemRequestIndex}][item_name]" >
-            </div><div class="col-xl-4"><label>Quantity :</label><input class="form-control" type="number" id="qty" name="item_request[${itemRequestIndex}][quantity]" >
-            </div><div class="col-xl-2"><label></label><button type="button" class="btn btn-danger btn-block removeThis"><i class="fas fa-trash"></i></button>
-            </div></div>`);
-        });
-
-        $(document).on('click', '.removeThis', function() {
-            $(this).parent().parent().remove();
-        });
-
-        $(document).ready(function() {
-            $('#supplier_id').select2({
+        for (let i = 0; i < itemRequestIndex; i++) {
+            $('#supplier_select' + i).select2({
                 allowClear: true,
                 placeholder: 'Choose Supplier',
+                tags: true,
+
             });
-        });
+        }
+
+        // // Toggle date period based on checkbox state
+        // $('input[name="deactivate"]').change(function() {
+        //     var selectedValue = $(this).val();
+        //     if (selectedValue === 'temporarily') {
+        //         // Show with slide down animation
+        //         $('#deactivate-period').slideDown(400);
+        //     } else {
+        //         // Hide with slide up animation
+        //         $('#deactivate-period').slideUp(400);
+                
+        //         // Optional: Clear the date values when hiding
+        //         $('#start_date, #end_date').val('');
+        //     }
+        // });
+
+        // $(document).on('change', '.is-exist-checkbox', function() {
+        //     var isChecked = $(this).is(':checked');
+        //     var index = $('.is-exist-checkbox').index(this);
+
+        //      if (isChecked) {
+        //         $('#supplier_select' + index).removeClass('d-none').val('');
+        //         $('#supplier_input' + index).addClass('d-none').focus();
+        //     } else {
+        //         $('#supplier_input' + index).removeClass('d-none');
+        //         $('#supplier_select' + index).addClass('d-none').val('');
+        //     }
+        //     //updateDynamicInput(isChecked);
+        // });
 
     });
 </script>

@@ -123,15 +123,36 @@ class PurchaseRequestionController extends Controller
         return response()->json(['data' => $arrivalHistory]);
     }
 
+    public function assignSupplier($purchaseRequestionNumber)
+    {
+        $purchaseRequests = PurchaseRequestion::where('purchase_requestion_number', $purchaseRequestionNumber)->get();
+        $suppliers = DB::connection('smartit')->table('ms_supplier')->select('supplier_code', 'supplier_name')->get();
+        $created_by = DB::table('users')->where('id', $purchaseRequests[0]->employee_id)->first()->name;
+
+        return view('purchase-requestion.assign-supplier', compact('purchaseRequests', 'suppliers', 'created_by'));
+    }
+
     public function processPurchaseRequest(Request $request)
     {
-        $processReq = PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number)
-            ->update([
-                'status' => 'process',
-                'status_code' => '02',
-                'approval_id' => auth()->id(),
-                'process_date' => now(),
-            ]);
+        // $processReq = PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number)
+        //     ->update([
+        //         'status' => 'process',
+        //         'status_code' => '02',
+        //         'approval_id' => auth()->id(),
+        //         'process_date' => now(),
+        // //     ]);
+        // dd($request->all());
+
+        foreach ($request['item_request'] as $item) {
+            $processReq = PurchaseRequestion::where('id', $item['id'])
+                ->update([
+                    'supplier' => $item['supplier_id'],
+                    'status' => 'process',
+                    'status_code' => '02',
+                    'approval_id' => auth()->id(),
+                    'process_date' => now(),
+                ]);
+        }
         $requestEmail = DB::table('users')->where('id', $request->employee_id)->first()->email;
         $emailBody = [
             'name' => 'Chutex E-Signature',
