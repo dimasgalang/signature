@@ -74,13 +74,14 @@
                                     <br>
                                     <div>
                                         <label for="documentName">Document Name</label>
-                                        @if(((substr($handover?->document_name,2,5)) != date('y') . date('n') . date('d')))
+                                        <input class="form-control" type="text" id="documentName" name="documentName" value="{{ $newDocumentName }}" readonly>
+                                        {{-- @if(((substr($handover?->document_name,2,5)) != date('y') . date('n') . date('d')))
                                         <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'HO' . date('y') . date('n') . date('d') . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
                                         @elseif(((substr($handover?->document_name,2,5)) == (date('y') . date('n') . date('d'))) || ($handover?->document_name ?? ''))
                                         <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'HO' . date('y') . date('n') . date('d') . str_pad(intval(substr($handover?->document_name,-4)) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
                                         @else
                                         <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'HO' . date('y') . date('n') . date('d') . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                     <br>
                                     <div class="row">

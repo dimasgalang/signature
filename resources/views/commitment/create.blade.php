@@ -34,13 +34,14 @@
                                     <input class="form-control" type="hidden" id="id" name="id">
                                     <div>
                                         <label for="document_name">Document Name</label>
-                                        @if(((substr($commitment?->document_name,3,5)) != date('y') . date('n') . date('d')))
+                                        <input class="form-control" type="text" id="document_name" name="document_name" value="{{ $newDocumentName }}" readonly>
+                                        {{-- @if(((substr($commitment?->document_name,3,5)) != date('y') . date('n') . date('d')))
                                         <input class="form-control" type="text" id="document_name" name="document_name" value="{{ 'CCU' . date('y') . date('n') . date('d') . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
                                         @elseif(((substr($commitment?->document_name,3,5)) == (date('y') . date('n') . date('d'))) || ($commitment?->document_name ?? ''))
                                         <input class="form-control" type="text" id="document_name" name="document_name" value="{{ 'CCU' . date('y') . date('n') . date('d') . str_pad(intval(substr($commitment?->document_name,-4)) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
                                         @else
                                         <input class="form-control" type="text" id="document_name" name="document_name" value="{{ 'CCU' . date('y') . date('n') . date('d') . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                     <br>
                                     <div>

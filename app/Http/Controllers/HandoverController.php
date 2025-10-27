@@ -33,13 +33,30 @@ class HandoverController extends Controller
 
     public function create()
     {
+        $handover = Handover::orderBy('id', 'desc')->first();
+        $prefix = 'HO';
+        $defaultNumber = 1;
+        $todayDate = date('ymd');
+
+        if (isset($handover) && preg_match('/^HO(\d{6})(\d{2})$/', $handover->document_name, $matches)) {
+            $lastDate = $matches[1];
+            if ($lastDate === $todayDate) {
+                $nextNumber = intval($matches[2]) + 1;
+            } else {
+                $nextNumber = $defaultNumber;
+            }
+        } else {
+            $nextNumber = $defaultNumber;
+        }
+        $newDocumentName = $prefix . $todayDate . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
         $users = User::all();
         // $items = Item::all();
 
         $items = DB::connection('smartit')->table('ms_barang')->select('barang_code', 'barang_name')->where('barang_status', '=', 'Active')->get();
         $handover = Handover::all()->last();
         // dd('HO' . date('y') . date('n') . date('d') . str_pad(intval(substr($handover?->document_name, -4)) + 1, 4, '0', STR_PAD_LEFT));
-        return view('handover.create', compact('users', 'items', 'handover'));
+        return view('handover.create', compact('users', 'items', 'handover', 'newDocumentName'));
     }
 
     public function store(Request $request)

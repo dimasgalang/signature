@@ -28,7 +28,9 @@ class CyberUserAccountController extends Controller
 
     public function create()
     {
-        $users = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK AS NPK', 'NAMA_KARYAWAN', 'BAG',)->get();
+        $usersActive = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK AS NPK', 'NAMA_KARYAWAN', 'BAG',)->get();
+        $usersOut = DB::connection('cii')->table('BIODATA_KELUAR')->select('BIODATA_KELUAR.NPK AS NPK', 'NAMA_KARYAWAN', 'BAG',)->get();
+        $users = $usersActive->merge($usersOut);
         $reasons = ReasonDeactivateCyberUser::all();
 
         // CUA25062401
@@ -92,7 +94,10 @@ class CyberUserAccountController extends Controller
 
     public function fetchEmployee($npk)
     {
-        $employee = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')->where('BIODATA.NPK', '=', $npk)->get();
+        $employee = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')->get();
+        $employeeOut = DB::connection('cii')->table('BIODATA_KELUAR')->select('BIODATA_KELUAR.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA_KELUAR.ID_DEPT', '=', 'DEPT.ID_DEPT')->get();
+
+        $employee = $employee->merge($employeeOut)->where('NPK', '=', $npk)->first();
         return response()->json($employee);
     }
 

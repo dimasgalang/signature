@@ -24,9 +24,26 @@ class CommitmentComputerController extends Controller
 
     public function create()
     {
+        $commitment = Commitment::orderBy('id', 'desc')->first();
+        $prefix = 'CCU';
+        $defaultNumber = 1;
+        $todayDate = date('ymd');
+
+        if (isset($commitment) && preg_match('/^CCU(\d{6})(\d{2})$/', $commitment->document_name, $matches)) {
+            $lastDate = $matches[1];
+            if ($lastDate === $todayDate) {
+                $nextNumber = intval($matches[2]) + 1;
+            } else {
+                $nextNumber = $defaultNumber;
+            }
+        } else {
+            $nextNumber = $defaultNumber;
+        }
+        $newDocumentName = $prefix . $todayDate . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
         $commitment = Commitment::all()->last();
         $users = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')->get();
-        return view('commitment.create', compact('users', 'commitment'));
+        return view('commitment.create', compact('users', 'commitment', 'newDocumentName'));
     }
 
     public function fetchEmployee($npk)

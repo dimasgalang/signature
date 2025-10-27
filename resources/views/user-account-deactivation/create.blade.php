@@ -199,9 +199,9 @@
                     success:function(data) {
                         console.log(data);
                         
-                        $('#npk').val(data[0].NPK);
-                        $('#position').val(data[0].BAG);
-                        $('#department-employee').val(data[0].DEPARTEMENT);
+                        $('#npk').val(data.NPK);
+                        $('#position').val(data.BAG);
+                        $('#department-employee').val(data.DEPARTEMENT);
                     }
                 });
             } else{
