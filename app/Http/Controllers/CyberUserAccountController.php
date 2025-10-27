@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CyberUserAccount;
 use App\Models\ReasonDeactivateCyberUser;
+use App\Models\SysLog;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Jenssegers\Agent\Agent;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class CyberUserAccountController extends Controller
@@ -88,6 +90,22 @@ class CyberUserAccountController extends Controller
             ]);
         }
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Updated Deactivate Access for NPK ' . User::where('npk', '=', $request->employee_id)->first()->npk,
+            'menu' => 'Cyber User Account',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Updated Successfully!', 'Deactivate Access successfully updated!');
         return redirect()->intended('approval/indexDeactivate');
     }
@@ -164,6 +182,22 @@ class CyberUserAccountController extends Controller
             'token' => $random
         ]);
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Create Deactivate Access for NPK ' . User::where('npk', '=', $request->employee_id)->first()->npk,
+            'menu' => 'Cyber User Account',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Created Successfully!', 'Deactivate Access successfully created!');
         return redirect()->intended('approval/indexDeactivate');
     }
@@ -193,6 +227,22 @@ class CyberUserAccountController extends Controller
             ]);
         }
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Approved Deactivate Access for NPK ' . User::where('id', '=', $request->employee_id)->first()->npk,
+            'menu' => 'Cyber User Account',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Approved Successfully!', 'Document successfully approved!');
         return redirect()->intended('approval/indexDeactivate');
     }
@@ -209,6 +259,22 @@ class CyberUserAccountController extends Controller
         CyberUserAccount::select('*')->where('preparer_id', '=', $request->employee_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
             'status' => 'revision',
             'comment' => $request->comment,
+        ]);
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Revised Deactivate Access for NPK ' . User::where('id', '=', $request->employee_id)->first()->npk,
+            'menu' => 'Cyber User Account',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
         ]);
 
         Alert::success('Comment to Revision Successfully!', 'Approval "' . $request->document_name . '" successfully commented!');
@@ -248,6 +314,22 @@ class CyberUserAccountController extends Controller
             'void' => 'true',
         ]);
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Void Deactivate Access for NPK ' . User::where('id', '=', $request->employee_id)->first()->npk,
+            'menu' => 'Cyber User Account',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Void Successfully!', 'Cyber User Request For "' . $request->document_name . '" successfully voided!');
         return redirect('approval/indexDeactivate');
     }
@@ -256,6 +338,22 @@ class CyberUserAccountController extends Controller
     {
         $approval = CyberUserAccount::select('*')->where('deactivation_request_id', '=', $request->deactivation_request_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
             'void' => 'false',
+        ]);
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Restore Deactivate Access for NPK ' . User::where('id', '=', $request->employee_id)->first()->npk,
+            'menu' => 'Cyber User Account',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
         ]);
 
         Alert::success('Restore Successfully!', 'Cyber User Request For "' . $request->document_name . '" successfully restored!');

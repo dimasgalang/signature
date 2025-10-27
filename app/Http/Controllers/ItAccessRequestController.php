@@ -8,6 +8,7 @@ use App\Models\Approval;
 use App\Models\FileFolderAccess;
 use App\Models\HardwareRequest;
 use App\Models\ResourceAccess;
+use App\Models\SysLog;
 use App\Models\User;
 use App\Models\UserAccount;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -19,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Jenssegers\Agent\Agent;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ItAccessRequestController extends Controller
@@ -190,6 +192,22 @@ class ItAccessRequestController extends Controller
             }
         }
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Created IT Access Request ' . $request->document_name,
+            'menu' => 'IT Access Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Created Successfully!', 'Request Access successfully created!');
         return redirect()->intended('approval/indexItAccess');
     }
@@ -325,6 +343,22 @@ class ItAccessRequestController extends Controller
             }
         }
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Approved IT Access Request ' . $request->document_name,
+            'menu' => 'IT Access Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Approval Successfully!', 'Document successfully approved!');
         return redirect()->intended('approval/indexItAccess');
     }
@@ -357,6 +391,22 @@ class ItAccessRequestController extends Controller
             ]);
         }
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Approved IT Access Request ' . $request->document_name,
+            'menu' => 'IT Access Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Approved Successfully!', 'Document successfully approved!');
         return redirect()->intended('approval/indexItAccess');
     }
@@ -374,6 +424,22 @@ class ItAccessRequestController extends Controller
         AccessRequest::select('*')->where('employee_id', '=', $request->employee_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
             'status' => 'revision',
             'comment' => $request->comment,
+        ]);
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Commented to Revision IT Access Request ' . $request->document_name,
+            'menu' => 'IT Access Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
         ]);
 
         Alert::success('Comment to Revision Successfully!', 'Approval "' . $request->document_name . '" successfully commented!');
@@ -406,6 +472,22 @@ class ItAccessRequestController extends Controller
         if (!file_exists($directory)) {
             mkdir($directory, 0777, true);
         }
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Generated PDF IT Access Request ' . $id,
+            'menu' => 'IT Access Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
 
         $pdf->save($directory . $id . '.pdf');
     }
@@ -632,6 +714,22 @@ class ItAccessRequestController extends Controller
             }
         }
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Updated IT Access Request ' . $request->document_name,
+            'menu' => 'IT Access Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Update Successfully!', 'Access Request successfully updated!');
         return redirect()->intended('approval/indexItAccess');
     }
@@ -642,6 +740,22 @@ class ItAccessRequestController extends Controller
             'void' => 'true',
         ]);
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Voided IT Access Request ' . $request->document_name,
+            'menu' => 'IT Access Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Void Successfully!', 'Access Request For "' . $request->document_name . '" successfully voided!');
         return redirect('approval/indexItAccess');
     }
@@ -650,6 +764,22 @@ class ItAccessRequestController extends Controller
     {
         $approval = AccessRequest::select('*')->where('id_request_access', '=', $request->id_request_access)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
             'void' => 'false',
+        ]);
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Restored IT Access Request ' . $request->document_name,
+            'menu' => 'IT Access Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
         ]);
 
         Alert::success('Restore Successfully!', 'Access Request For "' . $request->document_name . '" successfully restored!');

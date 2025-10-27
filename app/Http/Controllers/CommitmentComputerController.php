@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commitment;
+use App\Models\SysLog;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Jenssegers\Agent\Agent;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class CommitmentComputerController extends Controller
@@ -81,6 +84,22 @@ class CommitmentComputerController extends Controller
         $commitments->base64 = $pdfToBase64;
         $commitments->save();
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Create Commitment Document ' . $commitments->document_name . ' for ' . $commitments->name,
+            'menu' => 'Commitment',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Upload Successfully!', 'Document successfully uploaded!');
         return redirect()->intended('commitment/index');
     }
@@ -89,6 +108,22 @@ class CommitmentComputerController extends Controller
     {
         $commitment = Commitment::all()->find($id);
         // dd($handover);
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Generate PDF Commitment Document ' . $document_name . ' for ' . $commitment->name,
+            'menu' => 'Commitment',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
 
         $pdf = Pdf::loadView('template.commitment', compact(['commitment']));
 
@@ -107,6 +142,23 @@ class CommitmentComputerController extends Controller
         $commitment = Commitment::find($request->commitment_id);
         $commitment->void = 'true';
         $commitment->save();
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Void Commitment Document ' . $commitment->document_name . ' for ' . $commitment->name,
+            'menu' => 'Commitment',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Void Successfully!', 'Document successfully void!');
         return redirect()->intended('commitment/index');
     }
@@ -115,6 +167,23 @@ class CommitmentComputerController extends Controller
         $commitment = Commitment::find($request->commitment_id);
         $commitment->void = 'false';
         $commitment->save();
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Restore Commitment Document ' . $commitment->document_name . ' for ' . $commitment->name,
+            'menu' => 'Commitment',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Restore Successfully!', 'Document successfully restore!');
         return redirect()->intended('commitment/index');
     }

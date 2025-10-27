@@ -6,12 +6,14 @@ use App\Models\ItemLeaver;
 use App\Models\ItemService;
 use App\Models\Leaver;
 use App\Models\ServiceLeaver;
+use App\Models\SysLog;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Jenssegers\Agent\Agent;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class LeaverController extends Controller
@@ -65,6 +67,22 @@ class LeaverController extends Controller
             $item->serial_number = $value['serial_number'];
             $item->quantity = $value['quantity'];
             $item->save();
+
+            $username = Auth::user()->name;
+            $agent = new Agent();
+            $agent->setUserAgent(request()->userAgent());
+            $ipAddress = request()->ip();
+            $browser = $agent->browser();
+            $os = $agent->platform();
+            SysLog::create([
+                'username' => $username,
+                'activity' => 'Create Leaver Item ' . $leaver->document_name . ' : ' . $value['barang_code'] . ' - ' . $value['item_details'],
+                'menu' => 'Leaver',
+                'log_date' => now(),
+                'ip_address' => $ipAddress,
+                'browser_type' => $browser,
+                'os' => $os,
+            ]);
         }
 
         foreach ($request->service_id as $key => $value) {
@@ -72,6 +90,22 @@ class LeaverController extends Controller
             $service->leaver_id = $leaver->id;
             $service->leaver_code = $value;
             $service->save();
+
+            $username = Auth::user()->name;
+            $agent = new Agent();
+            $agent->setUserAgent(request()->userAgent());
+            $ipAddress = request()->ip();
+            $browser = $agent->browser();
+            $os = $agent->platform();
+            SysLog::create([
+                'username' => $username,
+                'activity' => 'Create Leaver Service ' . $leaver->document_name . ' : ' . $value,
+                'menu' => 'Leaver',
+                'log_date' => now(),
+                'ip_address' => $ipAddress,
+                'browser_type' => $browser,
+                'os' => $os,
+            ]);
         }
 
         // Generate PDF and save it to storage
@@ -122,11 +156,22 @@ class LeaverController extends Controller
             ->select('item_services.leaver_id', 'service_leavers.leaver_name')
             ->get();
 
-        // foreach($itemData as $list) {
-        //     dd($list['item_name']);
-        // }
-        // dd($itemData);
-        // $pdf = PDF::loadView('template.handover', compact(['handover', 'itemHandover']));
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Generate Leaver Document ' . $documentName,
+            'menu' => 'Leaver',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         $pdf = Pdf::loadView('template.leaver', compact(['leaver', 'itemData', 'services']));
 
         return $pdf;
@@ -205,6 +250,22 @@ class LeaverController extends Controller
                     $item->serial_number = $value['serial_number'];
                     $item->quantity = $value['quantity'];
                     $item->save();
+
+                    $username = Auth::user()->name;
+                    $agent = new Agent();
+                    $agent->setUserAgent(request()->userAgent());
+                    $ipAddress = request()->ip();
+                    $browser = $agent->browser();
+                    $os = $agent->platform();
+                    SysLog::create([
+                        'username' => $username,
+                        'activity' => 'Update Leaver Item ' . $leaver->document_name . ' : ' . ' - ' . $value['item_details'],
+                        'menu' => 'Leaver',
+                        'log_date' => now(),
+                        'ip_address' => $ipAddress,
+                        'browser_type' => $browser,
+                        'os' => $os,
+                    ]);
                 }
                 // If id is null, create a new item
             } else {
@@ -215,6 +276,22 @@ class LeaverController extends Controller
                 $item->serial_number = $value['serial_number'];
                 $item->quantity = $value['quantity'];
                 $item->save();
+
+                $username = Auth::user()->name;
+                $agent = new Agent();
+                $agent->setUserAgent(request()->userAgent());
+                $ipAddress = request()->ip();
+                $browser = $agent->browser();
+                $os = $agent->platform();
+                SysLog::create([
+                    'username' => $username,
+                    'activity' => 'Create New Leaver Item ' . $leaver->document_name . ' : ' . $value['item_details'],
+                    'menu' => 'Leaver',
+                    'log_date' => now(),
+                    'ip_address' => $ipAddress,
+                    'browser_type' => $browser,
+                    'os' => $os,
+                ]);
             }
         }
 
@@ -228,12 +305,44 @@ class LeaverController extends Controller
                     $service->leaver_id = $request->leaver_id;
                     $service->leaver_code = $value['service_id'];
                     $service->save();
+
+                    $username = Auth::user()->name;
+                    $agent = new Agent();
+                    $agent->setUserAgent(request()->userAgent());
+                    $ipAddress = request()->ip();
+                    $browser = $agent->browser();
+                    $os = $agent->platform();
+                    SysLog::create([
+                        'username' => $username,
+                        'activity' => 'Update Leaver Service ' . $leaver->document_name,
+                        'menu' => 'Leaver',
+                        'log_date' => now(),
+                        'ip_address' => $ipAddress,
+                        'browser_type' => $browser,
+                        'os' => $os,
+                    ]);
                 }
                 // If id is null, create a new item
             } else {
                 $service = new ItemService();
                 $service->leaver_id = $request->leaver_id;
                 $service->leaver_code = $value['service_id'];
+
+                $username = Auth::user()->name;
+                $agent = new Agent();
+                $agent->setUserAgent(request()->userAgent());
+                $ipAddress = request()->ip();
+                $browser = $agent->browser();
+                $os = $agent->platform();
+                SysLog::create([
+                    'username' => $username,
+                    'activity' => 'Create New Leaver Service ' . $leaver->document_name,
+                    'menu' => 'Leaver',
+                    'log_date' => now(),
+                    'ip_address' => $ipAddress,
+                    'browser_type' => $browser,
+                    'os' => $os,
+                ]);
                 $service->save();
             }
         }

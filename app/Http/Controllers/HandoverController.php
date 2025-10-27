@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Handover;
 use App\Models\Item;
 use App\Models\ItemHandover;
+use App\Models\SysLog;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\PDF;
 use Carbon\Carbon;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Jenssegers\Agent\Agent;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class HandoverController extends Controller
@@ -61,6 +63,13 @@ class HandoverController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+
         $handover = Handover::create([
             'handover_name_id' => $request->handover_name_id,
             'receiver_name_id' => $request->receiver_name_id,
@@ -77,6 +86,16 @@ class HandoverController extends Controller
             $item->serial_number = $value['serial_number'];
             $item->quantity = $value['quantity'];
             $item->save();
+
+            SysLog::create([
+                'username' => $username,
+                'activity' => 'Create Handover Item ' . $handover->document_name . ' : ' . $value['barang_code'] . ' - ' . $value['item_details'],
+                'menu' => 'Handover',
+                'log_date' => now(),
+                'ip_address' => $ipAddress,
+                'browser_type' => $browser,
+                'os' => $os,
+            ]);
         }
 
         // Generate PDF and save it to storage
@@ -150,6 +169,22 @@ class HandoverController extends Controller
                     $item->serial_number = $value['serial_number'];
                     $item->quantity = $value['quantity'];
                     $item->save();
+
+                    $username = Auth::user()->name;
+                    $agent = new Agent();
+                    $agent->setUserAgent(request()->userAgent());
+                    $ipAddress = request()->ip();
+                    $browser = $agent->browser();
+                    $os = $agent->platform();
+                    SysLog::create([
+                        'username' => $username,
+                        'activity' => 'Update Handover Item ' . $handover->document_name . ' : ' . $value['barang_code'] . ' - ' . $value['item_details'],
+                        'menu' => 'Handover',
+                        'log_date' => now(),
+                        'ip_address' => $ipAddress,
+                        'browser_type' => $browser,
+                        'os' => $os,
+                    ]);
                 }
                 // If id is null, create a new item
             } else {
@@ -160,6 +195,22 @@ class HandoverController extends Controller
                 $item->serial_number = $value['serial_number'];
                 $item->quantity = $value['quantity'];
                 $item->save();
+
+                $username = Auth::user()->name;
+                $agent = new Agent();
+                $agent->setUserAgent(request()->userAgent());
+                $ipAddress = request()->ip();
+                $browser = $agent->browser();
+                $os = $agent->platform();
+                SysLog::create([
+                    'username' => $username,
+                    'activity' => 'Update Handover Item ' . $handover->document_name . ' : ' . $value['barang_code'] . ' - ' . $value['item_details'],
+                    'menu' => 'Handover',
+                    'log_date' => now(),
+                    'ip_address' => $ipAddress,
+                    'browser_type' => $browser,
+                    'os' => $os,
+                ]);
             }
         }
 
@@ -190,6 +241,23 @@ class HandoverController extends Controller
         $handover = Handover::find($request->handover_id);
         $handover->void = 'true';
         $handover->save();
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Void Handover Document ' . $handover->document_name,
+            'menu' => 'Handover',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Void Successfully!', 'Document successfully void!');
         return redirect()->intended('handover/index');
     }
@@ -198,6 +266,23 @@ class HandoverController extends Controller
         $handover = Handover::find($request->handover_id);
         $handover->void = 'false';
         $handover->save();
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Restore Handover Document ' . $handover->document_name,
+            'menu' => 'Handover',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Restore Successfully!', 'Document successfully restore!');
         return redirect()->intended('handover/index');
     }
@@ -222,6 +307,22 @@ class HandoverController extends Controller
             );
             $itemData[] = $data;
         }
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Generate PDF Handover Document ' . $documentName,
+            'menu' => 'Handover',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
 
         $pdf = PDF::loadView('template.handover', compact(['handover', 'itemData']));
 

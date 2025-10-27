@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\SendEmail;
 use App\Models\Approval;
+use App\Models\SysLog;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use setasign\Fpdi\PdfParser\StreamReader;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Jenssegers\Agent\Agent;
 use Yajra\DataTables\Facades\DataTables;
 
 class ApprovalController extends Controller
@@ -279,6 +281,22 @@ class ApprovalController extends Controller
             Mail::to($finishTo[0]->email)->send(new SendEmail($email));
         }
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Approved document "' . $approval->document_name . '"',
+            'menu' => 'Approval',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Approval Successfully!', 'Document "' . $approval->document_name . '" successfully approved!');
 
         // return PDF::Output('Signature.pdf', 'I');
@@ -377,6 +395,23 @@ class ApprovalController extends Controller
             'stamp' => 'true',
         ]);
 
+        // Logging Activity 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => $username . ' stamped document "' . $approval->document_name . '"',
+            'menu' => 'Approval',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         $sendTo = Approval::select('users.email', 'approval.id')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->where('approval.approval_level', '=', $request->approval_progress + 1)->get();
         // dd($sendTo);
         $finishTo = Approval::select('users.email', 'approval.id')->leftJoin('users', 'users.id', '=', 'approval.approval_id')->where('approval.preparer_id', '=', $request->preparer_id)->where('approval.document_name', '=', $request->document_name)->where('approval.token', '=', $request->token)->where('approval.approval_level', '=', 1)->get();
@@ -435,6 +470,23 @@ class ApprovalController extends Controller
             $level++;
         }
 
+        // Logging Activity
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Create New Approval ' . $request->document_name,
+            'menu' => 'Approval',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         if ($request->file) {
             Storage::put('public/document/', $file);
         } else {
@@ -484,6 +536,22 @@ class ApprovalController extends Controller
             'comment' => $request->comment,
         ]);
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => $username . ' commented to revision on document "' . $request->document_name . '"',
+            'menu' => 'Approval',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Comment to Revision Successfully!', 'Approval "' . $request->document_name . '" successfully commented!');
         return redirect('approval/index');
     }
@@ -494,6 +562,22 @@ class ApprovalController extends Controller
             'void' => 'true',
         ]);
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => $username . ' void document "' . $request->document_name . '"',
+            'menu' => 'Approval',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Void Successfully!', 'Approval "' . $request->document_name . '" successfully voided!');
         return redirect('approval/index');
     }
@@ -502,6 +586,22 @@ class ApprovalController extends Controller
     {
         $approval = Approval::select('*')->where('preparer_id', '=', $request->preparer_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
             'void' => 'false',
+        ]);
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => $username . ' restore document "' . $request->document_name . '"',
+            'menu' => 'Approval',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
         ]);
 
         Alert::success('Restore Successfully!', 'Approval "' . $request->document_name . '" successfully restored!');

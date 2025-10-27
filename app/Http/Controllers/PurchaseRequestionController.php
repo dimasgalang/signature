@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Mail\SendEmail;
 use App\Models\ArrivalPurchaseItem;
 use App\Models\PurchaseRequestion;
+use App\Models\SysLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
+use Jenssegers\Agent\Agent;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PurchaseRequestionController extends Controller
@@ -96,6 +98,22 @@ class PurchaseRequestionController extends Controller
             // Mail::to($email)->send(new SendEmail($emailBody));
         }
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Created Purchase Request ' . $request->purchase_request_number,
+            'menu' => 'Purchase Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Created Successfully!', 'Purchase Request successfully created!');
         return redirect()->intended('purchase-requestion/index');
     }
@@ -153,6 +171,23 @@ class PurchaseRequestionController extends Controller
                     'process_date' => now(),
                 ]);
         }
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Processed Purchase Request ' . $request->purchase_request_number,
+            'menu' => 'Purchase Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         $requestEmail = DB::table('users')->where('id', $request->employee_id)->first()->email;
         $emailBody = [
             'name' => 'Chutex E-Signature',
@@ -175,6 +210,23 @@ class PurchaseRequestionController extends Controller
             'body' => 'Your purchase requestion with number "' . $request['purchase_request_number'] . '"_"' . $request['requestion'] . '" has been canceled. You can check the purchase requestion by opening the link below.',
             'url' => URL::to("/purchase-requestion/index/")
         ];
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Canceled Purchase Request ' . $request->purchase_request_number,
+            'menu' => 'Purchase Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         // Mail::to($requestEmail)->send(new SendEmail($emailBody));
         Alert::success('Canceled Successfully!', 'Purchase Request successfully canceled!');
         return redirect()->intended('purchase-requestion/index');
@@ -221,6 +273,22 @@ class PurchaseRequestionController extends Controller
            }
         }
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Created Arrival Items for Purchase Request ' . $request->purchase_request_number,
+            'menu' => 'Purchase Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Created Successfully!', 'Arrival items successfully created!');
         return redirect()->intended('purchase-requestion/index');
     }
@@ -231,6 +299,22 @@ class PurchaseRequestionController extends Controller
         $purchaseRequestion = PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number);
         $purchaseRequestion->update(['void' => 'true']);
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Void Purchase Request ' . $request->purchase_requestion_number,
+            'menu' => 'Purchase Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Void Successfully!', 'Document successfully void!');
         return redirect()->intended('purchase-requestion/index');
     }
@@ -238,6 +322,23 @@ class PurchaseRequestionController extends Controller
     {
         $purchaseRequestion = PurchaseRequestion::where('purchase_requestion_number', $request->purchase_requestion_number);
         $purchaseRequestion->update(['void' => 'false']);
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Restore Purchase Request ' . $request->purchase_requestion_number,
+            'menu' => 'Purchase Request',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Restore Successfully!', 'Document successfully restore!');
         return redirect()->intended('purchase-requestion/index');
     }

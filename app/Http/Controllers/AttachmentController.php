@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Approval;
 use App\Models\Attachment;
+use App\Models\SysLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Str;
+use Jenssegers\Agent\Agent;
 
 class AttachmentController extends Controller
 {
@@ -45,6 +48,22 @@ class AttachmentController extends Controller
             'void' => 'false',
         ]);
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Upload Attachment ' . $request->document_name,
+            'menu' => 'Attachment',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Storage::put('public/attachment/', $file);
 
         Alert::success('Upload Successfully!', 'Attachment "' . $request->document_name . '" successfully uploaded!');
@@ -64,6 +83,22 @@ class AttachmentController extends Controller
             'void' => 'true',
         ]);
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Void Attachment ' . $request->document_name,
+            'menu' => 'Attachment',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Void Successfully!', 'Attachment "' . $request->document_name . '" successfully voided!');
         return redirect('attachment/index');
     }
@@ -72,6 +107,22 @@ class AttachmentController extends Controller
     {
         $attachments = Attachment::select('*')->where('id', '=', $request->id)->update([
             'void' => 'false',
+        ]);
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Restore Attachment ' . $request->document_name,
+            'menu' => 'Attachment',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
         ]);
 
         Alert::success('Restore Successfully!', 'Attachment "' . $request->document_name . '" successfully restored!');

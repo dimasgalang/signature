@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\AnswerSurveillanceQuestionnaire;
 use App\Models\ItemQuestionnaireSurveillance;
 use App\Models\SurveillanceSystemMaintenance;
+use App\Models\SysLog;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Jenssegers\Agent\Agent;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class SurveillanceSystemMaintenanceController extends Controller
@@ -117,6 +120,22 @@ class SurveillanceSystemMaintenanceController extends Controller
             'answer' => $request->recommendation_replacement,
         ]);
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Created Surveillance System Maintenance ' . $request->surveillance_system_maintenance_id,
+            'menu' => 'Surveillance System Maintenance',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Created Successfully!', 'Surveillance System Maintenance successfully created!');
         return redirect()->intended('approval/indexSurveillance');
     }
@@ -144,6 +163,22 @@ class SurveillanceSystemMaintenanceController extends Controller
         if (!file_exists($directory)) {
             mkdir($directory, 0777, true);
         }
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Generated PDF for Surveillance System Maintenance ' . $id,
+            'menu' => 'Surveillance System Maintenance',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
 
         $pdf->save($directory . $id . '.pdf');
     }
@@ -176,6 +211,22 @@ class SurveillanceSystemMaintenanceController extends Controller
                 'status' => 'approved',
             ]);
         }
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Approved Surveillance System Maintenance ' . $surveillanceSystemMaintenance->surveillance_system_maintenance_id,
+            'menu' => 'Surveillance System Maintenance',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
 
         Alert::success('Approved Successfully!', 'Document successfully approved!');
         return redirect()->intended('approval/indexSurveillance');
@@ -246,6 +297,22 @@ class SurveillanceSystemMaintenanceController extends Controller
             ->where('questionnaire_id', 0)
             ->update(['answer' => $request->recommendation_replacement]);
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Updated Surveillance System Maintenance ' . $request->surveillance_system_maintenance_id,
+            'menu' => 'Surveillance System Maintenance',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+        
         Alert::success('Update Successfully!', 'Surveillance System Maintenance successfully updated!');
         return redirect()->intended('approval/indexSurveillance');
     }
@@ -256,6 +323,22 @@ class SurveillanceSystemMaintenanceController extends Controller
             'void' => 'true',
         ]);
 
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Voided Surveillance Maintenance Request For ' . $request->document_name,
+            'menu' => 'Surveillance System Maintenance',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Void Successfully!', 'Surveillance Maintenance Request For "' . $request->document_name . '" successfully voided!');
         return redirect('approval/indexSurveillance');
     }
@@ -264,6 +347,22 @@ class SurveillanceSystemMaintenanceController extends Controller
     {
         $approval = SurveillanceSystemMaintenance::select('*')->where('surveillance_system_maintenance_id', '=', $request->surveillance_system_maintenance_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
             'void' => 'false',
+        ]);
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Restored Surveillance Maintenance Request For ' . $request->document_name,
+            'menu' => 'Surveillance System Maintenance',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
         ]);
 
         Alert::success('Restore Successfully!', 'Surveillance Maintenance Request For "' . $request->document_name . '" successfully restored!');

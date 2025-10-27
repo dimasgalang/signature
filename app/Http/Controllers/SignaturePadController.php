@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Signature;
+use App\Models\SysLog;
 use App\Models\User;
 use Elibyy\TCPDF\Facades\TCPDF as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Jenssegers\Agent\Agent;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class SignaturePadController extends Controller
@@ -109,6 +111,22 @@ class SignaturePadController extends Controller
             Storage::disk('signature_uploads')->delete($request->old_signature);
         }
         Storage::put('public/signature/' . $filename, $image_base64);
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Create Signature for ' . Auth::user()->name,
+            'menu' => 'Signature',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
 
         Alert::success('Create Successfully!', 'Signature successfully created!');
         return redirect('user/profile');
