@@ -106,6 +106,20 @@
             </div>
         </div>
     </li> -->
+    {{-- SysLogs --}}
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSyslogs"
+            aria-expanded="true" aria-controls="collapseSyslogs">
+            <i class="fas fa-fw fa-file"></i>
+            <span>SysLogs</span>
+        </a>
+        <div id="collapseSyslogs" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('syslog.index') }}">System Logs</a>
+            </div>
+        </div>
+    </li>
+
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTemplate"
             aria-expanded="true" aria-controls="collapseTemplate">

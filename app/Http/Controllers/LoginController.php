@@ -25,6 +25,7 @@ class LoginController extends Controller
         $agent = new Agent();
         $agent->setUserAgent(request()->userAgent());
         $ipAddress = $request->ip();
+        $mac = get_mac_address($ipAddress);
         $browser = $agent->browser();
         $os = $agent->platform();
 
@@ -45,6 +46,7 @@ class LoginController extends Controller
                 'menu' => 'Login',
                 'log_date' => now(),
                 'ip_address' => $ipAddress,
+                'mac_address' => $mac,
                 'browser_type' => $browser,
                 'os' => $os,
             ]);
@@ -64,6 +66,7 @@ class LoginController extends Controller
                 'menu' => 'Login',
                 'log_date' => now(),
                 'ip_address' => $ipAddress,
+                'mac_address' => $mac,
                 'browser_type' => $browser,
                 'os' => $os,
             ]);
@@ -80,6 +83,7 @@ class LoginController extends Controller
             'menu' => 'Login',
             'log_date' => now(),
             'ip_address' => $ipAddress,
+            'mac_address' => $mac,
             'browser_type' => $browser,
             'os' => $os,
         ]);
@@ -100,6 +104,7 @@ class LoginController extends Controller
         $agent = new Agent();
         $agent->setUserAgent(request()->userAgent());
         $ipAddress = request()->ip();
+        $macAddress = get_mac_address($ipAddress);
         $browser = $agent->browser();
         $os = $agent->platform();
         SysLog::create([
@@ -108,6 +113,7 @@ class LoginController extends Controller
             'menu' => 'Logout',
             'log_date' => now(),
             'ip_address' => $ipAddress,
+            'mac_address' => $macAddress,
             'browser_type' => $browser,
             'os' => $os,
         ]);

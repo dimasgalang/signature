@@ -20,6 +20,7 @@ use App\Http\Controllers\SignaturePadController;
 use App\Http\Controllers\SmartITController;
 use App\Http\Controllers\SpeechController;
 use App\Http\Controllers\SurveillanceSystemMaintenanceController;
+use App\Http\Controllers\SysLogController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Models\PurchaseRequestOrder;
@@ -43,7 +44,7 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/register/guest', [RegisterController::class, 'store'])->name('register.guest');
 
     Route::get('/login', [LoginController::class, 'login'])->name('login.guest');
-    Route::post('/login', [LoginController::class, 'authenticate'])->name('login')->middleware('throttle:5,10');
+    Route::post('/login', [LoginController::class, 'authenticate'])->name('login')->middleware('throttle:3,10');
     Route::get('/login/qrauth', [LoginController::class, 'qrauth'])->name('login.qrauth');
 });
 
@@ -230,6 +231,8 @@ Route::group(['middleware' => 'auth'], function () {
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');
     Route::get('/export/lpp_pdf', [ExportController::class, 'lpp_pdf'])->name('export.lpp_pdf');
+
+    Route::get('/syslog/index', [SysLogController::class, 'index'])->name('syslog.index');
 
     //Converter
     Route::get('/converter', [ConverterController::class, 'index'])->name('converter.index');
