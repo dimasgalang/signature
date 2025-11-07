@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemQuestionnaireSurveillance;
 use Illuminate\Http\Request;
 
 class TemplateController extends Controller
@@ -33,5 +34,10 @@ class TemplateController extends Controller
     public function surveillance_system_maintenance()
     {
         return view('template.cctv-maintenance');
+    }
+    
+    public function computer_inspection()
+    {
+        return view('template.computer-inspection');
     }
 }

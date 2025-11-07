@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\CommitmentComputerController;
+use App\Http\Controllers\ComputerInspectionController;
 use App\Http\Controllers\LeaverController;
 use App\Http\Controllers\ConverterController;
 use App\Http\Controllers\CyberUserAccountController;
@@ -214,6 +215,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/purchase-requestion/restore', [PurchaseRequestionController::class, 'restore'])->name('purchase-requestion.restore');
 
 
+    // Computer Inspection
+    Route::get('/computer-inspection/index', [ComputerInspectionController ::class, 'index'])->name('computer-inspection.index');
+    Route::get('/computer-inspection/create', [ComputerInspectionController::class, 'create'])->name('computer-inspection.create');
+    Route::post('/computer-inspection/store', [ComputerInspectionController::class, 'store'])->name('computer-inspection.store');
+    Route::get('/computer-inspection/fetchComputerInfo/{assets_number}', [ComputerInspectionController::class, 'fetchComputerInfo'])->name('computer-inspection.fetchComputerInfo');
+    Route::get('/computer-inspection/export', [ComputerInspectionController::class, 'export'])->name('computer-inspection.export');
+
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
 
@@ -227,7 +235,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/template/it-access', [TemplateController::class, 'it_access'])->name('template.itaccess');
     Route::get('/template/cyber-user-account', [TemplateController::class, 'cyber_user_account'])->name('template.cyber_user_account');
     Route::get('/template/surveillance-system-maintenance', [TemplateController::class, 'surveillance_system_maintenance'])->name('template.surveillance_system_maintenance');
-
+    Route::get('/template/computer-inspection', [TemplateController::class, 'computer_inspection'])->name('template.computer_inspection');
+    
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');
     Route::get('/export/lpp_pdf', [ExportController::class, 'lpp_pdf'])->name('export.lpp_pdf');

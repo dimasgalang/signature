@@ -374,4 +374,5 @@ class SurveillanceSystemMaintenanceController extends Controller
         Alert::success('Restore Successfully!', 'Surveillance Maintenance Request For "' . $request->document_name . '" successfully restored!');
         return redirect('approval/indexSurveillance');
     }
+
 }
