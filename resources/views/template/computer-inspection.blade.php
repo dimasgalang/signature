@@ -213,28 +213,18 @@
                     <td class="item-name">{{ $item->questionnaire_items }}</td>
                     @for($month = $a; $month <= 12; $month++)
                         @foreach($bodyPCAnswersGrouped as $key => $array)
-                            @if($computer->device_name == $key)
-                                @php
-                                    $found = false;
-                                @endphp
+                            @if($computer->assets_number == $key)
                                 @foreach($array as $answer)
-                                    @if( $ == $month && $answer->questionnaire_items_id == $item->id )
-                                        <td>
-                                            @if($answer->answer == 'YES')
-                                                <span class="checked">✓</span>
-                                            @else
-                                                {{-- empty cell --}}
-                                            @endif
-                                        </td>
+                                    @if($answer->questionnaire_item_id == $item->id && $answer->month == $month && $answer->answer == 'true')
+                                        <td><span class="checked">✓</span></td>
                                         @php
-                                            $found = true;
+                                            $answerFound = true;
                                         @endphp
                                         @break
+                                    @else
+                                        <td></td>
                                     @endif
                                 @endforeach
-                                @if(!$found)
-                                    <td></td>
-                                @endif
                             @endif
                         @endforeach
                     @endfor

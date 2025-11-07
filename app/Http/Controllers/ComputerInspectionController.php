@@ -156,8 +156,6 @@ class ComputerInspectionController extends Controller
 
         $bodyPC = AnswerCompInspectQuestionnaire::where('questionnaire_id', 61)->get();
         $bodyPCAnswersGrouped = $bodyPC->groupBy('assets_number');
-
-        dd($bodyPCAnswersGrouped);
         // $computerInspections = ComputerInspection::orderBy('created_at', 'desc')->get();
         return view('template.computer-inspection', compact(['computerList', 'hardwareQuestionaireItems', 'softwareQuestionaireItems', 'bodyPCAnswersGrouped']));
     }

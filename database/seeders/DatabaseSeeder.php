@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(RolesSeeder::class);
         // $this->call(ModelHasRolesSeeder::class);
         // $this->call(ItemSeeder::class);
-        $this->call(ItemQuestionnaireSurveillance::class);
+        // $this->call(ItemQuestionnaireSurveillance::class);
+        $this->call(QuestionnaireCompSeeder::class);
     }
 }
