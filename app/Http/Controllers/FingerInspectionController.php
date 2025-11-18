@@ -175,6 +175,8 @@ class FingerInspectionController extends Controller
         if (!file_exists($directory)) {
             mkdir($directory, 0777, true);
         }
+
+        $pdf->save($directory . $fromDate . '-' . $toDate . '- Finger' . '.pdf');
     }
 
     public function fetchInspections($finger_inspection_id)

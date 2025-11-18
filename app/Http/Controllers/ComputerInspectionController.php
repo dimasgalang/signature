@@ -227,6 +227,8 @@ class ComputerInspectionController extends Controller
         if (!file_exists($directory)) {
             mkdir($directory, 0777, true);
         }
+
+        $pdf->save($directory . $fromDate . '-' . $toDate . '- Computer' . '.pdf');
     }
 
     public function fetchInspections($computer_inspection_id)
