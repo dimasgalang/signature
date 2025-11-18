@@ -52,6 +52,8 @@
                 <a class="collapse-item" href="{{ route('approval.indexDeactivate') }}">Deactivate User</a>
                 @if(Auth::user()->dept === 'IT')
                 <a class="collapse-item" href="{{ route('approval.indexSurveillance') }}">Surveillance System</a>
+                <a class="collapse-item" href="{{ route('computer-inspection.index') }}">Computer Inspection</a>
+                <a class="collapse-item" href="{{ route('finger-inspection.index') }}">Finger Inspection</a>
                 @endif
             </div>
         </div>

@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('finger_inspection_id');
             $table->string('machine_number');
-            $table->date('date_of_inspection')->nullable();
             $table->string('questionnaire_id');
+            $table->string('month');
+            $table->string('year');
             $table->string('answer');
-            $table->string('person_in_charge')->nullable();
+            $table->string('notes')->nullable();
             $table->timestamps();
         });
     }

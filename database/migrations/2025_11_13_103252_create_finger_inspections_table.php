@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('computer_inspections', function (Blueprint $table) {
+        Schema::create('finger_inspections', function (Blueprint $table) {
             $table->id();
-            $table->string('computer_inspection_id');
-            $table->string('assets_number');
-            $table->string('user')->nullable();
-            $table->string('device_name')->nullable();
-            $table->string('location')->nullable();
+            $table->string('finger_inspection_id');
+            $table->string('machine_number')->nullable();
             $table->string('person_in_charge')->nullable();
             $table->date('date_of_inspection')->nullable();
             $table->string('void')->nullable();
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('computer_inspections');
+        Schema::dropIfExists('finger_inspections');
     }
 };

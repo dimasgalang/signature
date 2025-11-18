@@ -8,6 +8,7 @@ use App\Http\Controllers\LeaverController;
 use App\Http\Controllers\ConverterController;
 use App\Http\Controllers\CyberUserAccountController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\FingerInspectionController;
 use App\Http\Controllers\HandoverController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItAccessRequestController;
@@ -185,7 +186,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/cyber-user/restore', [CyberUserAccountController::class, 'restore'])->name('cyber-user.restore');
 
     // Surveillance System Maintenance
-    Route::get('/surveillance-system-maintenance/index', [SurveillanceSystemMaintenanceController ::class, 'index'])->name('surveillance-system-maintenance.index');
+    Route::get('/surveillance-system-maintenance/index', [SurveillanceSystemMaintenanceController::class, 'index'])->name('surveillance-system-maintenance.index');
     Route::get('/surveillance-system-maintenance/create', [SurveillanceSystemMaintenanceController::class, 'create'])->name('surveillance-system-maintenance.create');
     Route::post('/surveillance-system-maintenance/store', [SurveillanceSystemMaintenanceController::class, 'store'])->name('surveillance-system-maintenance.store');
     Route::get('/surveillance-system-maintenance/view/{id}', [SurveillanceSystemMaintenanceController::class, 'generatePdf'])->name('surveillance-system-maintenance.view');
@@ -200,7 +201,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     // Purchase Request Order
-    Route::get('/purchase-requestion/index', [PurchaseRequestionController ::class, 'index'])->name('purchase-requestion.index');
+    Route::get('/purchase-requestion/index', [PurchaseRequestionController::class, 'index'])->name('purchase-requestion.index');
     Route::get('/purchase-requestion/create', [PurchaseRequestionController::class, 'create'])->name('purchase-requestion.create');
     Route::post('/purchase-requestion/store', [PurchaseRequestionController::class, 'store'])->name('purchase-requestion.store');
     Route::get('/purchase-requestion/fetchPurchaseRequest/{purchaseRequestionNumber}', [PurchaseRequestionController::class, 'fetchPurchaseRequest'])->name('purchase-requestion.fetchPurchaseRequest');
@@ -216,11 +217,30 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     // Computer Inspection
-    Route::get('/computer-inspection/index', [ComputerInspectionController ::class, 'index'])->name('computer-inspection.index');
+    Route::get('/computer-inspection/index', [ComputerInspectionController::class, 'index'])->name('computer-inspection.index');
     Route::get('/computer-inspection/create', [ComputerInspectionController::class, 'create'])->name('computer-inspection.create');
     Route::post('/computer-inspection/store', [ComputerInspectionController::class, 'store'])->name('computer-inspection.store');
     Route::get('/computer-inspection/fetchComputerInfo/{assets_number}', [ComputerInspectionController::class, 'fetchComputerInfo'])->name('computer-inspection.fetchComputerInfo');
-    Route::get('/computer-inspection/export', [ComputerInspectionController::class, 'export'])->name('computer-inspection.export');
+    Route::get('/computer-inspection/fetchInspections/{computer_inspection_id}', [ComputerInspectionController::class, 'fetchInspections'])->name('computer-inspection.details');
+    Route::get('/computer-inspection/export/{from_date}/{to_date}', [ComputerInspectionController::class, 'export'])->name('computer-inspection.export');
+    Route::get('/computer-inspection/show/{id}', [ComputerInspectionController::class, 'show'])->name('computer-inspection.show');
+    Route::get('/computer-inspection/edit/{id}', [ComputerInspectionController::class, 'edit'])->name('computer-inspection.edit');
+    Route::post('/computer-inspection/update', [ComputerInspectionController::class, 'update'])->name('computer-inspection.update');
+    Route::post('/computer-inspection/void', [ComputerInspectionController::class, 'void'])->name('computer-inspection.void');
+    Route::post('/computer-inspection/restore', [ComputerInspectionController::class, 'restore'])->name('computer-inspection.restore');
+
+    // Finger Inspection
+    Route::get('/finger-inspection/index', [FingerInspectionController::class, 'index'])->name('finger-inspection.index');
+    Route::get('/finger-inspection/create', [FingerInspectionController::class, 'create'])->name('finger-inspection.create');
+    Route::post('/finger-inspection/store', [FingerInspectionController::class, 'store'])->name('finger-inspection.store');
+    Route::get('/finger-inspection/fetchFingerInfo/{assets_number}', [FingerInspectionController::class, 'fetchFingerInfo'])->name('finger-inspection.fetchFingerInfo');
+    Route::get('/finger-inspection/fetchInspections/{finger_inspection_id}', [FingerInspectionController::class, 'fetchInspections'])->name('finger-inspection.details');
+    Route::get('/finger-inspection/export/{from_date}/{to_date}', [FingerInspectionController::class, 'export'])->name('finger-inspection.export');
+    Route::get('/finger-inspection/show/{id}', [FingerInspectionController::class, 'show'])->name('finger-inspection.show');
+    Route::get('/finger-inspection/edit/{id}', [FingerInspectionController::class, 'edit'])->name('finger-inspection.edit');
+    Route::post('/finger-inspection/update', [FingerInspectionController::class, 'update'])->name('finger-inspection.update');
+    Route::post('/finger-inspection/void', [FingerInspectionController::class, 'void'])->name('finger-inspection.void');
+    Route::post('/finger-inspection/restore', [FingerInspectionController::class, 'restore'])->name('finger-inspection.restore');
 
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
@@ -236,7 +256,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/template/cyber-user-account', [TemplateController::class, 'cyber_user_account'])->name('template.cyber_user_account');
     Route::get('/template/surveillance-system-maintenance', [TemplateController::class, 'surveillance_system_maintenance'])->name('template.surveillance_system_maintenance');
     Route::get('/template/computer-inspection', [TemplateController::class, 'computer_inspection'])->name('template.computer_inspection');
-    
+
     //Export
     Route::get('/export/lpp', [ExportController::class, 'lpp'])->name('export.lpp');
     Route::get('/export/lpp_pdf', [ExportController::class, 'lpp_pdf'])->name('export.lpp_pdf');

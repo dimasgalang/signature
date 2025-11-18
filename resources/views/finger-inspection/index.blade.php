@@ -17,19 +17,19 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Computer Inspection List</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Finger Inspection List</h1>
                     <div>
                     <!-- <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Import Approval</a> -->
-                    <a href="{{ route('computer-inspection.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-plus fa-sm text-white-50"></i> Create Computer Inspection</a>
+                    <a href="{{ route('finger-inspection.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                            class="fas fa-plus fa-sm text-white-50"></i> Create Finger Inspection</a>
                     </div>
                 </div>
                 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
-                        <h6 class="m-0 font-weight-bold text-primary">Computer Inspection Data</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Finger Inspection Data</h6>
                         <form method="GET" id="form-void">
                                 <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
                                     <option disabled selected hidden>Select Status</option>
@@ -64,28 +64,28 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Computer Inspection Number</th>
+                                        <th>Finger Inspection Number</th>
                                         <th>Date of Inspection</th>
                                         <th class="justify-content-center text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($computerInspections as $computerInspection)
+                                    @foreach($fingerInspections as $fingerInspection)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $computerInspection->computer_inspection_id }}</td>
-                                        <td>{{ $computerInspection->date_of_inspection }}</td>
+                                        <td>{{ $fingerInspection->finger_inspection_id }}</td>
+                                        <td>{{ $fingerInspection->date_of_inspection }}</td>
                                         <td>
-                                            <a class="btn btn-primary btn-sm btn-icon-split" id="show-detail" data-toggle="modal" data-target="#detailModal" data-detail-url="{{ route('computer-inspection.details', $computerInspection->computer_inspection_id) }}">
+                                            <a class="btn btn-primary btn-sm btn-icon-split" id="show-detail" data-toggle="modal" data-target="#detailModal" data-detail-url="{{ route('finger-inspection.details', $fingerInspection->finger_inspection_id) }}">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-info-circle"></i>
                                                 </span>
                                                 <span class="text">Detail</span>
                                             </a>
-                                            @if($computerInspection->void == 'false')
+                                            @if($fingerInspection->void == 'false')
                                             <a class="btn btn-danger btn-sm btn-icon-split btn-void-record" id="show-void" data-toggle="modal" data-target="#voidModal" href="#" 
-                                                data-void-url="{{ route('computer-inspection.details', $computerInspection->computer_inspection_id) }}"
-                                                data-void-name="{{ $computerInspection->computer_inspection_id }}">
+                                                data-void-url="{{ route('finger-inspection.details', $fingerInspection->finger_inspection_id) }}"
+                                                data-void-name="{{ $fingerInspection->finger_inspection_id }}">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-trash"></i>
                                                 </span> 
@@ -93,8 +93,8 @@
                                             </a>
                                             @else
                                             <a class="btn btn-success btn-sm btn-icon-split btn-restore-record" id="show-restore" data-toggle="modal" data-target="#restoreModal" href="#" 
-                                                data-restore-url="{{ route('computer-inspection.details', $computerInspection->computer_inspection_id) }}"
-                                                data-restore-name="{{ $computerInspection->computer_inspection_id }}">
+                                                data-restore-url="{{ route('finger-inspection.details', $fingerInspection->finger_inspection_id) }}"
+                                                data-restore-name="{{ $fingerInspection->finger_inspection_id }}">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-trash-restore"></i>
                                                 </span>
@@ -122,7 +122,7 @@
             <div class="modal-dialog modal-xl" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="delete-title" class="modal-title" id="exampleModalLabel">Detail Computer Inspection</h5>
+                        <h5 id="delete-title" class="modal-title" id="exampleModalLabel">Detail Finger Inspection</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">x</span>
                         </button>
@@ -132,12 +132,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Computer Inspection Number</th>
+                                    <th>Finger Inspection Number</th>
                                     <th>Date of Inspection</th>
-                                    <th>Asset Number</th>
-                                    <th>User</th>
-                                    <th>Device</th>
-                                    <th>Location</th>
+                                    <th>Machine Number</th>
                                     <th class="justify-content-center text-center">Action</th>
                                 </tr>
                             </thead>
@@ -184,11 +181,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('computer-inspection.void') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('finger-inspection.void') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-void"></p>
-                        <input class="form-control" type="hidden" id="modal_computer_inspection_id_void" name="computer_inspection_id" readonly>
+                        <input class="form-control" type="hidden" id="modal_finger_inspection_id_void" name="finger_inspection_id" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -208,11 +205,11 @@
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('computer-inspection.restore') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('finger-inspection.restore') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                     <div class="modal-body">
                         <p id="modal-text-record-restore"></p>
-                        <input class="form-control" type="hidden" id="modal_computer_inspection_id_restore" name="computer_inspection_id" readonly>
+                        <input class="form-control" type="hidden" id="modal_finger_inspection_id_restore" name="finger_inspection_id" readonly>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
@@ -238,7 +235,7 @@
             $("#modal-text-record").text('Apakah anda yakin ingin menghapus Approval ' + $(this).data('delete-name') + '?');
     });
     $('.btn-void-record').on('click', function () {
-            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Computer Inspections ' + $(this).data('void-name') + '?');
+            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Finger Inspections ' + $(this).data('void-name') + '?');
     });
     $('.btn-process-record').on('click', function () {
             $("#modal-text-record-process").text('Apakah anda yakin ingin memproses Purchase Request ' + $(this).data('process-name') + '?');
@@ -247,7 +244,7 @@
             $("#modal-text-record-canceled").text('Apakah anda yakin ingin membatalkan Purchase Request ' + $(this).data('canceled-name') + '?');
     });
     $('.btn-restore-record').on('click', function () {
-            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Computer Inspections ' + $(this).data('restore-name') + '?');
+            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Finger Inspections ' + $(this).data('restore-name') + '?');
     });
     $('.btn-revision-record').on('click', function () {
             $("#modal-text-record-revision").text('Apakah anda yakin ingin mengubah status Approval menjadi Revision ' + $(this).data('revision-name') + '?');
@@ -290,15 +287,12 @@
                             orderable: false, 
                             searchable: false
                         },
-                        { data: 'computer_inspection_id', name: 'computer_inspection_id', orderable: false },
+                        { data: 'finger_inspection_id', name: 'finger_inspection_id', orderable: false },
                         { data: 'date_of_inspection', name: 'date_of_inspection', orderable: true },
-                        { data: 'assets_number', name: 'assets_number', orderable: false },
-                        { data: 'user', name: 'user', orderable: false },
-                        { data: 'device_name', name: 'device_name', orderable: false },
-                        { data: 'location', name: 'location', orderable: false },
-                        { data: 'location', name: 'location', render: function(data, type, row) {
+                        { data: 'machine_number', name: 'machine_number', orderable: false },
+                        { data: 'machine_number', name: 'machine_number', render: function(data, type, row) {
                             return `
-                                <a class="btn btn-warning btn-sm btn-icon-split" href="/computer-inspection/edit/${row.id}">
+                                <a class="btn btn-warning btn-sm btn-icon-split" href="/finger-inspection/edit/${row.id}">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-edit"></i>
                                     </span>
@@ -317,7 +311,7 @@
             var toDate = $('#todate').val();
             var _token = $('input[name="_token"]').val();
 
-            window.open('{{ url('computer-inspection/export') }}/' + fromDate + '/' + toDate, '_blank');
+            window.open('{{ url('finger-inspection/export') }}/' + fromDate + '/' + toDate, '_blank');
         });
     });
     
@@ -327,7 +321,7 @@
         var jsonVoid = $(this).data('void-url'); 
         $.get(jsonVoid, function (data) {
             if (data.data.length > 0) {
-                $('#modal_computer_inspection_id_void').val(data.data[0].computer_inspection_id);
+                $('#modal_finger_inspection_id_void').val(data.data[0].finger_inspection_id);
                 } else {
 
                 }
@@ -339,7 +333,7 @@
         var jsonRestore = $(this).data('restore-url'); 
         $.get(jsonRestore, function (data) {
             if (data.data.length > 0) {
-                $('#modal_computer_inspection_id_restore').val(data.data[0].computer_inspection_id);
+                $('#modal_finger_inspection_id_restore').val(data.data[0].finger_inspection_id);
                 } else {
 
                 }

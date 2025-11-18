@@ -24,6 +24,7 @@
         .container {
             max-width: 210mm;
             margin: 0 auto;
+            margin-top: 4mm;
             background: white;
         }
 
@@ -122,20 +123,22 @@
 
         .signature-section {
             /* margin-top: 20px; */
-            display: flex;
-            justify-content: space-between;
+            /* display: flex;
+            justify-content: space-between; */
+            align-items: flex-end;
+            text-align: right;
             font-size: 10px;
         }
 
         .signature-box {
-            text-align: center;
-            width: 200px;
+            text-align: right;
+            align-items: flex-end;
+            width: 100px;
         }
 
         .signature-line {
+            text-align: center;
             border-top: 1px solid #000;
-            margin-top: 50px;
-            padding-top: 4px;
         }
 
         .page-break {
@@ -151,7 +154,7 @@
 
         @page {
             size: Legal;
-            margin-top: 10mm;
+            margin-top: 100mm;
             margin-bottom: 0mm;
             margin-left: 2mm;
             margin-right: 2mm;
@@ -159,7 +162,7 @@
     </style>
 </head>
 <body>
-     @php
+    @php
         $i = 0;
     @endphp
         @foreach ($computerList as $computer)
@@ -207,33 +210,40 @@
                 <tr>
                     <td colspan="14" class="category-header">HARDWARE</td>
                 </tr>
-                @foreach ($hardwareQuestionaireItems as $index => $item)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td class="item-name">{{ $item->questionnaire_items }}</td>
-                    @for($month = $a; $month <= 12; $month++)
-                        @foreach($bodyPCAnswersGrouped as $key => $array)
-                            @if($computer->assets_number == $key)
-                                @foreach($array as $answer)
-                                    @if($answer->questionnaire_item_id == $item->id && $answer->month == $month && $answer->answer == 'true')
-                                        <td><span class="checked">✓</span></td>
-                                        @php
-                                            $answerFound = true;
-                                        @endphp
-                                        @break
-                                    @else
+                    <td>1</td>
+                    <td class="item-name">BODY PC</td>
+                    <!-- Looping 89x -->
+                    @foreach($bodyPCAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
                                         <td></td>
-                                    @endif
-                                @endforeach
-                            @endif
-                        @endforeach
-                    @endfor
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
-                @endforeach
-                {{-- <tr>
+                <tr>
                     <td>2</td>
                     <td class="item-name">KIPAS</td>
-                    <td><span class="checked">✓</span></td>
+                    <!-- <td><span class="checked">V</span></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -244,12 +254,38 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td></td> -->
+                    <!-- Looping 89x -->
+                    @foreach($kipasAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
                 <tr>
                     <td>3</td>
                     <td class="item-name">MOTHERBOARD</td>
-                    <td><span class="checked">✓</span></td>
+                    <!-- <td><span class="checked">V</span></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -260,12 +296,38 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td></td> -->
+                    <!-- Looping 89x -->
+                    @foreach($motherboardAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
                 <tr>
                     <td>4</td>
                     <td class="item-name">RAM</td>
-                    <td><span class="checked">✓</span></td>
+                    <!-- <td><span class="checked">V</span></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -276,12 +338,38 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td></td> -->
+                    <!-- Looping 89x -->
+                    @foreach($ramAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
                 <tr>
                     <td>5</td>
                     <td class="item-name">HARDDISK</td>
-                    <td><span class="checked">✓</span></td>
+                    <!-- <td><span class="checked">V</span></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -292,12 +380,38 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td></td> -->
+                    <!-- Looping 89x -->
+                    @foreach($storageAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
                 <tr>
                     <td>6</td>
                     <td class="item-name">KABEL</td>
-                    <td><span class="checked">✓</span></td>
+                    <!-- <td><span class="checked">V</span></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -308,12 +422,38 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td></td> -->
+                    <!-- Looping 89x -->
+                    @foreach($cabelAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
                 <tr>
                     <td>7</td>
                     <td class="item-name">MONITOR</td>
-                    <td><span class="checked">✓</span></td>
+                    <!-- <td><span class="checked">V</span></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -324,12 +464,38 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td></td> -->
+                    <!-- Looping 89x -->
+                    @foreach($monitorAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
                 <tr>
                     <td>8</td>
                     <td class="item-name">MOUSE</td>
-                    <td><span class="checked">✓</span></td>
+                    <!-- <td><span class="checked">V</span></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -340,12 +506,38 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td></td> -->
+                    <!-- Looping 89x -->
+                    @foreach($mouseAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
                 <tr>
                     <td>9</td>
                     <td class="item-name">KEYBOARD</td>
-                    <td><span class="checked">✓</span></td>
+                    <!-- <td><span class="checked">V</span></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -356,8 +548,34 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
-                </tr> --}}
+                    <td></td> -->
+                    <!-- Looping 89x -->
+                    @foreach($keyboardAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
+                </tr>
 
                 <tr>
                     <td colspan="14" class="category-header">SOFTWARE</td>
@@ -365,50 +583,92 @@
                 <tr>
                     <td>1</td>
                     <td class="item-name">APLIKASI</td>
-                    <td><span class="checked">✓</span></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <!-- Looping 89x -->
+                    @foreach($applicationAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
                 <tr>
                     <td>2</td>
                     <td class="item-name">ANTI VIRUS</td>
-                    <td><span class="checked">✓</span></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <!-- Looping 89x -->
+                    @foreach($antivirusAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
                 <tr>
                     <td>3</td>
                     <td class="item-name">LISENSI</td>
-                    <td><span class="checked">✓</span></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <!-- Looping 89x -->
+                    @foreach($licenseAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
 
                 <tr>
@@ -417,73 +677,103 @@
                 <tr>
                     <td>1</td>
                     <td class="item-name">BAIK</td>
-                    <td><span class="checked">✓</span></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <!-- Looping 89x -->
+                    @foreach($conditionAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'true' ? 'V' : 'X'}}</span></td>
+                                    
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <= 12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
                 <tr>
                     <td>2</td>
                     <td class="item-name">PERBAIKAN/SERVIS</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <!-- Looping 89x -->
+                    @foreach($conditionAnswersGrouped as $key => $array)
+                        @if($computer->device_name == $key)
+                            @php
+                                $cekmonth = 1;
+                            @endphp
+                        <!-- Looping 2x -->
+                            @foreach($array as $answer)
+                                @if(intval($answer->month) == $cekmonth)
+                                    <td><span class="checked">{{$answer->answer == 'false' ? 'V' : 'X'}}</span></td>
+                                @elseif($cekmonth < intval($answer->month))
+                                    @for($cekmonth = $cekmonth; $cekmonth < intval($answer->month); $cekmonth++)
+                                        <td></td>
+                                    @endfor
+                                    <td><span class="checked">{{$answer->answer == 'false' ? 'V' : 'X'}}</span></td>
+                                @endif
+                                @php
+                                    $cekmonth = intval($answer->month) + 1;
+                                @endphp
+                            @endforeach
+                            @for($isibelakang = $cekmonth; $isibelakang <=12; $isibelakang++)
+                                <td></td>
+                            @endfor
+                        @endif
+                    @endforeach
                 </tr>
             </tbody>
         </table>
         
-        {{-- <div class="flex notes-section justify-content-between">
-            <div>
-                <strong>KETERANGAN</strong>
-                Beri tanda ☑ jika dikerjakan<br>
-                Beri tanda ☑ jika terjadi kerusakan
-            </div>
-            <div class="signature-section">
-                <div class="signature-box">
-                    <div>Penanggung Jawab</div>
-                    <div class="signature-line">
-                        Siqin Pinjaya
+        <table style="width:100%; margin-top:8px; border:1px solid #000; font-size:10px; border-collapse:collapse;">
+            <tr>
+                <td style="vertical-align:top; width:65%; border:none; padding:0;">
+                    <div style="padding: 4px">
+                        <strong style="display:block; margin-bottom:8px;">KETERANGAN</strong>
+                        @php $iteration = 1; @endphp
+                        @foreach($conditionAnswersGrouped as $key => $array)
+                            @if($computer->device_name == $key)
+                                @foreach($array as $answer)
+                                    @if($answer->notes != null)
+                                        <div style="margin-bottom:5px;">
+                                            {{$iteration++}}. {{ ucfirst(date('F', mktime(0, 0, 0, intval($answer->month), 1))) . ' ' . $answer->year  }} : {{ $answer->notes }}
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @endif
+                        @endforeach
                     </div>
-                </div>
-            </div>
-        </div> --}}
-        
-        <div class="justify-content-between" style="display:flex; justify-content:space-between; align-items:flex-start; margin-top:8px; padding:8px; border:1px solid #000; font-size:10px;">
-            <div>
-                <strong>KETERANGAN</strong>
-                {{-- <div>
-                    Beri tanda ☑ jika dikerjakan<br>
-                    Beri tanda ☑ jika terjadi kerusakan
-                </div> --}}
-            </div>
-            <div class="signature-section">
-                <div class="signature-box">
-                    <div>Penanggung Jawab</div>
-                    <div class="signature-line">
-                        Sigit Priyoga
+                </td>
+                <td style="border: none; width:35%;">
+
+                </td>
+                <td style="vertical-align:top; width:25; text-align:right; border:none; padding:0;">
+                    <div style="padding: 4px">
+                        <strong style="display:block; margin-bottom:8px;">Penanggung Jawab</strong>
+                        @php
+                            $imagePathSign2 = public_path('storage/signature/'. $inspectionPerson->signature_img);
+                            $imageSign2 = "data:image/png;base64," . base64_encode(file_get_contents($imagePathSign2));
+                        @endphp
+                            <img src="{{$imageSign2}}" alt="Requesting Person Signature" style="max-height:70px;">
+                            <div class="signature-line" style="font-size:12px; text-align:center;">
+                                &nbsp;{{ $inspectionPerson->name }}
+                            </div>
                     </div>
-                </div>
-            </div>
-            
-        </div>
-        <div style="font-size:10px;">
+                </td>
+            </tr>
+        </table>
+        <div style="font-size:10px; margin-top:4px;">
             Beri tanda ☑ jika dikerjakan<br>
             Beri tanda ☑ jika terjadi kerusakan
         </div>
