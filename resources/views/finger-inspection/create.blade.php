@@ -41,8 +41,8 @@
                                         </div>
                                         <div class="col-xl-6">
                                             <label>Person In Charge :</label>
-                                            <input class="form-control" type="text" id="name" name="name" value="{{ Auth::user()->name . ' - ' . Auth::user()->dept }}" readonly>
-                                            <input class="form-control" type="hidden" id="person_in_charge" name="person_in_charge" value="{{ Auth::user()->id }}" readonly>
+                                            <input class="form-control" type="text" id="name" name="name" value="{{ $PICId->name . ' - ' . $PICId->dept }}" readonly>
+                                            <input class="form-control" type="hidden" id="person_in_charge" name="person_in_charge" value="{{ $PICId->id }}" readonly>
                                         </div>
                                     </div>
                                 </div>

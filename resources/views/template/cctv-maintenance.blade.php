@@ -240,7 +240,7 @@
                 
                 <tr>
                     <td rowspan="10" class="subsection">1.1 </td>
-                    <td colspan="5"  class="subsection">Lensa Kamera Pengawas / Surveillance Camera Lens - 12 camera</td>
+                    <td colspan="5"  class="subsection">Lensa Kamera Pengawas / Surveillance Camera Lens - {{$surveillanceSystemMaintenance[0]->number_of_camera}} camera</td>
                 </tr>
 
                 @foreach ($surveillanceCameraLensItems as $item)
@@ -261,7 +261,7 @@
                 
                 <tr>
                     <td rowspan="6" class="subsection">1.2 </td>
-                    <td colspan="5" class="subsection">Memeriksa server rekaman/ Checking recording server – 2 servers.</td>
+                    <td colspan="5" class="subsection">Memeriksa server rekaman/ Checking recording server – {{$surveillanceSystemMaintenance[0]->number_of_server}} servers.</td>
                 </tr>
 
                 @foreach ($checkingRecordingServer as $item)

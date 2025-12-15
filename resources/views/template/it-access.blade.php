@@ -307,7 +307,7 @@
     
     .device-detail-item .detail-underline {
         border-bottom: 1px solid #000;
-        height: 20px;
+        /* height: 20px; */
         display: flex;
         align-items: flex-start;
         /* padding-bottom: 2px; */
@@ -732,8 +732,11 @@
                             <div class="detail-underline" style="margin-bottom: 5px">
                                 {{-- <span class="number"></span> --}}
                                 <span class="detail-value"> Tujuan/Purpose :</span>
-                                {{$internet->purpose}}
                             </div>
+                            <div style="margin-bottom: 3px;">
+                                {!! $internet->purpose !!}
+                            </div>
+                            <br>
                             <div class="detail-underline">
                                 <span class="detail-value"> Pembatasan/Restriction :</span>
                                 {{$internet->restriction}}

@@ -15,7 +15,7 @@ class FingerInspectionController extends Controller
 {
     public function create()
     {
-        $PICId = User::where('npk', '=', 'C-00983')->first();
+        $PICId = User::where('npk', '=', 'C-00825')->first();
 
         $fingerCheckItems = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'h')->get();
 
@@ -39,7 +39,7 @@ class FingerInspectionController extends Controller
 
         $newIdfingerInspection = $prefix . $todayDate . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
 
-        return view('finger-inspection.create', compact(['PICId', 'fingerCheckItems','newIdfingerInspection', 'fingerDocs']));
+        return view('finger-inspection.create', compact(['PICId', 'fingerCheckItems', 'newIdfingerInspection', 'fingerDocs']));
     }
 
     public function store(Request $request)
@@ -109,16 +109,16 @@ class FingerInspectionController extends Controller
     {
         if ($request->void) {
             $fingerInspections = FingerInspection::where('void', $request->void)
-            ->groupBy('finger_inspection_id', 'void')
-            ->select('void','finger_inspection_id', DB::raw('MAX(date_of_inspection) as date_of_inspection'))
-            ->orderBy('date_of_inspection', 'desc')
-            ->get();
+                ->groupBy('finger_inspection_id', 'void')
+                ->select('void', 'finger_inspection_id', DB::raw('MAX(date_of_inspection) as date_of_inspection'))
+                ->orderBy('date_of_inspection', 'desc')
+                ->get();
         } else {
             $fingerInspections = FingerInspection::where('void', 'false')
-            ->groupBy('finger_inspection_id', 'void')
-            ->select('void','finger_inspection_id', DB::raw('MAX(date_of_inspection) as date_of_inspection'))
-            ->orderBy('date_of_inspection', 'desc')
-            ->get();
+                ->groupBy('finger_inspection_id', 'void')
+                ->select('void', 'finger_inspection_id', DB::raw('MAX(date_of_inspection) as date_of_inspection'))
+                ->orderBy('date_of_inspection', 'desc')
+                ->get();
         }
 
         return view('finger-inspection/index', compact('fingerInspections'));
@@ -140,31 +140,41 @@ class FingerInspectionController extends Controller
         }
     }
 
-    public function export($fromDate, $toDate)
+    public function export($fromMonth, $toMonth)
     {
-        $fromDate = $fromDate . '-01';
-        $toDate = $toDate . '-31';
+        $fromDate = $fromMonth . '-01';
+        $toDate = $toMonth . '-31';
+
+        $fromParts = explode('-', $fromMonth);
+        $toParts = explode('-', $toMonth);
+
+        $fromYear = $fromParts[0];
+        $fromMonth = $fromParts[1];
+        $toMonth = $toParts[1];
+
+        // modify this query to join with inventoryqr from connection docstore by machine number = assets_number
+
         $fingerList = FingerInspection::whereBetween('date_of_inspection', [$fromDate, $toDate])
             ->select('machine_number', DB::raw('MIN(date_of_inspection) as date_of_inspection'))
             ->groupBy('machine_number')
             ->orderBy('machine_number', 'asc')
             ->get();
 
-        $sensor = AnswerFingerInspectQuestionnaire::where('questionnaire_id', 77)->orderBy('month', 'asc')->get();
+        $sensor = AnswerFingerInspectQuestionnaire::where('questionnaire_id', 36)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $sensorAnswersGrouped = $sensor->groupBy('machine_number');
 
-        $led = AnswerFingerInspectQuestionnaire::where('questionnaire_id', 78)->orderBy('month', 'asc')->get();
+        $led = AnswerFingerInspectQuestionnaire::where('questionnaire_id', 37)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $ledAnswersGrouped = $led->groupBy('machine_number');
 
-        $powerCable = AnswerFingerInspectQuestionnaire::where('questionnaire_id', 79)->orderBy('month', 'asc')->get();
+        $powerCable = AnswerFingerInspectQuestionnaire::where('questionnaire_id', 38)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $powerCableAnswersGrouped = $powerCable->groupBy('machine_number');
 
-        $electricity = AnswerFingerInspectQuestionnaire::where('questionnaire_id', 80)->orderBy('month', 'asc')->get();
+        $electricity = AnswerFingerInspectQuestionnaire::where('questionnaire_id', 39)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $electricityAnswersGrouped = $electricity->groupBy('machine_number');
 
-        $inspectionPerson = User::where('npk', 'C-00983')->join('signatures', 'users.id', '=', 'signatures.user_id')->select('users.name', 'signatures.signature_img')->first();
+        $inspectionPerson = User::where('npk', 'C-00825')->join('signatures', 'users.id', '=', 'signatures.user_id')->select('users.name', 'signatures.signature_img')->first();
         // return view('template.finger-inspection', compact(['fingerList', 'inspectionPerson', 'bodyPCAnswersGrouped', 'kipasAnswersGrouped', 'motherboardAnswersGrouped', 'ramAnswersGrouped', 'storageAnswersGrouped', 'cabelAnswersGrouped', 'monitorAnswersGrouped', 'keyboardAnswersGrouped', 'mouseAnswersGrouped', 'applicationAnswersGrouped', 'antivirusAnswersGrouped', 'licenseAnswersGrouped', 'conditionAnswersGrouped']));
-        
+
         $pdf = Pdf::loadView('template.finger-inspection', compact(['fingerList', 'inspectionPerson', 'sensorAnswersGrouped', 'ledAnswersGrouped', 'powerCableAnswersGrouped', 'electricityAnswersGrouped']))->setOptions(['defaultFont' => 'DejaVu Sans']);
 
         return response($pdf->output(), 200)
@@ -192,9 +202,9 @@ class FingerInspectionController extends Controller
     public function edit($id)
     {
         $fingerCheckItems = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'h')->get();
-        
+
         $fingerInspection = FingerInspection::where('id', $id)->get()->first();
-        $fingerAnswerItems = AnswerFingerInspectQuestionnaire::where('finger_inspection_id', $fingerInspection->finger_inspection_id)->where('machine_number', $fingerInspection->machine_number)->get();        
+        $fingerAnswerItems = AnswerFingerInspectQuestionnaire::where('finger_inspection_id', $fingerInspection->finger_inspection_id)->where('machine_number', $fingerInspection->machine_number)->get();
 
         return view('finger-inspection.edit', compact('fingerInspection', 'fingerCheckItems', 'fingerAnswerItems'));
     }

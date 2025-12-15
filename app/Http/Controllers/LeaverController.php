@@ -44,8 +44,27 @@ class LeaverController extends Controller
         $items = DB::connection('smartit')->table('ms_barang')->select('barang_code', 'barang_name')->where('barang_status', '=', 'Active')->get();
         $services = ServiceLeaver::all();
         $leaver = Leaver::all()->last();
+
+        $leavers = Leaver::orderBy('id', 'desc')->first();
+        $prefix = 'C';
+        $defaultNumber = 1;
+        $todayDate = date('ymd');
+
+        if (isset($leavers) && preg_match('/^C(\d{6})(\d{4})$/', $leavers->document_name, $matches)) {
+            $lastDate = $matches[1];
+            if ($lastDate === $todayDate) {
+                $nextNumber = intval($matches[2]) + 1;
+            } else {
+                $nextNumber = $defaultNumber;
+            }
+        } else {
+            $nextNumber = $defaultNumber;
+        }
+
+        $newIdleavers = $prefix . $todayDate . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
         // dd('HO' . date('y') . date('n') . date('d') . str_pad(intval(substr($handover?->document_name, -4)) + 1, 4, '0', STR_PAD_LEFT));
-        return view('leaver.create', compact('users', 'items', 'leaver', 'services'));
+        return view('leaver.create', compact('users', 'items', 'leaver', 'services', 'newIdleavers'));
     }
 
     public function store(Request $request)
@@ -380,6 +399,69 @@ class LeaverController extends Controller
         $leaver->save();
 
         Alert::success('Upload Successfully!', 'Document successfully uploaded!');
+        return redirect()->intended('leaver/index');
+    }
+
+    public function fetchLeaver($id)
+    {
+        $fetchLeaver = Leaver::select('leavers.*', 'users.name')->leftJoin('users', 'users.id', '=', 'leavers.leaver_name_id')->where('leavers.id', '=', $id)->get();
+        // dd($fetchapproval);
+        return response()->json($fetchLeaver);
+    }
+
+    public function void(Request $request)
+    {
+        // dd($request->all());
+        $leaver = Leaver::find($request->leaver_id);
+        $leaver->void = 'true';
+        $leaver->save();
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $macAddress = get_mac_address($ipAddress);
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Void Leaver Document ' . $leaver->document_name,
+            'menu' => 'Leaver',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'mac_address' => $macAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
+        Alert::success('Void Successfully!', 'Document successfully void!');
+        return redirect()->intended('leaver/index');
+    }
+    public function restore(Request $request)
+    {
+        $leaver = Leaver::find($request->leaver_id);
+        $leaver->void = 'false';
+        $leaver->save();
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $macAddress = get_mac_address($ipAddress);
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        SysLog::create([
+            'username' => $username,
+            'activity' => 'Restore Leaver Document ' . $leaver->document_name,
+            'menu' => 'Leaver',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'mac_address' => $macAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
+        Alert::success('Restore Successfully!', 'Document successfully restore!');
         return redirect()->intended('leaver/index');
     }
 }

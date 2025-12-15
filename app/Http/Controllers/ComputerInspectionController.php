@@ -18,16 +18,16 @@ class ComputerInspectionController extends Controller
     {
         if ($request->void) {
             $computerInspections = ComputerInspection::where('void', $request->void)
-            ->groupBy('computer_inspection_id', 'void')
-            ->select('void','computer_inspection_id', DB::raw('MAX(date_of_inspection) as date_of_inspection'))
-            ->orderBy('date_of_inspection', 'desc')
-            ->get();
+                ->groupBy('computer_inspection_id', 'void')
+                ->select('void', 'computer_inspection_id', DB::raw('MAX(date_of_inspection) as date_of_inspection'))
+                ->orderBy('date_of_inspection', 'desc')
+                ->get();
         } else {
             $computerInspections = ComputerInspection::where('void', 'false')
-            ->groupBy('computer_inspection_id', 'void')
-            ->select('void','computer_inspection_id', DB::raw('MAX(date_of_inspection) as date_of_inspection'))
-            ->orderBy('date_of_inspection', 'desc')
-            ->get();
+                ->groupBy('computer_inspection_id', 'void')
+                ->select('void', 'computer_inspection_id', DB::raw('MAX(date_of_inspection) as date_of_inspection'))
+                ->orderBy('date_of_inspection', 'desc')
+                ->get();
         }
 
         return view('computer-inspection.index', compact('computerInspections'));
@@ -39,7 +39,7 @@ class ComputerInspectionController extends Controller
 
         $hardwareCheckItems = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'e')->get();
         $softwareCheckItems = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'f')->get();
-        $computerConditions = ItemQuestionnaireSurveillance::where('id', 75)->get();
+        $computerConditions = ItemQuestionnaireSurveillance::where('id', 35)->get();
 
         $computerInspection = ComputerInspection::orderBy('id', 'desc')->first();
         $prefix = 'CMPI';
@@ -99,7 +99,7 @@ class ComputerInspectionController extends Controller
             DB::table('answer_comp_inspect_questionnaires')->insert([
                 'computer_inspection_id' => $request->computer_inspection_id,
                 'assets_number' => $inspectionData['assets_number'],
-                'questionnaire_id' => 75,
+                'questionnaire_id' => 35,
                 'answer' => $inspectionData['condition'],
                 'notes' => $inspectionData['additional_notes'] ?? null,
                 'month' => date('m', strtotime($inspectionData['date_of_inspection'])),
@@ -109,7 +109,7 @@ class ComputerInspectionController extends Controller
             ]);
         }
 
-        $fetchComputerList = DB::connection('docstore')->table('inventory_it')->select('inventory_it.assets_number', 'inventory_it.user', 'inventory_it.location', 'inventory_it.incoming_date')->where('inventory_it.incoming_date', '<=', $request->computer_inspection[0]['date_of_inspection'])->get();
+        $fetchComputerList = DB::connection('docstore')->table('inventory_it')->select('inventory_it.assets_number', 'inventory_it.user', 'inventory_it.location', 'inventory_it.incoming_date')->whereRaw("CAST(inventory_it.incoming_date AS DATE) <= ?", [$request->computer_inspection[0]['date_of_inspection']])->get();
         $checkItems = ItemQuestionnaireSurveillance::whereIn('questionnaire_category_id', ['e', 'f', 'g'])->where('id', '!=', 76)->get();
         foreach ($fetchComputerList as $computer) {
             if (!in_array($computer->assets_number, $assetsNumbers)) {
@@ -161,54 +161,62 @@ class ComputerInspectionController extends Controller
         }
     }
 
-    public function export($fromDate, $toDate)
+    public function export($fromMonth, $toMonth)
     {
-        $fromDate = $fromDate . '-01';
-        $toDate = $toDate . '-31';
+        $fromDate = $fromMonth . '-01';
+        $toDate = $toMonth . '-31';
+
+        $fromParts = explode('-', $fromMonth);
+        $toParts = explode('-', $toMonth);
+
+        $fromYear = $fromParts[0];
+        $fromMonth = $fromParts[1];
+        $toMonth = $toParts[1];
+
         $computerList = ComputerInspection::whereBetween('date_of_inspection', [$fromDate, $toDate])
             ->select('device_name', 'user', 'location', DB::raw('MIN(date_of_inspection) as date_of_inspection'))
-            
+
             ->groupBy('device_name', 'user', 'location')
             ->orderBy('device_name', 'asc')
             ->get();
 
-        $bodyPC = AnswerCompInspectQuestionnaire::where('questionnaire_id', 61)->orderBy('month', 'asc')->get();
+        $bodyPC = AnswerCompInspectQuestionnaire::where('questionnaire_id', 23)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $bodyPCAnswersGrouped = $bodyPC->groupBy('assets_number');
 
-        $kipas = AnswerCompInspectQuestionnaire::where('questionnaire_id', 62)->orderBy('month', 'asc')->get();
+        $kipas = AnswerCompInspectQuestionnaire::where('questionnaire_id', 24)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $kipasAnswersGrouped = $kipas->groupBy('assets_number');
 
-        $motherboard = AnswerCompInspectQuestionnaire::where('questionnaire_id', 64)->orderBy('month', 'asc')->get();
+        $motherboard = AnswerCompInspectQuestionnaire::where('questionnaire_id', 25)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $motherboardAnswersGrouped = $motherboard->groupBy('assets_number');
 
-        $ram = AnswerCompInspectQuestionnaire::where('questionnaire_id', 65)->orderBy('month', 'asc')->get();
+        $ram = AnswerCompInspectQuestionnaire::where('questionnaire_id', 26)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $ramAnswersGrouped = $ram->groupBy('assets_number');
 
-        $storage = AnswerCompInspectQuestionnaire::where('questionnaire_id', 66)->orderBy('month', 'asc')->get();
+        $storage = AnswerCompInspectQuestionnaire::where('questionnaire_id', 27)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $storageAnswersGrouped = $storage->groupBy('assets_number');
 
-        $cabel = AnswerCompInspectQuestionnaire::where('questionnaire_id', 67)->orderBy('month', 'asc')->get();
+        $cabel = AnswerCompInspectQuestionnaire::where('questionnaire_id', 28)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $cabelAnswersGrouped = $cabel->groupBy('assets_number');
 
-        $monitor = AnswerCompInspectQuestionnaire::where('questionnaire_id', 69)->orderBy('month', 'asc')->get();
+        $monitor = AnswerCompInspectQuestionnaire::where('questionnaire_id', 29)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $monitorAnswersGrouped = $monitor->groupBy('assets_number');
 
-        $mouse = AnswerCompInspectQuestionnaire::where('questionnaire_id', 70)->orderBy('month', 'asc')->get();
+        $mouse = AnswerCompInspectQuestionnaire::where('questionnaire_id', 30)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $mouseAnswersGrouped = $mouse->groupBy('assets_number');
 
-        $keyboard = AnswerCompInspectQuestionnaire::where('questionnaire_id', 71)->orderBy('month', 'asc')->get();
+        $keyboard = AnswerCompInspectQuestionnaire::where('questionnaire_id', 31)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $keyboardAnswersGrouped = $keyboard->groupBy('assets_number');
 
-        $application = AnswerCompInspectQuestionnaire::where('questionnaire_id', 72)->orderBy('month', 'asc')->get();
+        $application = AnswerCompInspectQuestionnaire::where('questionnaire_id', 32)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $applicationAnswersGrouped = $application->groupBy('assets_number');
 
-        $antivirus = AnswerCompInspectQuestionnaire::where('questionnaire_id', 73)->orderBy('month', 'asc')->get();
+        $antivirus = AnswerCompInspectQuestionnaire::where('questionnaire_id', 33)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $antivirusAnswersGrouped = $antivirus->groupBy('assets_number');
 
-        $license = AnswerCompInspectQuestionnaire::where('questionnaire_id', 74)->orderBy('month', 'asc')->get();
+        $license = AnswerCompInspectQuestionnaire::where('questionnaire_id', 34)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $licenseAnswersGrouped = $license->groupBy('assets_number');
 
-        $condition = AnswerCompInspectQuestionnaire::where('questionnaire_id', 75)->orderBy('month', 'asc')->get();
+        $condition = AnswerCompInspectQuestionnaire::where('questionnaire_id', 35)->where('month', '>=', $fromMonth)->where('month', '<=', $toMonth)->where('year', $fromYear)->orderBy('month', 'asc')->get();
         $conditionAnswersGrouped = $condition->groupBy('assets_number');
 
         // dd($bodyPCAnswersGrouped["I-0296"]);
@@ -216,7 +224,7 @@ class ComputerInspectionController extends Controller
         $cabelAnswersGrouped = $cabel->groupBy('assets_number');
         $inspectionPerson = User::where('npk', 'C-00983')->join('signatures', 'users.id', '=', 'signatures.user_id')->select('users.name', 'signatures.signature_img')->first();
         // return view('template.computer-inspection', compact(['computerList', 'inspectionPerson', 'bodyPCAnswersGrouped', 'kipasAnswersGrouped', 'motherboardAnswersGrouped', 'ramAnswersGrouped', 'storageAnswersGrouped', 'cabelAnswersGrouped', 'monitorAnswersGrouped', 'keyboardAnswersGrouped', 'mouseAnswersGrouped', 'applicationAnswersGrouped', 'antivirusAnswersGrouped', 'licenseAnswersGrouped', 'conditionAnswersGrouped']));
-        
+
         $pdf = Pdf::loadView('template.computer-inspection', compact(['computerList', 'inspectionPerson', 'bodyPCAnswersGrouped', 'kipasAnswersGrouped', 'motherboardAnswersGrouped', 'ramAnswersGrouped', 'storageAnswersGrouped', 'cabelAnswersGrouped', 'monitorAnswersGrouped', 'keyboardAnswersGrouped', 'mouseAnswersGrouped', 'applicationAnswersGrouped', 'antivirusAnswersGrouped', 'licenseAnswersGrouped', 'conditionAnswersGrouped']))->setOptions(['defaultFont' => 'DejaVu Sans']);
 
         return response($pdf->output(), 200)
@@ -245,13 +253,13 @@ class ComputerInspectionController extends Controller
     {
         $hardwareCheckItems = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'e')->get();
         $softwareCheckItems = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'f')->get();
-        $computerConditions = ItemQuestionnaireSurveillance::where('id', 75)->get();
-        
+        $computerConditions = ItemQuestionnaireSurveillance::where('id', 35)->get();
+
         $computerInspection = ComputerInspection::where('id', $id)->get()->first();
         $hardwareAnswerItems = AnswerCompInspectQuestionnaire::where('computer_inspection_id', $computerInspection->computer_inspection_id)->where('assets_number', $computerInspection->assets_number)->get();
         $softwareAnswerItems = AnswerCompInspectQuestionnaire::where('computer_inspection_id', $computerInspection->computer_inspection_id)->where('assets_number', $computerInspection->assets_number)->get();
-        $conditionAnswerItem = AnswerCompInspectQuestionnaire::where('questionnaire_id', 75)->where('computer_inspection_id', $computerInspection->computer_inspection_id)->where('assets_number', $computerInspection->assets_number)->first();
-        
+        $conditionAnswerItem = AnswerCompInspectQuestionnaire::where('questionnaire_id', 35)->where('computer_inspection_id', $computerInspection->computer_inspection_id)->where('assets_number', $computerInspection->assets_number)->first();
+
         // dd($conditionAnswerItem);
         return view('computer-inspection.edit', compact('computerInspection', 'hardwareCheckItems', 'softwareCheckItems', 'computerConditions', 'hardwareAnswerItems', 'softwareAnswerItems', 'conditionAnswerItem'));
     }
@@ -270,7 +278,7 @@ class ComputerInspectionController extends Controller
 
         AnswerCompInspectQuestionnaire::where('computer_inspection_id', $computerInspection->computer_inspection_id)
             ->where('assets_number', $computerInspection->assets_number)
-            ->where('questionnaire_id', 75)
+            ->where('questionnaire_id', 35)
             ->update([
                 'answer' => $request->computer_inspection['condition'],
                 'notes' => $request->computer_inspection['additional_notes'] ?? null,

@@ -37,7 +37,7 @@
                                     <div class="row">
                                         <div class="col-xl-2">
                                             <label>Date of Maintenance :</label>
-                                            <input class="form-control" type="date" id="date_of_maintenance" name="date_of_maintenance" value="{{ date('Y-m-d') }}" readonly>
+                                            <input class="form-control" type="date" id="date_of_maintenance" name="date_of_maintenance">
                                         </div>
                                         <div class="col-xl-2">
                                             <label>Document Name :</label>
@@ -45,8 +45,8 @@
                                         </div>
                                         <div class="col-xl-2">
                                             <label>Maintenance performer  :</label>
-                                            <input class="form-control" type="text" id="name_performer" name="name_performer" value="{{ $performerId->name }}" readonly>
-                                            <input class="form-control" type="hidden" id="department_performer" name="department_performer" value="{{ $performerId->dept }}">
+                                            <input class="form-control" type="text" id="name_performer" name="name_performer" value="{{ Auth::user()->name }}" readonly>
+                                            <input class="form-control" type="hidden" id="department_performer" name="department_performer" value="{{ Auth::user()->dept }}">
                                         </div>
                                         <div class="col-xl-2">
                                             <label>Follow-Up person   :</label>
@@ -212,7 +212,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="col-xl-12">
-                                    <textarea name="recommendation_replacement" class="form-control" rows="5" id="" required></textarea>
+                                    <textarea name="recommendation_replacement" class="form-control" rows="5" id=""></textarea>
                                 </div>
                             </div>
                         </div>

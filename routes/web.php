@@ -46,7 +46,7 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/register/guest', [RegisterController::class, 'store'])->name('register.guest');
 
     Route::get('/login', [LoginController::class, 'login'])->name('login.guest');
-    Route::post('/login', [LoginController::class, 'authenticate'])->name('login')->middleware('throttle:3,10');
+    Route::post('/login', [LoginController::class, 'authenticate'])->name('login')->middleware('throttle:10,10');
     Route::get('/login/qrauth', [LoginController::class, 'qrauth'])->name('login.qrauth');
 });
 
@@ -125,7 +125,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/leaver/revision/{id}', [LeaverController::class, 'revision'])->name('leaver.revision')->middleware(['auth', 'role:Admin']);
     Route::get('/leaver/fetchLeaver/{id}', [LeaverController::class, 'fetchLeaver'])->name('leaver.fetchLeaver');
     Route::post('/leaver/update', [LeaverController::class, 'update'])->name('leaver.update')->middleware(['auth', 'role:Admin']);
-    Route::post('/leaver/void', [LeaverController::class, 'void'])->name('leaver.void')->middleware(['auth', 'role:Admin']);
+    Route::post('/leaver/void', [LeaverController::class, 'void'])->name('leaver.void');
     Route::post('/leaver/restore', [LeaverController::class, 'restore'])->name('leaver.restore')->middleware(['auth', 'role:Admin']);
     Route::get('/leaver/fetchDept/{id_user}', [LeaverController::class, 'fetchDept'])->name('leaver.fetchDept');
     Route::get('/leaver/create-approval/{id}', [LeaverController::class, 'createApproval'])->name('leaver.createApproval');

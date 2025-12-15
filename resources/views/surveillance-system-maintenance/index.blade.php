@@ -79,10 +79,20 @@
                                         </td> --}}
                                         @endif
                                         <td class="d-flex flex-row justify-content-center align-items-center">
-                                            {{-- <div class=""> --}}
+                                            <!-- {{-- <div class=""> --}} -->
                                                 <a id="show-view" class="btn btn-primary btn-circle btn-sm show-view mx-1" data-view-document="{{ route('surveillance-system-maintenance.view', $approval->surveillance_system_maintenance_id) }}">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
+
+                                                @if (request()->get('void') == 'false' || request()->get('void') == '')
+                                                    <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void mx-1" data-void-url="{{ route('surveillance-system-maintenance.fetchsurveillancemaintenance', $approval->id) }}" data-void-link="{{ route('surveillance-system-maintenance.void') }}" data-void-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#voidModal">
+                                                        <i class="fas fa-ban"></i>
+                                                    </a>
+                                                    @elseif (request()->get('void') == 'true')
+                                                    <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore mx-1" data-restore-url="{{ route('surveillance-system-maintenance.fetchsurveillancemaintenance', $approval->id) }}" data-restore-link="{{ route('surveillance-system-maintenance.restore') }}" data-restore-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#restoreModal">
+                                                        <i class="fas fa-history"></i>
+                                                    </a>
+                                                @endif
     
                                                 @if($approval->preparer_id == Auth::user()->id && ($approval->approval_progress < '2' || $approval->status == 'revision'))
                                                     <a href="{{route('surveillance-system-maintenance.edit', $approval->surveillance_system_maintenance_id)}}" class="btn btn-warning btn-circle btn-sm mx-1">
@@ -125,18 +135,10 @@
                                                     @endif
                                                 @endif
 
-                                                @if ($approval->preparer_id == $approval->approval_id)
-                                                    @if (request()->get('void') == 'false' || request()->get('void') == '')
-                                                    <a id="show-void" class="btn btn-danger btn-circle btn-sm btn-void-record show-void mx-1" data-void-url="{{ route('surveillance-system-maintenance.fetchsurveillancemaintenance', $approval->id) }}" data-void-link="{{ route('surveillance-system-maintenance.void') }}" data-void-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#voidModal">
-                                                        <i class="fas fa-ban"></i>
-                                                    </a>
-                                                    @elseif (request()->get('void') == 'true')
-                                                    <a id="show-restore" class="btn btn-success btn-circle btn-sm btn-restore-record show-restore mx-1" data-restore-url="{{ route('surveillance-system-maintenance.fetchsurveillancemaintenance', $approval->id) }}" data-restore-link="{{ route('surveillance-system-maintenance.restore') }}" data-restore-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#restoreModal">
-                                                        <i class="fas fa-history"></i>
-                                                    </a>
-                                                    @endif
-                                                @endif
-                                            {{-- </div> --}}
+                                                <!-- @if ($approval->preparer_id == $approval->approval_id) -->
+
+                                                <!-- @endif -->
+                                            <!-- {{-- </div> --}} -->
                                         </td>
                                     </tr>
                                     @endforeach

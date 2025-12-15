@@ -46,13 +46,13 @@ class SurveillanceSystemMaintenanceController extends Controller
 
         $newIdSurveillanceSystemMaintenance = $prefix . $todayDate . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
 
-        return view('surveillance-system-maintenance.create', compact(['ItHeadId', 'performerId', 'surveillanceCameraLensItems', 'checkingRecordingServer', 'checkNetworkInfrastructure', 'softwareTesting', 'newIdSurveillanceSystemMaintenance'])); 
+        return view('surveillance-system-maintenance.create', compact(['ItHeadId', 'performerId', 'surveillanceCameraLensItems', 'checkingRecordingServer', 'checkNetworkInfrastructure', 'softwareTesting', 'newIdSurveillanceSystemMaintenance']));
     }
 
     public function store(Request $request)
     {
         $random = Str::random();
-        $performerId = User::where('npk', '=', 'C-00983')->first();
+        $performerId = Auth::user();
         // dd($performerId);
         $ITHeadId = User::where('npk', '=', 'C-00827')->first();
 
@@ -89,7 +89,7 @@ class SurveillanceSystemMaintenanceController extends Controller
                 'answer' => $value,
             ]);
         }
-        
+
         foreach ($request->checkingRecordingServer as $itemId => $value) {
             AnswerSurveillanceQuestionnaire::create([
                 'surveillance_system_maintenance_id' => $request->surveillance_system_maintenance_id,
@@ -117,7 +117,7 @@ class SurveillanceSystemMaintenanceController extends Controller
         AnswerSurveillanceQuestionnaire::create([
             'surveillance_system_maintenance_id' => $request->surveillance_system_maintenance_id,
             'questionnaire_id' => 0, // Assuming this is the ID for 'recommendation_replacement'
-            'answer' => $request->recommendation_replacement,
+            'answer' => $request->recommendation_replacement ?? '',
         ]);
 
         $username = Auth::user()->name;
@@ -144,8 +144,9 @@ class SurveillanceSystemMaintenanceController extends Controller
 
     public function generatePdf($id)
     {
+        $performerNpk = Auth::user()->npk;
         $surveillanceSystemMaintenance = SurveillanceSystemMaintenance::select('surveillance_system_maintenances.*', 'users.name', 'users.dept', 'users.npk', 'signatures.signature_img')->leftJoin('users', 'users.id', '=', 'surveillance_system_maintenances.approval_id')->leftJoin('signatures', 'signatures.user_id', '=', 'surveillance_system_maintenances.approval_id')->where('surveillance_system_maintenance_id', $id)->get();
-        $performer = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')->where('BIODATA.NPK', "C-00983")->get();
+        $performer = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')->where('BIODATA.NPK', $performerNpk)->get();
 
         // dd($performer);
         $surveillanceCameraLensItems = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'a')->get();
@@ -253,7 +254,7 @@ class SurveillanceSystemMaintenanceController extends Controller
             ])
             ->where('surveillance_system_maintenance_id', $id)
             ->first();
-        
+
         $surveillanceCameraLensItems = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'a')->get();
         $checkingRecordingServer = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'b')->get();
         $checkNetworkInfrastructure = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'c')->get();
@@ -274,29 +275,33 @@ class SurveillanceSystemMaintenanceController extends Controller
         foreach ($request->surveillanceCameraLensItems as $questionnaireId => $answer) {
             AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id)
                 ->where('questionnaire_id', $questionnaireId)
-                ->update(['answer' => $answer]
-            );
+                ->update(
+                    ['answer' => $answer]
+                );
         }
 
         foreach ($request->checkingRecordingServer as $questionnaireId => $answer) {
             AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id)
                 ->where('questionnaire_id', $questionnaireId)
-                ->update(['answer' => $answer]
-            );
+                ->update(
+                    ['answer' => $answer]
+                );
         }
 
         foreach ($request->checkNetworkInfrastructure as $questionnaireId => $answer) {
             AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id)
                 ->where('questionnaire_id', $questionnaireId)
-                ->update(['answer' => $answer]
-            );
+                ->update(
+                    ['answer' => $answer]
+                );
         }
 
         foreach ($request->softwareTesting as $questionnaireId => $answer) {
             AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id)
                 ->where('questionnaire_id', $questionnaireId)
-                ->update(['answer' => $answer]
-            );
+                ->update(
+                    ['answer' => $answer]
+                );
         }
 
         AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $request->surveillance_system_maintenance_id)
@@ -318,11 +323,11 @@ class SurveillanceSystemMaintenanceController extends Controller
             'browser_type' => $browser,
             'os' => $os,
         ]);
-        
+
         Alert::success('Update Successfully!', 'Surveillance System Maintenance successfully updated!');
         return redirect()->intended('approval/indexSurveillance');
     }
-    
+
     public function void(Request $request)
     {
         $approval = SurveillanceSystemMaintenance::select('*')->where('surveillance_system_maintenance_id', '=', $request->surveillance_system_maintenance_id)->where('document_name', '=', $request->document_name)->where('token', '=', $request->token)->update([
@@ -374,5 +379,4 @@ class SurveillanceSystemMaintenanceController extends Controller
         Alert::success('Restore Successfully!', 'Surveillance Maintenance Request For "' . $request->document_name . '" successfully restored!');
         return redirect('approval/indexSurveillance');
     }
-
 }

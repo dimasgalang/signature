@@ -46,7 +46,7 @@
                                         <th>ID</th>
                                         <th>Preparer</th>
                                         <th>Document Name</th>
-                                        <!-- <th>Original Name</th> -->
+                                        <th>Employee Name</th>
                                         <th>Need Approve</th>
                                         <th>Approval Date</th>
                                         <th>Status</th>
@@ -59,7 +59,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $approval->name }}</td>
                                         <td>{{ $approval->document_name }}</td>
-                                        {{-- <!-- <td>{{ $approval->original_name }}</td> --> --}}
+                                        <td>{{ check_user_by_npk($approval->employee_id) }}</td>
                                         <td>{{ $approval->need_approve }}</td>
                                         <td>{{ $approval->approval_date }}</td>
                                         @if ($approval->status == 'pending')

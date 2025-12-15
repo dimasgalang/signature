@@ -52,12 +52,12 @@
                                         <label>Receiver Name :</label>
                                         <div class="row">
                                             <div class="col-xl-12">
-                                                    <select class="form-control receiver_name_id" id="receiver_name_id" name="receiver_name_id" >
-                                                        <option></option>
-                                                        @foreach ($users as $user )
-                                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                                        @endforeach
-                                                    </select>
+                                                <select class="form-control receiver_name_id" id="receiver_name_id" name="receiver_name_id" >
+                                                    <option></option>
+                                                    @foreach ($users as $user )
+                                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -74,13 +74,14 @@
                                     <br>
                                     <div>
                                         <label for="documentName">Document Name</label>
-                                        @if(((substr($leaver?->document_name,1,5)) != date('y') . date('n') . date('d')))
+                                        <input class="form-control" type="text" id="documentName" name="documentName" value="{{ $newIdleavers }}" readonly>
+                                        <!-- @if(((substr($leaver?->document_name,1,5)) != date('y') . date('n') . date('d')))
                                         <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'C' . date('y') . date('n') . date('d') . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
                                         @elseif(((substr($leaver?->document_name,1,5)) == (date('y') . date('n') . date('d'))) || ($leaver?->document_name ?? ''))
                                         <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'C' . date('y') . date('n') . date('d') . str_pad(intval(substr($leaver?->document_name,-4)) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
                                         @else
                                         <input class="form-control" type="text" id="documentName" name="documentName" value="{{ 'C' . date('y') . date('n') . date('d') . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
-                                        @endif
+                                        @endif -->
                                     </div>
                                     <br>
                                     <div class="row">

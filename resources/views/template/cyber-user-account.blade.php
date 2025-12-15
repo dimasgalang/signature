@@ -485,15 +485,15 @@
                             <div class="employee-info">
                                 <div class="employee-row">
                                     <span class="employee-label">Nama Lengkap/ <em>Full name</em>:</span>
-                                    <input type="text" class="employee-input" style=" min-width: 100px;" value="{{$employee[0]->NAMA_KARYAWAN}}" readonly>
+                                    <input type="text" class="employee-input" style=" min-width: 100px;" value="{{$employee->NAMA_KARYAWAN}}" readonly>
                                     <span>NPK/<em>Employee No</em>:</span>
-                                    <input type="text" class="employee-input" value="{{$employee[0]->NPK}}" readonly style=" width: auto; min-width: 80px; max-width: 300px;">
+                                    <input type="text" class="employee-input" value="{{$employee->NPK}}" readonly style=" width: auto; min-width: 80px; max-width: 300px;">
                                 </div>
                                 <div class="employee-row">
                                     <span class="employee-label">Posisi/ <em>Position</em>:</span>
-                                    <input type="text" class="employee-input" style="min-width: 250px;" value="{{$employee[0]->BAG}}" readonly>
+                                    <input type="text" class="employee-input" style="min-width: 250px;" value="{{$employee->BAG}}" readonly>
                                     <span>Dept. (<em>Dept</em>.):</span>
-                                    <input type="text" class="employee-input" value="{{$employee[0]->DEPARTEMENT}}" readonly style="min-width: 80px;">
+                                    <input type="text" class="employee-input" value="{{$employee->DEPARTEMENT}}" readonly style="min-width: 80px;">
                                 </div>
                             </div>
                         </td>

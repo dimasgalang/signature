@@ -35,17 +35,6 @@ class ItAccessRequestController extends Controller
         }
         // dd($accessRequests);
         return view('it-access-request.index', compact('accessRequests'));
-
-        // $accessRequests = AccessRequest::join('users as employee', 'employee.id', '=', 'access_requests.employee_id')
-        //     ->join('users as approver', 'approver.id', '=', 'access_requests.approval_id')
-        //     ->select([
-        //         'access_requests.*',
-        //         DB::raw('employee.name as preparer_name'),
-        //         DB::raw('employee.dept as preparer_dept'),
-        //         DB::raw('approver.name as need_approve')
-        //     ])
-        //     ->orderBy('access_requests.created_at', 'desc')
-        //     ->get();
     }
 
     public function create()

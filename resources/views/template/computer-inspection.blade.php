@@ -755,10 +755,10 @@
                         @endforeach
                     </div>
                 </td>
-                <td style="border: none; width:35%;">
+                <td style="border: none; width:10%;">
 
                 </td>
-                <td style="vertical-align:top; width:25; text-align:right; border:none; padding:0;">
+                <td style="vertical-align:top; width:25%; text-align:center; border:none; padding:0;">
                     <div style="padding: 4px">
                         <strong style="display:block; margin-bottom:8px;">Penanggung Jawab</strong>
                         @php

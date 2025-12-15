@@ -46,7 +46,7 @@
                                         <th>ID</th>
                                         <th>Preparer</th>
                                         <th>Document Name</th>
-                                        <!-- <th>Original Name</th> -->
+                                        <!-- <th>Employee Name</th> -->
                                         <th>Need Approve</th>
                                         <th>Approval Date</th>
                                         <th>Status</th>
@@ -60,7 +60,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $approval->name }}</td>
                                         <td>{{ $approval->document_name }}</td>
-                                        <!-- <td>{{ $approval->original_name }}</td> -->
+                                        <!-- <td></td> -->
                                         <td>{{ $approval->need_approve }}</td>
                                         <td>{{ $approval->approval_date }}</td>
                                         @if ($approval->status == 'pending')
@@ -105,16 +105,22 @@
                                                 @endif
                                             @endif
                                             @if (request()->get('void') == 'false' || request()->get('void') == '')
-                                                @if ($approval->approval_level == $approval->approval_progress)
-                                                    @if ($approval->status == 'pending')
-                                                        @if (Auth::id() == $approval->approval_id)
-                                                        <a href="{{ route('approval.approve', ['id' => $approval->id]) }}" class="btn btn-success btn-circle btn-sm">
-                                                            <i class="fas fa-check"></i>
+                                                @if (($approval->type == 'leaver') && ($approval->approval_progress > 1) && ($approval->status == 'pending') && (Auth::id() != $approval->approval_id))
+                                                    <a href="{{ route('approval.approve', ['id' => $approval->id + 1]) }}" class="btn btn-success btn-circle btn-sm">
+                                                        <i class="fas fa-check"></i>
+                                                    </a>
+                                                @else
+                                                    @if ($approval->approval_level == $approval->approval_progress)
+                                                        @if ($approval->status == 'pending')
+                                                            @if (Auth::id() == $approval->approval_id)
+                                                            <a href="{{ route('approval.approve', ['id' => $approval->id]) }}" class="btn btn-success btn-circle btn-sm">
+                                                                <i class="fas fa-check"></i>
+                                                            </a>
+                                                            @endif
+                                                        <a id="show-revision" class="btn btn-warning btn-circle btn-sm show-revision" data-revision-url="{{ route('approval.fetchapproval', $approval->id) }}" data-revision-link="{{ route('approval.revision') }}" data-revision-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#revisionModal">
+                                                            <i class="fas fa-times"></i>
                                                         </a>
                                                         @endif
-                                                    <a id="show-revision" class="btn btn-warning btn-circle btn-sm show-revision" data-revision-url="{{ route('approval.fetchapproval', $approval->id) }}" data-revision-link="{{ route('approval.revision') }}" data-revision-name="{{ $approval->document_name }}" data-preparer-name="{{ $approval->preparer_id }}" data-date-name="{{ $approval->created_at }}" data-toggle="modal" data-target="#revisionModal">
-                                                        <i class="fas fa-times"></i>
-                                                    </a>
                                                     @endif
                                                 @endif
                                             @endif
