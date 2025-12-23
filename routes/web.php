@@ -25,6 +25,7 @@ use App\Http\Controllers\SurveillanceSystemMaintenanceController;
 use App\Http\Controllers\SysLogController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RecruitmentController;
 use App\Models\PurchaseRequestOrder;
 use Illuminate\Support\Facades\Route;
 
@@ -241,6 +242,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/finger-inspection/update', [FingerInspectionController::class, 'update'])->name('finger-inspection.update');
     Route::post('/finger-inspection/void', [FingerInspectionController::class, 'void'])->name('finger-inspection.void');
     Route::post('/finger-inspection/restore', [FingerInspectionController::class, 'restore'])->name('finger-inspection.restore');
+
+    // Recruitment
+    Route::get('/recruitment/index', [RecruitmentController::class, 'index'])->name('recruitment.index');
+    Route::post('/recruitment/send-whatsapp', [RecruitmentController::class, 'sendWhatsApp'])->name('recruitment.sendWhatsApp');
 
     //Text To Speech
     Route::get('/speech/index', [SpeechController::class, 'index'])->name('speech.index');
