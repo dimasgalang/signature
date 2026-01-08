@@ -144,18 +144,16 @@ class SurveillanceSystemMaintenanceController extends Controller
 
     public function generatePdf($id)
     {
-        $performerNpk = Auth::user()->npk;
         $surveillanceSystemMaintenance = SurveillanceSystemMaintenance::select('surveillance_system_maintenances.*', 'users.name', 'users.dept', 'users.npk', 'signatures.signature_img')->leftJoin('users', 'users.id', '=', 'surveillance_system_maintenances.approval_id')->leftJoin('signatures', 'signatures.user_id', '=', 'surveillance_system_maintenances.approval_id')->where('surveillance_system_maintenance_id', $id)->get();
-        $performer = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')->where('BIODATA.NPK', $performerNpk)->get();
+        $performerNpk = User::select('npk')->where('id', $surveillanceSystemMaintenance[0]->approval_id)->first();
+        $performer = DB::connection('cii')->table('BIODATA')->select('BIODATA.NPK', 'NAMA_KARYAWAN', 'BAG', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')->where('BIODATA.NPK', $performerNpk->npk)->get();
 
-        // dd($performer);
         $surveillanceCameraLensItems = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'a')->get();
         $checkingRecordingServer = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'b')->get();
         $checkNetworkInfrastructure = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'c')->get();
         $softwareTesting = ItemQuestionnaireSurveillance::where('questionnaire_category_id', 'd')->get();
 
         $answerSurveillanceQuestionnaires = AnswerSurveillanceQuestionnaire::where('surveillance_system_maintenance_id', $id)->get();
-        // dd($employee);
         $pdf = Pdf::loadView('template.cctv-maintenance', compact('surveillanceSystemMaintenance', 'performer', 'surveillanceCameraLensItems', 'checkingRecordingServer', 'checkNetworkInfrastructure', 'softwareTesting', 'answerSurveillanceQuestionnaires'))->setOptions(['defaultFont' => 'sans-serif']);
 
         return response($pdf->output(), 200)
