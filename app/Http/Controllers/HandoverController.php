@@ -9,6 +9,7 @@ use App\Models\SysLog;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\PDF;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -63,62 +64,67 @@ class HandoverController extends Controller
 
     public function store(Request $request)
     {
-        $username = Auth::user()->name;
-        $agent = new Agent();
-        $agent->setUserAgent(request()->userAgent());
-        $ipAddress = request()->ip();
-        $macAddress = get_mac_address($ipAddress);
-        $browser = $agent->browser();
-        $os = $agent->platform();
+        // dd($request->all());
+        try {
+            $username = Auth::user()->name;
+            $agent = new Agent();
+            $agent->setUserAgent(request()->userAgent());
+            $ipAddress = request()->ip();
+            $macAddress = get_mac_address($ipAddress);
+            $browser = $agent->browser();
+            $os = $agent->platform();
 
-        $handover = Handover::create([
-            'handover_name_id' => $request->handover_name_id,
-            'receiver_name_id' => $request->receiver_name_id,
-            'department' => $request->receiverDepartment,
-            'document_name' => $request->documentName,
-            'date' => $request->handoverDate,
-        ]);
-
-        foreach ($request->product_id as $key => $value) {
-            $item = new ItemHandover();
-            $item->handover_id = $handover->id;
-            $item->item_id = $value['barang_code'];
-            $item->item_details = $value['item_details'] ?? '';
-            $item->serial_number = $value['serial_number'];
-            $item->quantity = $value['quantity'];
-            $item->save();
-
-            SysLog::create([
-                'username' => $username,
-                'activity' => 'Create Handover Item ' . $handover->document_name . ' : ' . $value['barang_code'] . ' - ' . $value['item_details'],
-                'menu' => 'Handover',
-                'log_date' => now(),
-                'ip_address' => $ipAddress,
-                'mac_address' => $macAddress,
-                'browser_type' => $browser,
-                'os' => $os,
+            $handover = Handover::create([
+                'handover_name_id' => $request->handover_name_id,
+                'receiver_name_id' => $request->receiver_name_id,
+                'department' => $request->receiverDepartment,
+                'document_name' => $request->documentName,
+                'date' => $request->handoverDate,
             ]);
+
+            foreach ($request->product_id as $key => $value) {
+                $item = new ItemHandover();
+                $item->handover_id = $handover->id;
+                $item->item_id = $value['barang_code'];
+                $item->item_details = $value['item_details'] ?? '';
+                $item->serial_number = $value['serial_number'];
+                $item->quantity = $value['quantity'];
+                $item->save();
+
+                SysLog::create([
+                    'username' => $username,
+                    'activity' => 'Create Handover Item ' . $handover->document_name . ' : ' . $value['barang_code'] . ' - ' . $value['item_details'],
+                    'menu' => 'Handover',
+                    'log_date' => now(),
+                    'ip_address' => $ipAddress,
+                    'mac_address' => $macAddress,
+                    'browser_type' => $browser,
+                    'os' => $os,
+                ]);
+            }
+
+            // Generate PDF and save it to storage
+            $pdfHandover = $this->generatePDF($handover->id, $request->documentName);
+
+            // Convert the PDF to base64
+            $pdfToBase64 = 'data:application/pdf;base64, ' . base64_encode($pdfHandover->output());
+
+            // Set the file name and save the PDF to storage
+            $originalName = sha1($request->documentName) . '.pdf';
+
+            Storage::put('public/handover_pdfs/' . $originalName, $pdfHandover->output());
+
+            // updating handover to saving document name and base64
+            $handover->document_name = $request->documentName;
+            $handover->original_name = $originalName;
+            $handover->base64 = $pdfToBase64;
+            $handover->save();
+
+            Alert::success('Upload Successfully!', 'Document successfully uploaded!');
+            return redirect()->intended('handover/index');
+        } catch (Exception $e) {
+            dd($e->getMessage());
         }
-
-        // Generate PDF and save it to storage
-        $pdfHandover = $this->generatePDF($handover->id, $request->documentName);
-
-        // Convert the PDF to base64
-        $pdfToBase64 = 'data:application/pdf;base64, ' . base64_encode($pdfHandover->output());
-
-        // Set the file name and save the PDF to storage
-        $originalName = sha1($request->documentName) . '.pdf';
-
-        Storage::put('public/handover_pdfs/' . $originalName, $pdfHandover->output());
-
-        // updating handover to saving document name and base64
-        $handover->document_name = $request->documentName;
-        $handover->original_name = $originalName;
-        $handover->base64 = $pdfToBase64;
-        $handover->save();
-
-        Alert::success('Upload Successfully!', 'Document successfully uploaded!');
-        return redirect()->intended('handover/index');
     }
 
     public function fetchHandover($id)

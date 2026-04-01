@@ -26,6 +26,7 @@ use App\Http\Controllers\SysLogController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecruitmentController;
+use App\Http\Controllers\StampelController;
 use App\Models\PurchaseRequestOrder;
 use Illuminate\Support\Facades\Route;
 
@@ -107,6 +108,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/approval/stamping', [ApprovalController::class, 'stamping'])->name('approval.stamping');
     Route::get('/handover/create-approval/{id}', [HandoverController::class, 'createApproval'])->name('handover.createApproval');
 
+    //Stampel
+    Route::get('/stampel/index', [StampelController::class, 'index'])->name('stampel.index');
+    Route::get('/stampel/create', [StampelController::class, 'create'])->name('stampel.create');
+    Route::get('/stampel/approve/{id}', [StampelController::class, 'approve'])->name('stampel.approve');
+    Route::post('/stampel/void', [StampelController::class, 'void'])->name('stampel.void');
+    Route::post('/stampel/restore', [StampelController::class, 'restore'])->name('stampel.restore');
+    Route::post('/stampel/store', [StampelController::class, 'store'])->name('stampel.store');
+    Route::post('/stampel/approved', [StampelController::class, 'approved'])->name('stampel.approved');
+    Route::get('/stampel/stamp/{id}', [StampelController::class, 'stamp'])->name('stampel.stamp');
+    Route::post('/stampel/stamping', [StampelController::class, 'stamping'])->name('stampel.stamping');
+
     // Handover
     Route::get('/handover/index', [HandoverController::class, 'index'])->name('handover.index')->middleware(['auth', 'role:Admin']);
     Route::get('/handover/create', [HandoverController::class, 'create'])->name('handover.create')->middleware(['auth', 'role:Admin']);
@@ -142,7 +154,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/it-access-request/revision', [ItAccessRequestController::class, 'revision'])->name('it-access-request.revision')->middleware(['auth', 'role:Admin']);
     Route::get('/it-access-request/view/{id}', [ItAccessRequestController::class, 'generatePdf'])->name('it-access-request.view');
     Route::get('/it-access-request/revision/{id_request_access}', [ItAccessRequestController::class, 'edit'])->name('it-access-request.edit');
-    Route::post('/it-access-request/update', [ItAccessRequestController::class, 'update'])->name('it-access-request.update')->middleware(['auth', 'role:Admin']);
+    Route::post('/it-access-request/update', [ItAccessRequestController::class, 'update'])->name('it-access-request.update')->middleware(['auth']);
     Route::post('/it-access-request/void', [ItAccessRequestController::class, 'void'])->name('it-access-request.void')->middleware(['auth', 'role:Admin']);
     Route::post('/it-access-request/restore', [ItAccessRequestController::class, 'restore'])->name('it-access-request.restore')->middleware(['auth', 'role:Admin']);
     // Route::get('/leaver/revision/{id}', [ItAccessRequestController::class, 'revision'])->name('leaver.revision')->middleware(['auth', 'role:Admin']);

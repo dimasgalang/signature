@@ -136,6 +136,19 @@
             </div>
         </div>
     </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStampel"
+            aria-expanded="true" aria-controls="collapseStampel">
+            <i class="fas fa-fw fa-check-square"></i>
+            <span>Stampel</span>
+        </a>
+        <div id="collapseStampel" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('stampel.index') }}">Stampel List</a>
+            </div>
+        </div>
+    </li>
     <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseExport"
             aria-expanded="true" aria-controls="collapseExport">
